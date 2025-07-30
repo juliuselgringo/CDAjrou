@@ -1,5 +1,0 @@
-Julien ROUSSELOT
-
-class Tableau {
-    
-}
