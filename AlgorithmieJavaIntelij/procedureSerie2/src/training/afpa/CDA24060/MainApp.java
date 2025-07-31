@@ -1,36 +1,57 @@
 package training.afpa.CDA24060;
 
-import training.afpa.CDA24060.exo.Exo1;
-import training.afpa.CDA24060.exo.Exo2;
-import training.afpa.CDA24060.exo.Exo3;
-import training.afpa.CDA24060.exo.Exo4;
-
-import javax.swing.*;
+import training.afpa.CDA24060.exo.*;
+import training.afpa.CDA24060.modules.PrintScan;
 
 class MainApp {
 
-    //public static int[] randomArray;
-    //public static int moyenne;
-    public static int TAILLE_MAX;
-    public static int[] myArray;
-
-
     public static void main(String[] args) {
+        int menu;
 
-        Exo1 exo1 = new Exo1();
-        //randomArray = exo1.searchMax(randomArray);
+        PrintScan ps = new PrintScan();
+        ps.printEZ("Sélectionner l'exercice à lancer : ");
+        ps.printEZ("1/) tableau aléatoire et recherche valeur max.");
+        ps.printEZ("2/) tableau aléatoire et calcul de moyenne.");
+        ps.printEZ("3/) créateur de tableau et analyzer.");
+        ps.printEZ("4/) table de multiplication.");
+        ps.printEZ("5/) calculatrice.");
+        ps.printEZ("6/) tableau aléatoire et tri bubbleSort");
+        menu = ps.scanINT();
 
-        Exo2 exo2 = new Exo2();
-        //moyenne = exo2.calculMoyenne(randomArray);
+        switch(menu) {
+            case 1:
+                ArrayRandomMaxSearch exo1 = new ArrayRandomMaxSearch();
+                exo1.searchMax();
+                break;
 
-        Exo3 exo3 = new  Exo3();
-        TAILLE_MAX = exo3.saisieTailleMax();
-        myArray = exo3.saisieArray(TAILLE_MAX);
+            case 2:
+                Averager exo2 = new Averager();
+                exo2.calculMoyenne();
+                break;
 
+            case 3:
+                ArrayCreatorAnalyzer exo3 = new ArrayCreatorAnalyzer();
+                exo3.saisieTailleMax();
+                break;
 
-        exo3.DisplayMessageBox(myArray);
+            case 4:
+                MultiplicationTables exo4 = new MultiplicationTables();
+                exo4.tableMUltiplication();
+                break;
 
-        Exo4 exo4 = new Exo4();
+            case 5:
+                Calculator exo5 = new Calculator();
+                exo5.saisieOperandes();
+                break;
+
+            case 6:
+                ArrayRandomSorter exo6 = new ArrayRandomSorter();
+                exo6.arrayDisplay();
+                break;
+
+            default:
+                break;
+        }
 
     }
 

@@ -4,16 +4,14 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Arrays;
 
-public class Exo1 {
+public class ArrayRandomMaxSearch {
 
-    public static int TAILLE;
-
-
-    public static int[] arrayRandomizer(int[] randomArray) {
+    public static int[] arrayRandomizer() {
         Scanner scanner = new Scanner(System.in);
+        int TAILLE;
         System.out.println("Saisissez un entier pour générer un tableau : ");
         TAILLE = scanner.nextInt();
-        randomArray = new int[TAILLE];
+        int[] randomArray = new int[TAILLE];
         Random rand = new Random();
 
         for (int i = 0; i < TAILLE; i++) {
@@ -24,8 +22,8 @@ public class Exo1 {
         return randomArray;
     }
 
-    public static int[] searchMax (int[] randomArray) {
-        randomArray = arrayRandomizer(randomArray);
+    public static void searchMax () {
+        int [] randomArray = arrayRandomizer();
         int max = 0;
         for (int i = 0; i < randomArray.length; i++) {
             if(randomArray[i] > max) {
@@ -36,6 +34,5 @@ public class Exo1 {
         }
 
         System.out.println("Valeur maximum du tableau : " + max);
-        return randomArray;
     }
 }

@@ -1,12 +1,13 @@
 package training.afpa.CDA24060.exo;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
-public class Exo2 {
+public class Averager {
 
-    public String calculMoyenne(int[] randomArray) {
+    public String calculMoyenne() {
+        ArrayRandomMaxSearch rndArr = new ArrayRandomMaxSearch();
+        int[] randomArray = rndArr.arrayRandomizer();
         int somme = 0;
         for (int i = 0; i < randomArray.length; i++) {
             somme += randomArray[i];
