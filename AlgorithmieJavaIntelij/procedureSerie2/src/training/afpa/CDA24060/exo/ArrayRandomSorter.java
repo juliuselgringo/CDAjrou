@@ -4,6 +4,7 @@ import training.afpa.CDA24060.modules.PrintScan;
 
 public class ArrayRandomSorter {
 
+
     public static PrintScan ps = new PrintScan();
 
     public static void arrayDisplay(){
@@ -32,6 +33,8 @@ public class ArrayRandomSorter {
         for (int i = 0; i < array.length; i++) {
             System.out.print(array[i] + " ");
         }
+
+        ps.printEZ("\n");
     }
 
 
