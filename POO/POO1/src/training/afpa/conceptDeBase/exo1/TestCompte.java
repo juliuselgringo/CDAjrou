@@ -1,7 +1,11 @@
-package training.afpa.exo1;
+package training.afpa.conceptDeBase.exo1;
 
 public class TestCompte {
 
+    /**
+     *
+     * @param compte
+     */
     public void testerCompte(Compte compte){
         Double soldeBefore = compte.solde;
         compte.deposer(50.0);

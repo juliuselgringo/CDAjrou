@@ -1,6 +1,6 @@
-package training.afpa.exo4.geometry;
+package training.afpa.conceptDeBase.geometry;
 
-public class Mainapp {
+public class TestCercle {
 
     public static void main(String[] args) {
 
@@ -8,5 +8,7 @@ public class Mainapp {
         Cercle monCercle = new Cercle(leCentre,5.0);
         Point unPoint = new Point(10.0,5.0);
         monCercle.testAppartenance(unPoint);
+        monCercle.afficher();
+
     }
 }

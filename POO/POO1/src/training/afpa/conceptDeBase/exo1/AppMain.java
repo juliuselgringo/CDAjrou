@@ -1,4 +1,4 @@
-package training.afpa.exo1;
+package training.afpa.conceptDeBase.exo1;
 
 public class AppMain {
 
