@@ -2,7 +2,7 @@ package training.afpa.heritage.exo2;
 
 public class Town {
 
-    private String name;
+    private final String name;
     public int nbHab;
 
     /**
@@ -41,7 +41,7 @@ public class Town {
 
     /**
      * GETTER nbHab
-     * @return
+     * @return int
      */
     public int getNbHab(){
         return this.nbHab;

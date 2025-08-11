@@ -39,7 +39,7 @@ public class Rectangle {
      */
     @Override
     public String toString() {
-        return "Rectangle " + this.longueur + " x " + this.largeur;
+        return "Rectangle " + this.longueur + " x " + this.largeur + " cm";
     }
 
     /**

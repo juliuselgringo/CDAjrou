@@ -4,8 +4,8 @@ import java.text.DecimalFormat;
 
 public class Cercle {
 
-    private final Point centre;
-    private final Double rayon;
+    private Point centre;
+    private Double rayon;
 
     /**
      *
@@ -14,7 +14,7 @@ public class Cercle {
      */
     public Cercle(Point pCentre, Double rayon) {
         this.centre = pCentre;
-        this.rayon = securityRayon(rayon);
+        securityRayon(rayon);
     }
 
     /**
@@ -70,10 +70,9 @@ public class Cercle {
         System.out.println("Le cercle " + this + " a un perimetre de " + p + " et une surface de " + s);
     }
 
-    public Double securityRayon(Double rayon){
-        if(rayon <= 0.0) {
-            return rayon;
+    public void securityRayon(Double rayon){
+        if(rayon >= 0.0) {
+            this.rayon = rayon;
         }
-        return null;
     }
 }

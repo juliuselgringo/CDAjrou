@@ -7,7 +7,7 @@ public class Capital extends Town {
     /**
      * CONSTRUCTOR name, country
      * @param aName String
-     * @param aCountry
+     * @param aCountry String
      */
     public Capital(String aName, String aCountry){
         super(aName);
@@ -35,7 +35,7 @@ public class Capital extends Town {
 
     /**
      * SETTER country
-     * @param aCountry
+     * @param aCountry String
      */
     public void setCountry(String aCountry){
         this.country = aCountry;
