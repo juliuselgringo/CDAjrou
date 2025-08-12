@@ -13,7 +13,7 @@ public class Character {
      * @param origin Origin
      */
     public Character (String pseudo, Origin origin) {
-        this.pseudo = pseudo;
+        setPseudo(pseudo);
         this.origin = origin;
         this.healthPoint = 10;
         this.level = 1;
@@ -24,7 +24,7 @@ public class Character {
      * @param pseudo String
      */
     public void setPseudo(String pseudo) {
-        if (!this.pseudo.equals("")) {
+        if (!pseudo.equals("")) {
             this.pseudo = pseudo;
         }
     }

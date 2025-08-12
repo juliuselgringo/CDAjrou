@@ -3,7 +3,7 @@ package training.afpa.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Warrior extends Character {
+public class Warrior extends Character implements Comparable<Warrior> {
 
     private int strength;
     private static ArrayList<Warrior> warriorsList = new ArrayList();
@@ -19,15 +19,15 @@ public class Warrior extends Character {
         warriorsList.add(this);
     }
 
-    /**
-     * CONSTRUCTOR
-     * @param joueur Character
-     */
-    public Warrior(Character joueur){
-        super(joueur.pseudo,joueur.origin);
-        this.strength = 15;
-        warriorsList.add(this);
-    }
+//    /**
+//     * CONSTRUCTOR
+//     * @param joueur Character
+//     */
+//    public Warrior(Character joueur){
+//        super(joueur.pseudo,joueur.origin);
+//        this.strength = 15;
+//        warriorsList.add(this);
+//    }
 
     /**
      * GETTER strength
@@ -45,11 +45,24 @@ public class Warrior extends Character {
     }
 
     /**
-     *
+     * GETTER warriorsList
      * @return String
      */
     public static String getWarriorsList(){
         return warriorsList.toString();
+    }
+
+    @Override
+    public int compareTo(Warrior o) {
+        int value = this.getPseudo().compareTo(o.getPseudo());
+        if (value != 0) {
+            return value;
+        }
+        value = Integer.compare(this.getLevel(), o.getLevel());
+        if (value != 0) {
+            return value;
+        }
+        return Integer.compare(this.getstrength(), o.getstrength());
     }
 
     @Override
