@@ -72,4 +72,9 @@ public class Terminal {
 
         Display.printInt(joueur5.compareTo(joueur6));
     }
+
+    public static void WorldGenration(){
+
+
+    }
 }

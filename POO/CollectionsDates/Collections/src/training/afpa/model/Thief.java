@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Thief extends Character implements Comparable<Thief> {
 
     private int agility;
-    private static ArrayList<Thief> thiefsList= new ArrayList();
+    public static ArrayList<Thief> thiefsList= new ArrayList();
 
     /**
      * CONSTRUCTOR

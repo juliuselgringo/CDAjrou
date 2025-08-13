@@ -5,15 +5,17 @@ import javax.swing.*;
 public class Gui {
 
     /**
-     * JFRAME
+     *
      * @param locationX int
      * @param locationY int
-     * @return
+     * @param width int
+     * @param height int
+     * @return JFrame
      */
-    public static JFrame setFrame(int locationX, int locationY){
+    public static JFrame setFrame(int locationX, int locationY,int width,int height){
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        frame.setSize(600, 600);
+        frame.setSize(width, height);
         frame.setLocation(locationX, locationY);
         frame.setVisible(true);
 
@@ -34,6 +36,13 @@ public class Gui {
         return panel;
     }
 
+    /**
+     *
+     * @param panel
+     * @param sentence
+     * @param positionY
+     * @return
+     */
     public static JLabel labelMaker(JPanel panel, String sentence, int positionY){
         JLabel label = new JLabel(sentence);
         label.setBounds(10, positionY, 500, 20);
@@ -41,15 +50,29 @@ public class Gui {
         return label;
     }
 
-    public static JTextArea textAreaMaker(JPanel panel, String sentence, int positionY){
+    /**
+     *
+     * @param panel
+     * @param sentence
+     * @param positionY
+     * @param height
+     * @return
+     */
+    public static JTextArea textAreaMaker(JPanel panel, String sentence, int positionY,int height){
         JTextArea textArea = new JTextArea(sentence);
-        textArea.setBounds(10, positionY, 300, 20);
+        textArea.setBounds(10, positionY, 400, height);
         textArea.setEditable(false);
         panel.add(textArea);
 
         return textArea;
     }
 
+    /**
+     *
+     * @param panel
+     * @param positionY
+     * @return
+     */
     public static JTextField textFieldMaker(JPanel panel, int positionY){
         JTextField textField = new JTextField();
         textField.setBounds(10, positionY, 300, 20);
@@ -58,6 +81,13 @@ public class Gui {
         return textField;
     }
 
+    /**
+     *
+     * @param panel
+     * @param sentence
+     * @param positionY
+     * @return
+     */
     public static JButton buttonMaker(JPanel panel, String sentence, int positionY){
         JButton button = new JButton(sentence);
         button.setBounds(10, positionY, 300, 20);

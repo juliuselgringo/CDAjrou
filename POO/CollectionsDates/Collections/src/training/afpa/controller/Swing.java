@@ -17,7 +17,7 @@ public class Swing {
         Origin dwarf = new Origin("dwarf");
         Origin human = new Origin("human");
 
-        JFrame frame = Gui.setFrame(500, 500);
+        JFrame frame = Gui.setFrame(500, 500,600,600);
         JPanel panel = Gui.setPanel(frame);
 
         String[] jobsArray = {"Warrior", "Wizard", "Thief"};

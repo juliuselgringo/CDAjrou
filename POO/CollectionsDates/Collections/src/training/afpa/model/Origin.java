@@ -1,12 +1,15 @@
 package training.afpa.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Origin {
 
     private String name;
 
     public static ArrayList<Origin> originsList = new ArrayList<Origin>();
+    private static Map<String, Origin> originsMap = new HashMap<String, Origin>();
 
     /**
      * CONSTRUCTOR
@@ -15,6 +18,7 @@ public class Origin {
     public Origin(String name) {
         setName(name);
         originsList.add(this);
+        originsMap.put(name, this);
     }
 
     /**
@@ -41,6 +45,14 @@ public class Origin {
      */
     public static String getOriginsList(){
         return originsList.toString();
+    }
+
+    /**
+     * @param name  String
+     * @param elfic
+     */
+    public static Map<String, Origin> getOriginsMap(String name, Origin elfic){
+        return originsMap;
     }
 
     /**

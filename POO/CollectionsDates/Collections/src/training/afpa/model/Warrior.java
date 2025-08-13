@@ -6,7 +6,7 @@ import java.util.List;
 public class Warrior extends Character implements Comparable<Warrior> {
 
     private int strength;
-    private static ArrayList<Warrior> warriorsList = new ArrayList();
+    public static ArrayList<Warrior> warriorsList = new ArrayList();
 
     /**
      * CONSTRUCTOR

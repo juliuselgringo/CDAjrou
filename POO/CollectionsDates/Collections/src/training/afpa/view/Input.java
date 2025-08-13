@@ -4,11 +4,14 @@ import training.afpa.model.Origin;
 import training.afpa.model.Thief;
 import training.afpa.model.Warrior;
 import training.afpa.model.Wizard;
+import training.afpa.utility.UserInputException;
 
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class Input {
 
@@ -40,19 +43,85 @@ public class Input {
      * @return Warrior
      */
     public static Warrior inputWarrior(){
-        Display.printString("Saisissez le pseudo de vortre guerrier : ");
-        String pseudo = scanner.nextLine();
+        Display.printString("Saisissez le pseudo de votre guerrier : ");
+        boolean invalid = true;
+        String pseudo = "";
+        while(invalid){
+            try{
+                pseudo = scanner.nextLine();
+                if(pseudo.isEmpty()){
+                    throw new UserInputException("Ce champ ne peut être vide!");
+                }
+                invalid = false;
+            }
+            catch(UserInputException uie){
+                System.err.println("Saisie : " + uie.getMessage());
+            }
+        }
+        
         Origin origin = null;
-        Display.printString("Saisissez l'origine de vortre guerrier : \n" + Display.printOriginSelection());
-        int originInt = scanner.nextInt();
-        scanner.nextLine();
-        for(int i = 0; i < Origin.originsList.size(); i++){
-            if(originInt == i){
-                origin = (Origin)Origin.originsList.get(i);
+        Display.printString("Saisissez l'origine de votre guerrier : \n" + Display.printOriginSelection());
+        invalid = true;
+        int originInt = 0;
+        while(invalid) {
+            try{
+                originInt = scanner.nextInt();
+                scanner.nextLine();
+                invalid = false;
+            }catch(Exception e){
+                scanner.nextLine();
+                System.err.println("Saisie : " + e.getMessage());
+            }
+        if(!invalid){
+            invalid = true;
+            for (int i = 0; i < Origin.originsList.size(); i++) {
+                try {
+                    if (originInt == i) {
+                        origin = Origin.originsList.get(i);
+                        invalid = false;
+                    }
+                    throw new UserInputException("Votre saisie doit être un chiffre correspondant à l'origine souhaité.");
+                } catch (UserInputException uie) {
+                    System.err.println("Saisie : " + uie.getMessage());
+                }
+
             }
         }
 
-        return new Warrior(pseudo,origin);
+        }        
+        return new Warrior(pseudo.trim(),origin);
+    }
+    
+    /**
+     * INPUT WARRIOR SWING
+     */
+    public static void inputWarriorGUI(){
+        JPanel panel = Gui.setPanel(Gui.setFrame(400,400,600,600));
+        Gui.textAreaMaker(panel,Display.originSelection(),10,200);
+        Gui.labelMaker(panel,"Saisissez le pseudo de votre guerrier : ",240);
+        JTextField pseudoField = Gui.textFieldMaker(panel,270);
+        
+        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre guerrier : ",300);
+        JTextField originChoice = Gui.textFieldMaker(panel,330);
+        JButton validBtn = Gui.buttonMaker(panel,"Valider",360);
+
+        validBtn.addActionListener(e -> {
+            String originString =  originChoice.getText();
+            String pseudoString = pseudoField.getText();
+            Origin origin = null;
+            ArrayList array = Origin.originsList;
+            for(int i = 0; i < array.size(); i++){
+
+                if(originString.toString().equals(array.get(i).toString())){
+                    origin = Origin.originsList.get(i);
+
+                }
+
+            }
+            Warrior warrior = new Warrior(pseudoString,origin);
+            System.out.println(Warrior.getWarriorsList());
+            JOptionPane.showMessageDialog(null,warrior.toString(),"Information",JOptionPane.INFORMATION_MESSAGE);
+        });
     }
 
     /**
@@ -60,10 +129,10 @@ public class Input {
      * @return Wizard
      */
     public static Wizard inputWizard(){
-        Display.printString("Saisissez le pseudo de vortre mage : ");
+        Display.printString("Saisissez le pseudo de votre mage : ");
         String pseudo = scanner.nextLine();
         Origin origin = null;
-        Display.printString("Saisissez l'origine de vortre mage : \n" + Display.printOriginSelection());
+        Display.printString("Saisissez l'origine de votre mage : \n" + Display.printOriginSelection());
         int originInt = scanner.nextInt();
         scanner.nextLine();
         for(int i = 0; i < Origin.originsList.size(); i++){
@@ -76,14 +145,47 @@ public class Input {
     }
 
     /**
+     * INPUT WIZARD SWING
+     */
+    public static void inputWizardGUI(){
+        JPanel panel = Gui.setPanel(Gui.setFrame(400,400,600,600));
+        JTextArea textArea = Gui.textAreaMaker(panel,Display.originSelection(),10,200);
+        JLabel labelPseudo = Gui.labelMaker(panel,"Saisissez le pseudo de votre mage : ",240);
+        JTextField pseudoField = Gui.textFieldMaker(panel,270);
+
+        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre mage : ",300);
+        JTextField originChoice = Gui.textFieldMaker(panel,330);
+        JButton validBtn = Gui.buttonMaker(panel,"Valider",360);
+
+        validBtn.addActionListener(e -> {
+            String originString =  originChoice.getText();
+            String pseudoString = pseudoField.getText();
+            Origin origin = null;
+            ArrayList array = Origin.originsList;
+            for(int i = 0; i < array.size(); i++){
+
+                if(originString.toString().equals(array.get(i).toString())){
+                    origin = Origin.originsList.get(i);
+
+                }
+
+            }
+            Wizard wizard = new Wizard(pseudoString,origin);
+            System.out.println(Wizard.getwizardsList());
+            JOptionPane.showMessageDialog(null,wizard.toString(),"Information",JOptionPane.INFORMATION_MESSAGE);
+        });
+    }
+
+
+    /**
      * INPUT THIEF
      * @return Thief
      */
     public static Thief inputThief(){
-        Display.printString("Saisissez le pseudo de vortre voleur : ");
+        Display.printString("Saisissez le pseudo de votre voleur : ");
         String pseudo = scanner.nextLine();
         Origin origin = null;
-        Display.printString("Saisissez l'origine de vortre voleur : \n" + Display.printOriginSelection());
+        Display.printString("Saisissez l'origine de votre voleur : \n" + Display.printOriginSelection());
         int originInt = scanner.nextInt();
         scanner.nextLine();
         for(int i = 0; i < Origin.originsList.size(); i++){
@@ -91,7 +193,45 @@ public class Input {
                 origin = (Origin)Origin.originsList.get(i);
             }
         }
-
         return new Thief(pseudo,origin);
+    }
+
+    /**
+     * INPUT THIEF SWING
+     */
+    public static void inputThiefGUI(){
+        JPanel panel = Gui.setPanel(Gui.setFrame(400,400,600,600));
+        JTextArea textArea = Gui.textAreaMaker(panel,Display.originSelection(),10,200);
+        JLabel labelPseudo = Gui.labelMaker(panel,"Saisissez le pseudo de votre voleur : ",240);
+        JTextField pseudoField = Gui.textFieldMaker(panel,270);
+
+        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre voleur : ",300);
+        JTextField originChoice = Gui.textFieldMaker(panel,330);
+        JButton validBtn = Gui.buttonMaker(panel,"Valider",360);
+
+        validBtn.addActionListener(e -> {
+            String originString =  originChoice.getText();
+            String pseudoString = pseudoField.getText();
+            Origin origin = null;
+            ArrayList array = Origin.originsList;
+            for(int i = 0; i < array.size(); i++){
+
+                if(originString.toString().equals(array.get(i).toString())){
+                    origin = Origin.originsList.get(i);
+
+                }
+
+            }
+            Thief thief = new Thief(pseudoString,origin);
+            System.out.println(Thief.getthiefsList());
+            JOptionPane.showMessageDialog(null,thief.toString(),"Information",JOptionPane.INFORMATION_MESSAGE);
+        });
+    }
+
+    public static int inputIntMenuChoice(){
+        Display.printString("Saisissez le chiffre correspondant à votre choix : ");
+        int inputToReturn = scanner.nextInt();
+        scanner.nextLine();
+        return inputToReturn;
     }
 }
