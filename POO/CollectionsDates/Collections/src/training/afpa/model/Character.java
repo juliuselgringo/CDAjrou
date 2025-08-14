@@ -1,5 +1,7 @@
 package training.afpa.model;
 
+import training.afpa.utility.UserInputException;
+
 public class Character {
 
     protected String pseudo;
@@ -12,8 +14,8 @@ public class Character {
      * @param pseudo String
      * @param origin Origin
      */
-    public Character (String pseudo, Origin origin) {
-        setPseudo(pseudo);
+    public Character (String pseudo, Origin origin) throws UserInputException {
+        setPseudo(pseudo.trim());
         this.origin = origin;
         this.healthPoint = 10;
         this.level = 1;
@@ -23,9 +25,13 @@ public class Character {
      * SETTER pseudo
      * @param pseudo String
      */
-    public void setPseudo(String pseudo) {
-        if (!pseudo.equals("")) {
-            this.pseudo = pseudo;
+    public void setPseudo(String pseudo) throws UserInputException {
+        if (!pseudo.trim().isEmpty() || pseudo == null) {
+            this.pseudo = pseudo.trim();
+        }
+        else{
+            System.err.println("Le pseudo ne peut être vide");
+            throw new UserInputException("Le pseudo ne peut être vide");
         }
     }
 
@@ -60,7 +66,7 @@ public class Character {
     /**
      *  SETTER HP
      */
-    protected void setHealthPoint() {
+    public void setHealthPoint() {
         this.healthPoint += 5;
     }
 
@@ -68,7 +74,7 @@ public class Character {
      * GETTER HP
      * @return healthPoint int
      */
-    protected int getHealthPoint() {
+    public int getHealthPoint() {
         return this.healthPoint;
     }
     /**

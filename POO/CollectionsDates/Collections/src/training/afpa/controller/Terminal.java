@@ -1,11 +1,12 @@
 package training.afpa.controller;
 
 import training.afpa.model.*;
+import training.afpa.utility.UserInputException;
 import training.afpa.view.Display;
 
 public class Terminal {
 
-    public static void runTerminal(){
+    public static void runTerminal() throws UserInputException {
 
         // ________________________________________création des différentes origines
         Origin elfic = new Origin("elfic");

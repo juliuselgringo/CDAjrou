@@ -1,21 +1,27 @@
 package training.afpa.model;
 
+import training.afpa.utility.UserInputException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Wizard extends Character {
 
     private int intelligence;
-    private static ArrayList<Wizard> wizardsList= new ArrayList();
+    public static ArrayList<Wizard> wizardsList= new ArrayList();
+    public static Map<String, Wizard> wizardsMap= new HashMap();
 
     /**
      * CONSTRUCTOR
      * @param pseudo String
      * @param origin Origin
      */
-    public Wizard(String pseudo, Origin origin) {
+    public Wizard(String pseudo, Origin origin) throws UserInputException {
         super(pseudo, origin);
         this.intelligence = 15;
         wizardsList.add(this);
+        wizardsMap.put(pseudo, this);
     }
 
 //    /**

@@ -4,12 +4,13 @@ import training.afpa.model.Origin;
 import training.afpa.model.Thief;
 import training.afpa.model.Warrior;
 import training.afpa.model.Wizard;
+import training.afpa.utility.UserInputException;
 import training.afpa.view.Display;
 import training.afpa.view.Input;
 
 public class ProgrammeTerminal {
 
-    public static void run(){
+    public static void run() throws UserInputException {
         boolean start = true;
         worldGeneration();
         while(start){

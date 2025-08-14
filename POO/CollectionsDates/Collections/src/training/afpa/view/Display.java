@@ -11,7 +11,9 @@ public class Display {
             "3 : Créer un voleur \n" +
             "4 : Liste des guerriers \n" +
             "5 : Liste des mages \n" +
-            "6 : Liste des voleurs \n";
+            "6 : Liste des voleurs \n" +
+            "7 : Création d'une Squad \n" +
+            "8 : Liste des Squads";
 
     public static void printInt(int toPrint){
         System.out.println(toPrint);

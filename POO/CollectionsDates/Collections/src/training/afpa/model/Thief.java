@@ -1,21 +1,27 @@
 package training.afpa.model;
 
+import training.afpa.utility.UserInputException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Thief extends Character implements Comparable<Thief> {
 
     private int agility;
     public static ArrayList<Thief> thiefsList= new ArrayList();
+    public static Map<String,Thief> thiefsMap= new HashMap();
 
     /**
      * CONSTRUCTOR
      * @param pseudo String
      * @param origin Origin
      */
-    public Thief(String pseudo, Origin origin) {
+    public Thief(String pseudo, Origin origin) throws UserInputException {
         super(pseudo, origin);
         this.agility = 15;
         thiefsList.add(this);
+        thiefsMap.put(pseudo, this);
     }
 
 //    /**
@@ -76,4 +82,5 @@ public class Thief extends Character implements Comparable<Thief> {
         }
         return Integer.compare(this.getLevel(), o.getLevel());
     }
+
 }

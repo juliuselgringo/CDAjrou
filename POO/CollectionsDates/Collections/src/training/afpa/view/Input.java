@@ -42,7 +42,7 @@ public class Input {
      * INPUT WARRIOR
      * @return Warrior
      */
-    public static Warrior inputWarrior(){
+    public static Warrior inputWarrior() throws UserInputException {
         Display.printString("Saisissez le pseudo de votre guerrier : ");
         boolean invalid = true;
         String pseudo = "";
@@ -97,12 +97,12 @@ public class Input {
      */
     public static void inputWarriorGUI(){
         JPanel panel = Gui.setPanel(Gui.setFrame(400,400,600,600));
-        Gui.textAreaMaker(panel,Display.originSelection(),10,200);
-        Gui.labelMaker(panel,"Saisissez le pseudo de votre guerrier : ",240);
-        JTextField pseudoField = Gui.textFieldMaker(panel,270);
+        Gui.textAreaMaker(panel,Display.originSelection(),10,10,200);
+        Gui.labelMaker(panel,"Saisissez le pseudo de votre guerrier : ",10,240);
+        JTextField pseudoField = Gui.textFieldMaker(panel,10,270);
         
-        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre guerrier : ",300);
-        JTextField originChoice = Gui.textFieldMaker(panel,330);
+        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre guerrier : ",10,300);
+        JTextField originChoice = Gui.textFieldMaker(panel,10,330);
         JButton validBtn = Gui.buttonMaker(panel,"Valider",360);
 
         validBtn.addActionListener(e -> {
@@ -118,7 +118,12 @@ public class Input {
                 }
 
             }
-            Warrior warrior = new Warrior(pseudoString,origin);
+            Warrior warrior = null;
+            try {
+                warrior = new Warrior(pseudoString,origin);
+            } catch (UserInputException ex) {
+                throw new RuntimeException(ex);
+            }
             System.out.println(Warrior.getWarriorsList());
             JOptionPane.showMessageDialog(null,warrior.toString(),"Information",JOptionPane.INFORMATION_MESSAGE);
         });
@@ -128,7 +133,7 @@ public class Input {
      * INPUT WIZARD
      * @return Wizard
      */
-    public static Wizard inputWizard(){
+    public static Wizard inputWizard() throws UserInputException {
         Display.printString("Saisissez le pseudo de votre mage : ");
         String pseudo = scanner.nextLine();
         Origin origin = null;
@@ -149,12 +154,12 @@ public class Input {
      */
     public static void inputWizardGUI(){
         JPanel panel = Gui.setPanel(Gui.setFrame(400,400,600,600));
-        JTextArea textArea = Gui.textAreaMaker(panel,Display.originSelection(),10,200);
-        JLabel labelPseudo = Gui.labelMaker(panel,"Saisissez le pseudo de votre mage : ",240);
-        JTextField pseudoField = Gui.textFieldMaker(panel,270);
+        JTextArea textArea = Gui.textAreaMaker(panel,Display.originSelection(),10,10,200);
+        JLabel labelPseudo = Gui.labelMaker(panel,"Saisissez le pseudo de votre mage : ",10,240);
+        JTextField pseudoField = Gui.textFieldMaker(panel,10,270);
 
-        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre mage : ",300);
-        JTextField originChoice = Gui.textFieldMaker(panel,330);
+        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre mage : ",10,300);
+        JTextField originChoice = Gui.textFieldMaker(panel,10,330);
         JButton validBtn = Gui.buttonMaker(panel,"Valider",360);
 
         validBtn.addActionListener(e -> {
@@ -170,7 +175,12 @@ public class Input {
                 }
 
             }
-            Wizard wizard = new Wizard(pseudoString,origin);
+            Wizard wizard = null;
+            try {
+                wizard = new Wizard(pseudoString,origin);
+            } catch (UserInputException ex) {
+                throw new RuntimeException(ex);
+            }
             System.out.println(Wizard.getwizardsList());
             JOptionPane.showMessageDialog(null,wizard.toString(),"Information",JOptionPane.INFORMATION_MESSAGE);
         });
@@ -181,7 +191,7 @@ public class Input {
      * INPUT THIEF
      * @return Thief
      */
-    public static Thief inputThief(){
+    public static Thief inputThief() throws UserInputException {
         Display.printString("Saisissez le pseudo de votre voleur : ");
         String pseudo = scanner.nextLine();
         Origin origin = null;
@@ -201,12 +211,12 @@ public class Input {
      */
     public static void inputThiefGUI(){
         JPanel panel = Gui.setPanel(Gui.setFrame(400,400,600,600));
-        JTextArea textArea = Gui.textAreaMaker(panel,Display.originSelection(),10,200);
-        JLabel labelPseudo = Gui.labelMaker(panel,"Saisissez le pseudo de votre voleur : ",240);
-        JTextField pseudoField = Gui.textFieldMaker(panel,270);
+        JTextArea textArea = Gui.textAreaMaker(panel,Display.originSelection(),10,10,200);
+        JLabel labelPseudo = Gui.labelMaker(panel,"Saisissez le pseudo de votre voleur : ",10,240);
+        JTextField pseudoField = Gui.textFieldMaker(panel,10,270);
 
-        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre voleur : ",300);
-        JTextField originChoice = Gui.textFieldMaker(panel,330);
+        JLabel labelOrigin = Gui.labelMaker(panel,"Saisissez l'origine de votre voleur : ",10,300);
+        JTextField originChoice = Gui.textFieldMaker(panel,10,330);
         JButton validBtn = Gui.buttonMaker(panel,"Valider",360);
 
         validBtn.addActionListener(e -> {
@@ -222,7 +232,12 @@ public class Input {
                 }
 
             }
-            Thief thief = new Thief(pseudoString,origin);
+            Thief thief = null;
+            try {
+                thief = new Thief(pseudoString,origin);
+            } catch (UserInputException ex) {
+                throw new RuntimeException(ex);
+            }
             System.out.println(Thief.getthiefsList());
             JOptionPane.showMessageDialog(null,thief.toString(),"Information",JOptionPane.INFORMATION_MESSAGE);
         });

@@ -34,7 +34,7 @@ public class Origin {
      * @param name String
      */
     public void setName(String name) {
-        if(!name.equals("")){
+        if(!name.isEmpty()){
             this.name = name;
         }
     }

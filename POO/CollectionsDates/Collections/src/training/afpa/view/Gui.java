@@ -43,9 +43,9 @@ public class Gui {
      * @param positionY
      * @return
      */
-    public static JLabel labelMaker(JPanel panel, String sentence, int positionY){
+    public static JLabel labelMaker(JPanel panel, String sentence,int positionX, int positionY){
         JLabel label = new JLabel(sentence);
-        label.setBounds(10, positionY, 500, 20);
+        label.setBounds(positionX, positionY, 500, 20);
         panel.add(label);
         return label;
     }
@@ -58,9 +58,9 @@ public class Gui {
      * @param height
      * @return
      */
-    public static JTextArea textAreaMaker(JPanel panel, String sentence, int positionY,int height){
+    public static JTextArea textAreaMaker(JPanel panel, String sentence,int positionX, int positionY,int height){
         JTextArea textArea = new JTextArea(sentence);
-        textArea.setBounds(10, positionY, 400, height);
+        textArea.setBounds(positionX, positionY, 400, height);
         textArea.setEditable(false);
         panel.add(textArea);
 
@@ -73,9 +73,9 @@ public class Gui {
      * @param positionY
      * @return
      */
-    public static JTextField textFieldMaker(JPanel panel, int positionY){
+    public static JTextField textFieldMaker(JPanel panel,int positionX, int positionY){
         JTextField textField = new JTextField();
-        textField.setBounds(10, positionY, 300, 20);
+        textField.setBounds(positionX, positionY, 300, 20);
         panel.add(textField);
 
         return textField;

@@ -1,22 +1,29 @@
 package training.afpa.model;
 
+import training.afpa.utility.UserInputException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Warrior extends Character implements Comparable<Warrior> {
 
     private int strength;
     public static ArrayList<Warrior> warriorsList = new ArrayList();
+    public static Map<String, Warrior> warriorsMap = new HashMap();
 
     /**
      * CONSTRUCTOR
      * @param pseudo String
      * @param origin Origin
      */
-    public Warrior(String pseudo, Origin origin) {
+    public Warrior(String pseudo, Origin origin) throws UserInputException {
         super(pseudo,origin);
         this.strength = 15;
         warriorsList.add(this);
+        warriorsMap.put(pseudo, this);
+
     }
 
 //    /**
