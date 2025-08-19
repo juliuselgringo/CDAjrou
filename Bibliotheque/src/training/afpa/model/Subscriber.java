@@ -1,13 +1,16 @@
 package training.afpa.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Subscriber extends Person {
 
     private String email;
-    private LocalDate subDate;
+    private String subDate;
     private String REGEX = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
+    public static ArrayList<Subscriber> subscribersList = new ArrayList<>();
 
     /**
      * CONSTRUCTOR
@@ -18,8 +21,9 @@ public class Subscriber extends Person {
     public Subscriber(String firstName, String lastName, String email) {
         super(firstName, lastName);
         setEmail(email);
-        this.subDate = LocalDate.now();
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        this.subDate = LocalDate.now().format(formatter);
+        subscribersList.add(this);
     }
 
     /**
@@ -35,18 +39,37 @@ public class Subscriber extends Person {
      * @param email String
      */
     public void setEmail(String email) {
-        try {
-            if (email == null || email.isEmpty() || !email.matches(REGEX)) {
-                throw new IllegalArgumentException("email invalide");
-            }
-            this.email = email;
-        }catch(IllegalArgumentException iae) {
-            System.err.println(iae.getMessage());
+        email = email.trim();
+        if (email == null || email.isEmpty() || !email.matches(REGEX)) {
+            throw new IllegalArgumentException("email invalide");
         }
+        this.email = email;
     }
+
+    /**
+     * GETTER subDate
+     * @return String
+     */
+    public String getSubDate() {
+        return subDate;
+    }
+
 
     @Override
     public String toString() {
-        return "Subscriber{" + "email=" + this.email + ", subDate=" + this.subDate + '}';
+        return "\nSubscriber{First name: " + this.getFirstName() +
+                ", Last name: " + this.getLastName() +
+                ", email: " + this.getEmail() +
+                ", subDate: " + this.getSubDate() + "}\n";
+    }
+
+    public static Subscriber searchSubscriberByEmail(String subscriberEmail) {
+        Subscriber subscriberFound = null;
+        for(Subscriber subscriber : Subscriber.subscribersList){
+            if(subscriberEmail.equals(subscriber.getEmail())){
+                subscriberFound =  subscriber;
+            }
+        }
+        return  subscriberFound;
     }
 }

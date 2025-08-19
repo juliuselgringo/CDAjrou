@@ -7,20 +7,25 @@ import training.afpa.model.Person;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersonTest {
+public class PersonTest {
+
+    Person person = new Person("Adele", "Boulanger");
 
     @Test
-    public void constructorGetterAndSetter_ValidInput(){
-        Person person = new Person("Adele", "Boulanger");
+    public void constructor_GetterAndSetter_ValidInput(){
         assertEquals("Adele",person.getFirstName());
         assertEquals("Boulanger",person.getLastName());
     }
 
     @ParameterizedTest(name = "{0} : le setter lève une exception.")
     @ValueSource(strings = {"", "       "})
-    public void setFirstName_InvalidInput(String firstName){
-        Person person = new Person("Adele", "Boulanger");
+    public void setFirstName_InvalidInput(String firstName) {
         assertThrows(IllegalArgumentException.class, () -> person.setFirstName(firstName));
     }
 
+    @ParameterizedTest(name = "{0} : le setter lève une exception.")
+    @ValueSource(strings = {"", "       "})
+    public void setLastName_InvalidInput(String lastName) {
+        assertThrows(IllegalArgumentException.class, () -> person.setLastName(lastName));
+    }
 }

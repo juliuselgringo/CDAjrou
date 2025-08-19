@@ -30,7 +30,8 @@ public class Person {
      * @param firstName String
      */
     public void setFirstName(String firstName) {
-        if(firstName == null || firstName.trim().isEmpty()) {
+        firstName = firstName.trim();
+        if (firstName == null || firstName.isEmpty()) {
             throw new IllegalArgumentException("firstName cannot be null or empty");
         }
         this.firstName = firstName;
@@ -49,9 +50,10 @@ public class Person {
      * @param lastName String
      */
     public void setLastName(String lastName) {
-        if(lastName == null || lastName.trim().isEmpty()) {
+        lastName = lastName.trim();
+        if (lastName == null || lastName.isEmpty()) {
             throw new IllegalArgumentException("lastName cannot be null or empty");
-        }else {
+        } else {
             this.lastName = lastName;
         }
     }
@@ -62,6 +64,7 @@ public class Person {
      */
     @Override
     public String toString() {
-        return "Personne{" + "firstName=" + this.getFirstName() + ", lastName=" + this.getLastName() + '}';
+        return "Personne{" + "firstName=" + this.getFirstName() +
+                ", lastName=" + this.getLastName() + '}';
     }
 }
