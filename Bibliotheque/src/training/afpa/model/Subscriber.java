@@ -1,9 +1,12 @@
 package training.afpa.model;
 
+import training.afpa.vue.Display;
+import training.afpa.vue.UserInput;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Comparator;
 
 public class Subscriber extends Person {
 
@@ -24,6 +27,7 @@ public class Subscriber extends Person {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.subDate = LocalDate.now().format(formatter);
         subscribersList.add(this);
+        subscribersList.sort(Comparator.comparing(Subscriber::getFirstName));
     }
 
     /**
@@ -54,7 +58,10 @@ public class Subscriber extends Person {
         return subDate;
     }
 
-
+    /**
+     * TO STRING
+     * @return String
+     */
     @Override
     public String toString() {
         return "\nSubscriber{First name: " + this.getFirstName() +
@@ -63,6 +70,11 @@ public class Subscriber extends Person {
                 ", subDate: " + this.getSubDate() + "}\n";
     }
 
+    /**
+     * CHERCHER UN ABONNE PAR EMAIL
+     * @param subscriberEmail String
+     * @return Subscriber
+     */
     public static Subscriber searchSubscriberByEmail(String subscriberEmail) {
         Subscriber subscriberFound = null;
         for(Subscriber subscriber : Subscriber.subscribersList){
@@ -71,5 +83,31 @@ public class Subscriber extends Person {
             }
         }
         return  subscriberFound;
+    }
+
+    /**
+     * CREER UN NOUVEL ABONNE
+     */
+    public static void createNewSubscriber(){
+        try{
+            Display.print("Saisissez le prénom du nouvel abonné: ");
+            String newFirstName = UserInput.userInputText();
+            Display.print("Saisissez le nom du nouvel abonné: ");
+            String newLastName = UserInput.userInputText();
+            Display.print("Saisissez l'email du nouvel abonné: ");
+            String newEmail = UserInput.userInputText();
+            if(searchSubscriberByEmail(newEmail) != null){
+                Display.error("Cet utilisateur existe déjà dans la base de données");
+            }
+            else{
+                Subscriber newSubscriber = new Subscriber(newFirstName, newLastName, newEmail);
+                Display.print("Nouvel abonné enregitré: " + newSubscriber.toString());
+            }
+        }
+        catch(Exception e){
+            Display.error(e.getMessage());
+        }
+
+
     }
 }

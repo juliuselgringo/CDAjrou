@@ -4,8 +4,6 @@ import training.afpa.model.*;
 import training.afpa.vue.Display;
 import training.afpa.vue.UserInput;
 
-import static java.time.LocalTime.now;
-
 public class MainApp {
 
     public static void main(String[] args) {
@@ -30,11 +28,15 @@ public class MainApp {
                 case "1":
                     Loan.createNewLoan();
                     break;
-                    /*
                 case  "2":
                     Subscriber.createNewSubscriber();
                     break;
-*/
+                case "3":
+                    Book.createNewBook();
+                    break;
+                case "4":
+                    Display.print(Subscriber.subscribersList.toString());
+                    break;
                 case "5":
                     Display.print(Book.booksList.toString());
                     break;
@@ -43,8 +45,8 @@ public class MainApp {
                     break;
                 case "7":
                     Book.consultBooksStock();
+                    UserInput.in.close();
                     break;
-
 
                 default:
                     Display.error("Menu : Saisie invalide");
@@ -56,12 +58,12 @@ public class MainApp {
 
     }
 
-    public static void libraryCreation(){
+    public static void libraryCreation() {
         new Librerian("Jean",
                 "Duboncoin",
                 "JeDub");
 
-        new Book("1984", "George Orwell", "978-2070368226",1);
+        new Book("1984", "George Orwell", "978-2070368226", 10);
         new Book("Le Petit Prince", "Antoine de Saint-Exupéry", "978-2070612758", 10);
         new Book("Sapiens : Une brève histoire de l'humanité", "Yuval Noah Harari", "978-2226391022", 3);
         new Book("Orgueil et Préjugés", "Jane Austen", "978-2070400237", 7);
@@ -103,27 +105,6 @@ public class MainApp {
         new Subscriber("Maxime", "Chevalier", "maxime.chevalier@mistral.com");
         new Subscriber("Jeanne", "Perrin", "jeanne.perrin@mistral.com");
 
-    }
-
-    public void firstTest(){
-        Librerian librerian = new Librerian("Jean",
-                "Duboncoin",
-                "JeDub");
-        Subscriber subscriber1 = new Subscriber("Adele",
-                "Boulanger",
-                "adele.boulanger@afpa.training");
-        Subscriber subscriber2 = new Subscriber("Sandro",
-                "Boucher",
-                "sandro.boucher@afpa.training");
-        Book book1 = new Book("Book1", "author1", "1235456",1);
-        Book book2 = new Book("Book2", "author2", "12354567",2);
-        System.out.println(subscriber1);
-        System.out.println(librerian);
-        System.out.println(book1);
-        System.out.println(Subscriber.subscribersList.toString());
-        System.out.println(Book.booksList.toString());
-        Loan loan1 = new Loan("sandor.boucher@afpa.training","Book1");
-        System.out.println(loan1);
     }
 
 }

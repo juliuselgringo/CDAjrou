@@ -1,10 +1,5 @@
 package training.afpa.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 public class Librerian extends Person {
 
     private String id;
@@ -42,6 +37,10 @@ public class Librerian extends Person {
         }
     }
 
+    /**
+     * TO STRING
+     * @return Sring
+     */
     @Override
     public String toString() {
         return "Librerian{First name: " + this.getFirstName() +

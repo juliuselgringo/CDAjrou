@@ -11,8 +11,8 @@ public class Loan {
 
     private LocalDate loanDate;
     private LocalDate returnDate;
-    public Subscriber subscriber;
-    public Book book;
+    private Subscriber subscriber;
+    private Book book;
     public static ArrayList<Loan> loansList =  new ArrayList<Loan>();
 
     /**
@@ -69,6 +69,14 @@ public class Loan {
     }
 
     /**
+     * GETTER book
+     * @return Book
+     */
+    public Book getBook() {
+        return book;
+    }
+
+    /**
      * SETTER book
      * @param bookTitle String
      */
@@ -96,13 +104,17 @@ public class Loan {
                 this.subscriber.getLastName() + "}\n";
     }
 
+    /**
+     * CREER UN PRET
+     */
     public static void createNewLoan(){
         Display.print("Saisissez l'email de l'emprunteur: ");
         String loanerEmail = UserInput.userInputText();
         Display.print("Saisissez le titre du livre: ");
         String bookTitle = UserInput.userInputText();
         try{
-            new Loan(loanerEmail, bookTitle);
+            Loan newLoan = new Loan(loanerEmail, bookTitle);
+            Display.print(newLoan.toString());
         }catch(Exception e){
             e.printStackTrace();
         }

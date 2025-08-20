@@ -4,7 +4,7 @@ import training.afpa.vue.Display;
 import training.afpa.vue.UserInput;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 
 public class Book {
 
@@ -28,6 +28,7 @@ public class Book {
         setIsbn(isbn);
         setQuantity(quantity);
         booksList.add(this);
+        booksList.sort(Comparator.comparing(Book::getTitle));
     }
 
     /**
@@ -143,6 +144,11 @@ public class Book {
                 ", Quantity: " + this.getQuantity() + "}\n";
     }
 
+    /**
+     * CHERCHER UN LIVRE PAR TITRE
+     * @param title String
+     * @return Book
+     */
     public static Book searchBookByTitle(String title) {
         Book bookFound = null;
         for(Book book : booksList) {
@@ -153,6 +159,9 @@ public class Book {
         return bookFound;
     }
 
+    /**
+     * CONSULTER LE STOCK PAR TITRE
+     */
     public static void consultBooksStock() {
         Display.print("Saisissez le titre du livre: ");
         String titleToSearch = UserInput.userInputText();
@@ -164,6 +173,32 @@ public class Book {
             Display.print(booksearched.toString());
 
         }catch(NullPointerException e) {
+            Display.error(e.getMessage());
+        }
+    }
+
+    /**
+     * CREER UN NOUVEAU LIVRE
+     */
+    public static void createNewBook() {
+        try{
+            Display.print("Saisissez le titre du nouveau livre: ");
+            String newTitle = UserInput.userInputText();
+            Display.print("Saisissez l'auteur du nouveau livre: ");
+            String newAuthor = UserInput.userInputText();
+            Display.print("Saisissez l'ISBN du nouveau livre: ");
+            String newIsbn = UserInput.userInputText();
+            Display.print("Saisissez la quantité de livre: ");
+            int newQuantity = UserInput.userInputInt();
+            if(searchBookByTitle(newTitle) != null){
+                Display.error("Ce livre existe déjà dans la base de donnée.");
+            }
+            else{
+                Book newBook = new Book(newTitle,newAuthor,newIsbn, newQuantity);
+                Display.print("Nouveau livre enregitré: " + newBook.toString());
+            }
+        }
+        catch(Exception e){
             Display.error(e.getMessage());
         }
     }

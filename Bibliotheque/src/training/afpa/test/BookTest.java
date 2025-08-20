@@ -1,13 +1,10 @@
 package training.afpa.test;
 
-import jdk.jfr.BooleanFlag;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.BooleanString;
 import training.afpa.model.Book;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class BookTest {
@@ -54,5 +51,6 @@ class BookTest {
         book2.setQuantity(0);
         assertEquals(false, book2.getAvailable());
     }
+
 
 }

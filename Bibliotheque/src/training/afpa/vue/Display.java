@@ -2,14 +2,25 @@ package training.afpa.vue;
 
 public class Display {
 
-    public static void print(String Sentence){
-        System.out.println(Sentence);
+    /**
+     * PRINT LINE OUT
+     * @param sentence String
+     */
+    public static void print(String sentence){
+        System.out.println(sentence);
     }
 
-    public static void error(String Sentence){
-        System.err.println(Sentence);
+    /**
+     * PRINT LINE ERR
+     * @param sentence String
+     */
+    public static void error(String sentence){
+        System.err.println(sentence);
     }
 
+    /**
+     * PRINT MENU
+     */
     public static void menu(){
         System.out.println("Menu de gestion de la bibliotheque\n" +
                 "1) Nouvel emprunt\n" +
