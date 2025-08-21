@@ -22,6 +22,8 @@ class SubscriberTest {
     @Test
     public void constructor_GetterAndSetter_ValidInput() {
         assertEquals("adele.boulanger@afpa.training", subscriber1.getEmail());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        assertEquals(LocalDate.now().format(formatter), subscriber2.getSubDate());
     }
 
     @ParameterizedTest(name="{0} le setter leve exception avec succes.")

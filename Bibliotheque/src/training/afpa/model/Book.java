@@ -151,10 +151,13 @@ public class Book {
      */
     public static Book searchBookByTitle(String title) {
         Book bookFound = null;
-        for(Book book : booksList) {
-            if(book.getTitle().equals(title)) {
+        for (Book book : booksList) {
+            if (book.getTitle().equals(title)) {
                 bookFound = book;
             }
+        }
+        if (bookFound == null) {
+            throw new NullPointerException("Ce livre n'est pas en stock. Book not found");
         }
         return bookFound;
     }

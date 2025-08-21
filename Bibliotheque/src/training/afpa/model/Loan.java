@@ -21,18 +21,13 @@ public class Loan {
      * @param bookTitle String
      */
     public Loan(String subscriberEmail, String bookTitle) {
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        //this.loanDate = LocalDate.now().format(formatter);
         this.loanDate = LocalDate.now();
         this.returnDate = LocalDate.now().plusDays(7);
         setSubscriber(subscriberEmail);
         setBook(bookTitle);
-        if(this.subscriber != null && this.book != null ){
+        if (this.subscriber != null && this.book != null) {
             loansList.add(this);
             this.book.setQuantity(this.book.getQuantity() - 1);
-        }
-        else{
-            Display.error("Erreur: saisie du prêt incorrecte");
         }
     }
 
@@ -55,8 +50,13 @@ public class Loan {
     /**
      * SETTER returnDate
      */
-    public void setReturnDate(LocalDate newReturnDate) {
-        this.returnDate = newReturnDate;
+    public void setReturnDate(LocalDate newReturnDate) throws Exception {
+        if(newReturnDate.isAfter(LocalDate.now())){
+            this.returnDate = newReturnDate;
+        }
+        else{
+            throw new Exception("La date de retour n'est pas valide");
+        }
     }
 
     /**
@@ -88,12 +88,17 @@ public class Loan {
      * @param bookTitle String
      */
     public void setBook(String bookTitle) {
-        Book searchedBook = Book.searchBookByTitle(bookTitle.trim());
-        if(searchedBook.getAvailable()){
-            this.book = searchedBook;
+        try {
+            Book searchedBook = Book.searchBookByTitle(bookTitle.trim());
+            if (searchedBook.getAvailable()) {
+                this.book = searchedBook;
+            }
+            else{
+                throw new Exception("Le livre n'est plus en stock.");
+            }
         }
-        else{
-            this.book = null;
+        catch(Exception e){
+            Display.error( e.getMessage());
         }
     }
 
@@ -112,9 +117,25 @@ public class Loan {
     }
 
     /**
+     * CHERCHER UN PRET AVEC EMAIL ABONNE
+     * @return Loan
+     */
+    public static Loan searchLoanBySubscriberEmail(){
+        Display.print("Saisissez l'email de l'emprunteur: ");
+        String loanerEmail = UserInput.userInputText();
+        Loan loanFound = null;
+        for(Loan loan : loansList){
+            if(loan.getSubscriber().getEmail().equals(loanerEmail.trim())){
+                loanFound = loan;
+            }
+        }
+        return loanFound;
+    }
+
+    /**
      * MENU PRET
      */
-    public static void loanMenu(){
+    public static void loanMenu() throws Exception {
         Display.loanMenu();
         String LoanSelection = UserInput.menuSelection();
         switch (LoanSelection) {
@@ -148,25 +169,9 @@ public class Loan {
             Loan newLoan = new Loan(loanerEmail.trim(), bookTitle.trim());
             Display.print(newLoan.toString());
         }catch(NullPointerException e){
-            Display.error("La saisie du livre ou de l'abonné est invalide." + e.getMessage());
+            Display.error("La saisie du livre ou de l'abonné est invalide.");
         }
 
-    }
-
-    /**
-     * CHERCHER UN PRET AVEC EMAIL ABONNE
-     * @return Loan
-     */
-    public static Loan searchLoanBySubscriberEmail(){
-        Display.print("Saisissez l'email de l'emprunteur: ");
-        String loanerEmail = UserInput.userInputText();
-        Loan loanFound = null;
-        for(Loan loan : loansList){
-            if(loan.getSubscriber().getEmail().equals(loanerEmail.trim())){
-                loanFound = loan;
-            }
-        }
-        return loanFound;
     }
 
     /**
@@ -183,7 +188,7 @@ public class Loan {
     /**
      * MODIFICATION DE PRET
      */
-    public static void modifyLoanReturnDate(){
+    public static void modifyLoanReturnDate() throws Exception {
         Loan loanToModify = Loan.searchLoanBySubscriberEmail();
         Display.print(loanToModify.toString());
         Display.print("Saisissez le nombre de jour de prologation: ");

@@ -3,6 +3,7 @@ package training.afpa.test;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import training.afpa.model.Book;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,5 +53,21 @@ class BookTest {
         assertEquals(false, book2.getAvailable());
     }
 
+    @Test
+    public void toString_ValidInput() {
+        assertEquals("\nBook{Title: Book1, Author: author1, ISBN: 1235456, Available: true, Quantity: 1}\n",
+                book1.toString());
+    }
+
+    @Test
+    public void searchBookByTitle_ValidInput() {
+        assertInstanceOf(Book.class, book1.searchBookByTitle("Book1"));
+    }
+
+    @ParameterizedTest(name="{0} la methode leve bien l exception.")
+    @ValueSource(strings={"book"})
+    public void searchBookByTitle_InvalidInput(String  title) {
+        assertThrows(NullPointerException.class, () -> Book.searchBookByTitle(title));
+    }
 
 }

@@ -6,7 +6,7 @@ import training.afpa.vue.UserInput;
 
 public class MainApp {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
             MainApp.terminalProgram();
 
 
@@ -14,7 +14,7 @@ public class MainApp {
 
     }
 
-    public static void terminalProgram(){
+    public static void terminalProgram() throws Exception {
         Boolean start = true;
 
         try{
@@ -54,7 +54,7 @@ public class MainApp {
                 "Duboncoin",
                 "JeDub");
 
-        new Book("1984", "George Orwell", "978-2070368226", 10);
+        new Book("1984", "George Orwell", "978-2070368226", 0);
         new Book("Le Petit Prince", "Antoine de Saint-Exupéry", "978-2070612758", 10);
         new Book("Sapiens : Une brève histoire de l'humanité", "Yuval Noah Harari", "978-2226391022", 3);
         new Book("Orgueil et Préjugés", "Jane Austen", "978-2070400237", 7);

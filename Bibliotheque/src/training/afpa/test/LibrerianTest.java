@@ -23,4 +23,9 @@ public class LibrerianTest {
     public void setId_InvalidInput(String id){
         assertThrows(IllegalArgumentException.class, () -> librerian.setId(id));
     }
+
+    @Test
+    public void toString_ValidInput() {
+        assertEquals("Librerian{First name: Jean, Last name: Duboncoin, id: JeDub}", librerian.toString());
+    }
 }
