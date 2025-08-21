@@ -53,6 +53,13 @@ public class Loan {
     }
 
     /**
+     * SETTER returnDate
+     */
+    public void setReturnDate(LocalDate newReturnDate) {
+        this.returnDate = newReturnDate;
+    }
+
+    /**
      * GETTER subscriber
      * @return Subscriber
      */
@@ -105,19 +112,83 @@ public class Loan {
     }
 
     /**
+     * MENU PRET
+     */
+    public static void loanMenu(){
+        Display.loanMenu();
+        String LoanSelection = UserInput.menuSelection();
+        switch (LoanSelection) {
+            case "0":
+                break;
+            case "1":
+                Loan.createNewLoan();
+                break;
+            case "2":
+                Loan.returnLoan();
+                break;
+            case "3":
+                Display.print(Loan.loansList.toString());
+                break;
+            case "4":
+                Loan.modifyLoanReturnDate();
+                break;
+            default:
+                break;
+        }
+    }
+    /**
      * CREER UN PRET
      */
     public static void createNewLoan(){
         Display.print("Saisissez l'email de l'emprunteur: ");
-        String loanerEmail = UserInput.userInputText();
+        String loanerEmail = UserInput.userInputEmail();
         Display.print("Saisissez le titre du livre: ");
         String bookTitle = UserInput.userInputText();
         try{
-            Loan newLoan = new Loan(loanerEmail, bookTitle);
+            Loan newLoan = new Loan(loanerEmail.trim(), bookTitle.trim());
             Display.print(newLoan.toString());
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch(NullPointerException e){
+            Display.error("La saisie du livre ou de l'abonné est invalide." + e.getMessage());
         }
 
+    }
+
+    /**
+     * CHERCHER UN PRET AVEC EMAIL ABONNE
+     * @return Loan
+     */
+    public static Loan searchLoanBySubscriberEmail(){
+        Display.print("Saisissez l'email de l'emprunteur: ");
+        String loanerEmail = UserInput.userInputText();
+        Loan loanFound = null;
+        for(Loan loan : loansList){
+            if(loan.getSubscriber().getEmail().equals(loanerEmail.trim())){
+                loanFound = loan;
+            }
+        }
+        return loanFound;
+    }
+
+    /**
+     * RETOUR DE PRET
+     */
+    public static void returnLoan(){
+        Loan returnLoan = Loan.searchLoanBySubscriberEmail();
+        loansList.remove(returnLoan);
+        returnLoan.getBook().setQuantity(returnLoan.getBook().getQuantity() + 1);
+        Display.print(returnLoan.toString());
+        Display.print("Retourné avec succès.");
+    }
+
+    /**
+     * MODIFICATION DE PRET
+     */
+    public static void modifyLoanReturnDate(){
+        Loan loanToModify = Loan.searchLoanBySubscriberEmail();
+        Display.print(loanToModify.toString());
+        Display.print("Saisissez le nombre de jour de prologation: ");
+        int dayToAdd = UserInput.userInputInt();
+        loanToModify.setReturnDate(loanToModify.getReturnDate().plusDays(dayToAdd));
+        Display.print(loanToModify.toString());
     }
 }

@@ -47,12 +47,32 @@ public class UserInput {
     }
 
     /**
+     * INPUT EMAIL
+     * @return String
+     */
+    public static String userInputEmail(){
+        String REGEX = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
+        Boolean startIn = true;
+        String emailInput = "";
+        while(startIn){
+            emailInput = in.nextLine();
+            if(emailInput.trim() == null|| emailInput.trim().isEmpty() || !emailInput.trim().matches(REGEX)){
+                Display.error("L'email saisi est invalide");
+                startIn = true;
+            }else{
+                break;
+            }
+        }
+        return emailInput;
+    }
+
+    /**
      * INPUT MENU
      * @return String
      */
     public static String menuSelection(){
         Display.print("Saisissez le chiffre correspondant à votre choix: ");
         String userInput = in.nextLine();
-        return userInput;
+        return userInput.trim();
     }
 }

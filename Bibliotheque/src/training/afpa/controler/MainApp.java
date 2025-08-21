@@ -7,6 +7,14 @@ import training.afpa.vue.UserInput;
 public class MainApp {
 
     public static void main(String[] args) {
+            MainApp.terminalProgram();
+
+
+
+
+    }
+
+    public static void terminalProgram(){
         Boolean start = true;
 
         try{
@@ -16,46 +24,29 @@ public class MainApp {
             System.exit(1);
         };
 
-        while(start){
+        while(start) {
             Display.menu();
             String UserSelection = UserInput.menuSelection();
 
-            switch(UserSelection){
+            switch (UserSelection) {
                 case "0":
                     start = false;
                     UserInput.in.close();
                     break;
                 case "1":
-                    Loan.createNewLoan();
+                    Loan.loanMenu();
                     break;
-                case  "2":
-                    Subscriber.createNewSubscriber();
+                case "2":
+                    Subscriber.subscriberMenu();
                     break;
                 case "3":
-                    Book.createNewBook();
+                    Book.bookMenu();
                     break;
-                case "4":
-                    Display.print(Subscriber.subscribersList.toString());
-                    break;
-                case "5":
-                    Display.print(Book.booksList.toString());
-                    break;
-                case "6":
-                    Display.print(Loan.loansList.toString());
-                    break;
-                case "7":
-                    Book.consultBooksStock();
-                    UserInput.in.close();
-                    break;
-
                 default:
                     Display.error("Menu : Saisie invalide");
                     break;
             }
         }
-
-
-
     }
 
     public static void libraryCreation() {
@@ -84,6 +75,8 @@ public class MainApp {
         new Book("Les Trois Mousquetaires", "Alexandre Dumas", "978-2070401975", 8);
         new Book("L'Alchimiste", "Paulo Coelho", "978-2253133026", 10);
 
+
+        new Subscriber("test", "test", "test@test.fr");
         new Subscriber("Lucas", "Martin", "lucas.martin@mistral.com");
         new Subscriber("Camille", "Dubois", "camille.dubois@mistral.com");
         new Subscriber("Thomas", "Bernard", "thomas.bernard@mistral.com");

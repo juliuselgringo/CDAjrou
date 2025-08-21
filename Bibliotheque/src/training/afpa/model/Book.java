@@ -160,20 +160,30 @@ public class Book {
     }
 
     /**
-     * CONSULTER LE STOCK PAR TITRE
+     * MENU LIVRE
      */
-    public static void consultBooksStock() {
-        Display.print("Saisissez le titre du livre: ");
-        String titleToSearch = UserInput.userInputText();
-        try {
-            Book booksearched = Book.searchBookByTitle(titleToSearch);
-            if (booksearched == null) {
-                throw new NullPointerException("Ce livre n'est pas en stock.");
-            }
-            Display.print(booksearched.toString());
-
-        }catch(NullPointerException e) {
-            Display.error(e.getMessage());
+    public static void bookMenu(){
+        Display.bookMenu();
+        String bookSelection = UserInput.menuSelection();
+        switch (bookSelection) {
+            case "0":
+                break;
+            case "1":
+                Book.createNewBook();
+                break;
+            case "2":
+                Book.removeBook();
+                break;
+            case "3":
+                Display.print(booksList.toString());
+                break;
+            case "4":
+                Book.modifyBookQuantity();
+                break;
+            case  "5":
+                Book.consultBooksStock();
+            default:
+                break;
         }
     }
 
@@ -199,6 +209,58 @@ public class Book {
             }
         }
         catch(Exception e){
+            Display.error(e.getMessage());
+        }
+    }
+
+    /**
+     * SUPPRIMER UN LIVRE
+     */
+    public static void removeBook() {
+        Display.print("Saisissez le titre du livre à supprimer:");
+        String newTitleToRemove = UserInput.userInputText();
+        Book bookToremove = searchBookByTitle(newTitleToRemove);
+        if(bookToremove != null){
+            booksList.remove(bookToremove);
+            Display.print("Le livre a été supprimé avec succès.");
+        }
+        else{
+            Display.error("Ce livre n'est pas en stock.");
+        }
+    }
+
+    /**
+     * MODIFIER LA QUANTITE D UN LIVRE
+     */
+    public static void modifyBookQuantity() {
+        Display.print("Saisissez le titre du livre: ");
+        String titleToSearch = UserInput.userInputText();
+        Book bookToModify = searchBookByTitle(titleToSearch);
+        if(bookToModify != null){
+            Display.print("Saisissez la nouvelle quantité de livre: ");
+            int newQuantity = UserInput.userInputInt();
+            bookToModify.setQuantity(newQuantity);
+            Display.print("La quantité a été modifié avec succès.");
+        }
+        else{
+            Display.error("Ce livre n'est pas en stock.");
+        }
+    }
+
+    /**
+     * CONSULTER LE STOCK PAR TITRE
+     */
+    public static void consultBooksStock() {
+        Display.print("Saisissez le titre du livre: ");
+        String titleToSearch = UserInput.userInputText();
+        try {
+            Book booksearched = Book.searchBookByTitle(titleToSearch);
+            if (booksearched == null) {
+                throw new NullPointerException("Ce livre n'est pas en stock.");
+            }
+            Display.print(booksearched.toString());
+
+        }catch(NullPointerException e) {
             Display.error(e.getMessage());
         }
     }
