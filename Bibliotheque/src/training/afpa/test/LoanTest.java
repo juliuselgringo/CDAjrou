@@ -9,6 +9,8 @@ import training.afpa.model.Subscriber;
 import training.afpa.vue.Display;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoanTest {
@@ -41,8 +43,10 @@ class LoanTest {
 
     @Test
     public void toString_ValidInputs(){
-        assertEquals("\nPret{Date du pret: 21/08/2025, Date de retour: 28/08/2025, Titre: Book1, Emprunteur: Adele Boulanger}\n",
-                loan10.toString());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        assertEquals("\nPret{Date du pret: " + LocalDate.now().format(formatter) + ", Date de retour: " +
+                        LocalDate.now().plusDays(7).format(formatter) + ", Titre: Book1, Emprunteur: Adele Boulanger}\n",
+                        loan10.toString());
     }
 
 

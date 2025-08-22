@@ -2,18 +2,41 @@ package training.afpa.controler;
 
 import training.afpa.model.*;
 import training.afpa.vue.Display;
+import training.afpa.vue.Gui;
 import training.afpa.vue.UserInput;
+
+import javax.swing.*;
 
 public class MainApp {
 
     public static void main(String[] args) throws Exception {
-            MainApp.terminalProgram();
-
-
-
+        //MainApp.terminalProgram();
+        MainApp.swingProgram();
 
     }
 
+    /**
+     * LANCE LE TERMINAL CONCU POUR SWING
+     */
+    public static void swingProgram() {
+        JFrame frame = Gui.setFrame(300,300,700,500);
+        JPanel panel = Gui.setPanel(frame);
+
+        Gui.labelMaker(panel,"Menu de getion de la Bibliothèque",10,10);
+        JButton loanButton = Gui.buttonMaker(panel, "Gestion de prets", 40);
+        JButton subscriberButton = Gui.buttonMaker(panel, "Gestion de abonnés", 70);
+        JButton bookButton = Gui.buttonMaker(panel, "Gestion de Livre", 100);
+
+        loanButton.addActionListener(e -> {
+            Loan.swingMenu();
+        });
+
+    }
+
+    /**
+     * LANCE LE PROGRAMME CONCU POUR LE TERMINAL
+     * @throws Exception
+     */
     public static void terminalProgram() throws Exception {
         Boolean start = true;
 
@@ -49,6 +72,9 @@ public class MainApp {
         }
     }
 
+    /**
+     * CREE DES DONNEES POUR LA BIBLIOTHEQUE
+     */
     public static void libraryCreation() {
         new Librerian("Jean",
                 "Duboncoin",

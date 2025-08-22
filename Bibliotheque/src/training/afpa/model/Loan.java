@@ -1,8 +1,10 @@
 package training.afpa.model;
 
 import training.afpa.vue.Display;
+import training.afpa.vue.Gui;
 import training.afpa.vue.UserInput;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -195,5 +197,18 @@ public class Loan {
         int dayToAdd = UserInput.userInputInt();
         loanToModify.setReturnDate(loanToModify.getReturnDate().plusDays(dayToAdd));
         Display.print(loanToModify.toString());
+    }
+
+    public static void swingMenu() {
+        JFrame frame = Gui.setFrame(300,300,700,500);
+        JPanel panel = Gui.setPanel(frame);
+
+        JLabel title = Gui.labelMaker(panel,"Menu Pret",10,10);
+        JButton createLoanButton = Gui.buttonMaker(panel, "Nouveau pret", 40);
+        JButton returnLoanButton = Gui.buttonMaker(panel, "Retour pret", 70);
+        JButton readLoanButton = Gui.buttonMaker(panel, "Liste prets", 100);
+        JButton modifyLoanButton = Gui.buttonMaker(panel, "Modifer date de retour", 130);
+
+
     }
 }
