@@ -1,7 +1,7 @@
 package training.afpa.model;
 
-import training.afpa.vue.Display;
-import training.afpa.vue.UserInput;
+import training.afpa.vue.terminal.Display;
+import training.afpa.vue.terminal.UserInput;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -156,9 +156,7 @@ public class Book {
                 bookFound = book;
             }
         }
-        if (bookFound == null) {
-            throw new NullPointerException("Ce livre n'est pas en stock. Book not found");
-        }
+
         return bookFound;
     }
 

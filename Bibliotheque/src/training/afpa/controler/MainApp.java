@@ -1,15 +1,18 @@
 package training.afpa.controler;
 
 import training.afpa.model.*;
-import training.afpa.vue.Display;
-import training.afpa.vue.Gui;
-import training.afpa.vue.UserInput;
+import training.afpa.vue.swingGui.BookSwing;
+import training.afpa.vue.swingGui.Gui;
+import training.afpa.vue.swingGui.LoanSwing;
+import training.afpa.vue.swingGui.SubscriberSwing;
+import training.afpa.vue.terminal.Display;
+import training.afpa.vue.terminal.UserInput;
 
 import javax.swing.*;
 
 public class MainApp {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         //MainApp.terminalProgram();
         MainApp.swingProgram();
 
@@ -19,17 +22,28 @@ public class MainApp {
      * LANCE LE TERMINAL CONCU POUR SWING
      */
     public static void swingProgram() {
-        JFrame frame = Gui.setFrame(300,300,700,500);
+
+        try{
+            libraryCreation();
+        }catch(Exception e){
+            System.err.println("Erreur dans le programme d'initialisation: " + e.getMessage());
+            System.exit(1);
+        }
+
+        JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
         Gui.labelMaker(panel,"Menu de getion de la Bibliothèque",10,10);
         JButton loanButton = Gui.buttonMaker(panel, "Gestion de prets", 40);
         JButton subscriberButton = Gui.buttonMaker(panel, "Gestion de abonnés", 70);
         JButton bookButton = Gui.buttonMaker(panel, "Gestion de Livre", 100);
+        JButton exitButton = Gui.buttonMaker(panel, "Quitter", 160);
 
-        loanButton.addActionListener(e -> {
-            Loan.swingMenu();
-        });
+        loanButton.addActionListener(e -> LoanSwing.swingMenu());
+        subscriberButton.addActionListener(e -> SubscriberSwing.swingMenu());
+        bookButton.addActionListener(e -> BookSwing.swingMenu());
+        exitButton.addActionListener(e -> System.exit(0));
+
 
     }
 
@@ -45,7 +59,7 @@ public class MainApp {
         }catch(Exception e){
             System.err.println("Erreur dans le programme d'initialisation: " + e.getMessage());
             System.exit(1);
-        };
+        }
 
         while(start) {
             Display.menu();
@@ -80,7 +94,7 @@ public class MainApp {
                 "Duboncoin",
                 "JeDub");
 
-        new Book("1984", "George Orwell", "978-2070368226", 0);
+        new Book("1984", "George Orwell", "978-2070368226", 1);
         new Book("Le Petit Prince", "Antoine de Saint-Exupéry", "978-2070612758", 10);
         new Book("Sapiens : Une brève histoire de l'humanité", "Yuval Noah Harari", "978-2226391022", 3);
         new Book("Orgueil et Préjugés", "Jane Austen", "978-2070400237", 7);
@@ -123,6 +137,8 @@ public class MainApp {
         new Subscriber("Alice", "Gauthier", "alice.gauthier@mistral.com");
         new Subscriber("Maxime", "Chevalier", "maxime.chevalier@mistral.com");
         new Subscriber("Jeanne", "Perrin", "jeanne.perrin@mistral.com");
+
+        new Loan("test@test.fr","1984");
 
     }
 

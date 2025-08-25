@@ -1,5 +1,6 @@
-package training.afpa.vue;
+package training.afpa.vue.terminal;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class UserInput {
@@ -23,7 +24,7 @@ public class UserInput {
                 break;
             }
         }
-        return userText;
+        return userText.trim();
     }
 
     /**
@@ -34,13 +35,22 @@ public class UserInput {
         Boolean startIn = true;
         int userInt = 0;
         while(startIn){
-            userInt = in.nextInt();
-            in.nextLine();
-            if(userInt < 0){
-                Display.error("La quatité ne peut être inférieur à zéro.");
-                startIn = true;
-            }else{
+            try {
+                userInt = in.nextInt();
+
+                if (userInt < 0) {
+                    Display.error("La quatité ne peut être inférieur à zéro.");
+                    startIn = true;
+                } else {
+                    break;
+                }
+            }
+            catch (InputMismatchException e) {
+                Display.error("saisie invalide");
                 break;
+            }
+            finally {
+                in.nextLine();
             }
         }
         return userInt;
@@ -63,7 +73,7 @@ public class UserInput {
                 break;
             }
         }
-        return emailInput;
+        return emailInput.trim();
     }
 
     /**

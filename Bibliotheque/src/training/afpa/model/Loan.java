@@ -1,10 +1,8 @@
 package training.afpa.model;
 
-import training.afpa.vue.Display;
-import training.afpa.vue.Gui;
-import training.afpa.vue.UserInput;
+import training.afpa.vue.terminal.Display;
+import training.afpa.vue.terminal.UserInput;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -131,6 +129,14 @@ public class Loan {
                 loanFound = loan;
             }
         }
+        try {
+            if (loanFound == null) {
+                throw new NullPointerException("Il n'y a pas de pret qui correspond à cette requete.");
+            }
+        }
+        catch(NullPointerException e){
+            Display.error(e.getMessage());
+        }
         return loanFound;
     }
 
@@ -180,35 +186,39 @@ public class Loan {
      * RETOUR DE PRET
      */
     public static void returnLoan(){
-        Loan returnLoan = Loan.searchLoanBySubscriberEmail();
-        loansList.remove(returnLoan);
-        returnLoan.getBook().setQuantity(returnLoan.getBook().getQuantity() + 1);
-        Display.print(returnLoan.toString());
-        Display.print("Retourné avec succès.");
+        Loan returnLoan = null;
+        try {
+            returnLoan = Loan.searchLoanBySubscriberEmail();
+            loansList.remove(returnLoan);
+            returnLoan.getBook().setQuantity(returnLoan.getBook().getQuantity() + 1);
+            Display.print(returnLoan.toString());
+            Display.print("Retourné avec succès.");
+        }
+        catch(NullPointerException e){
+            Display.error(e.getMessage());
+        }
+
     }
 
     /**
-     * MODIFICATION DE PRET
+     * MODIFICATION DATE DE RETOUR DU PRET
      */
     public static void modifyLoanReturnDate() throws Exception {
-        Loan loanToModify = Loan.searchLoanBySubscriberEmail();
-        Display.print(loanToModify.toString());
-        Display.print("Saisissez le nombre de jour de prologation: ");
-        int dayToAdd = UserInput.userInputInt();
-        loanToModify.setReturnDate(loanToModify.getReturnDate().plusDays(dayToAdd));
-        Display.print(loanToModify.toString());
-    }
+        Loan loanToModify = null;
+        try{
+            loanToModify = Loan.searchLoanBySubscriberEmail();
+            Display.print(loanToModify.toString());
+            Display.print("Saisissez le nombre de jour de prologation: ");
+            int dayToAdd = UserInput.userInputInt();
+            loanToModify.setReturnDate(loanToModify.getReturnDate().plusDays(dayToAdd));
+            Display.print(loanToModify.toString());
 
-    public static void swingMenu() {
-        JFrame frame = Gui.setFrame(300,300,700,500);
-        JPanel panel = Gui.setPanel(frame);
-
-        JLabel title = Gui.labelMaker(panel,"Menu Pret",10,10);
-        JButton createLoanButton = Gui.buttonMaker(panel, "Nouveau pret", 40);
-        JButton returnLoanButton = Gui.buttonMaker(panel, "Retour pret", 70);
-        JButton readLoanButton = Gui.buttonMaker(panel, "Liste prets", 100);
-        JButton modifyLoanButton = Gui.buttonMaker(panel, "Modifer date de retour", 130);
-
+        }
+        catch(NullPointerException e){
+            Display.error(e.getMessage());
+        }
 
     }
+
+
 }

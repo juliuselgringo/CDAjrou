@@ -1,4 +1,4 @@
-package training.afpa.vue;
+package training.afpa.vue.terminal;
 
 public class Display {
 

@@ -64,10 +64,4 @@ class BookTest {
         assertInstanceOf(Book.class, book1.searchBookByTitle("Book1"));
     }
 
-    @ParameterizedTest(name="{0} la methode leve bien l exception.")
-    @ValueSource(strings={"book"})
-    public void searchBookByTitle_InvalidInput(String  title) {
-        assertThrows(NullPointerException.class, () -> Book.searchBookByTitle(title));
-    }
-
 }

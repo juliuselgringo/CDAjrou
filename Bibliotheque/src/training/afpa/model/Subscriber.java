@@ -1,7 +1,7 @@
 package training.afpa.model;
 
-import training.afpa.vue.Display;
-import training.afpa.vue.UserInput;
+import training.afpa.vue.terminal.Display;
+import training.afpa.vue.terminal.UserInput;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +14,7 @@ public class Subscriber extends Person {
     private String lastName;
     private String email;
     private String subDate;
-    private String REGEX = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
+    private final String REGEX = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
     public static ArrayList<Subscriber> subscribersList = new ArrayList<>();
 
     /**
@@ -84,14 +84,7 @@ public class Subscriber extends Person {
                 subscriberFound =  subscriber;
             }
         }
-        try {
-            if (subscriberFound == null) {
-                throw new NullPointerException("Subscriber not found");
-            }
-        }
-        catch (NullPointerException e) {
-            Display.error("L'email de l'abonné n'a pas été trouvé dans le système." + e.getMessage());
-        }
+
         return subscriberFound;
     }
 
@@ -162,6 +155,9 @@ public class Subscriber extends Person {
         }
     }
 
+    /**
+     * MODIFIER NOM DE FAMILLE ABONNE
+     */
     public static void modifySubscriberLastName(){
         try {
             Display.print("Saisissez l'email de l'utilisateur: ");
@@ -179,6 +175,9 @@ public class Subscriber extends Person {
         }
     }
 
+    /**
+     * MODIFIER EMAIL SUBSCRIBER
+     */
     public static void modifySubscriberEmail(){
         try {
             Display.print("Saisissez l'email de l'utilisateur: ");
@@ -195,5 +194,7 @@ public class Subscriber extends Person {
             Display.error("L'utilisateur n'as pas été touvé dans le système. " + e.getMessage());
         }
     }
+
+
 
 }

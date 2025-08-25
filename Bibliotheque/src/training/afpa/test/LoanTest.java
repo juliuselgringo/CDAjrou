@@ -6,7 +6,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import training.afpa.model.Book;
 import training.afpa.model.Loan;
 import training.afpa.model.Subscriber;
-import training.afpa.vue.Display;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
