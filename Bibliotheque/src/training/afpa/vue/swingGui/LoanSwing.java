@@ -1,11 +1,16 @@
 package training.afpa.vue.swingGui;
 
 import training.afpa.model.Loan;
+import training.afpa.vue.terminal.Display;
 
 import javax.swing.*;
+import java.awt.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class LoanSwing {
+
+    private static final String[] tableHeaders = {"Date du pret","Date de retour","Email abonne","Titre Livre"};
 
     public static String[][] createLoansMatrice(){
         String[][] loansMatrice = new String[Loan.loansList.size()][4];
@@ -30,8 +35,6 @@ public class LoanSwing {
         JButton returnLoanButton = Gui.buttonMaker(panel, "Retour pret", 70);
         JButton modifyLoanButton = Gui.buttonMaker(panel, "Modifer date de retour", 100);
 
-        String[] tableHeaders = {"Date du pret", "Date de retour", "Livre emprunté", "Email emprunteur"};
-
         Gui.tableMaker(panel,createLoansMatrice(),tableHeaders,500,10,700,900);
         JButton refreshButton = Gui.buttonMaker(panel, "Raffraichir",930);
 
@@ -44,41 +47,168 @@ public class LoanSwing {
         returnLoanButton.addActionListener(e -> returnLoan());
         modifyLoanButton.addActionListener(e -> modifyLoan());
 
+        JButton backButton = Gui.buttonMaker(panel,"Retour",160);
+        backButton.addActionListener(e -> frame.dispose());
     }
 
     public static void createLoan() {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
-        Gui.labelMaker(panel,"Saisissez l'email de l'emprunteur: ",10,10);
-        JTextField emailField = Gui.textFieldMaker(panel,10,40);
+        String[] subscribersEmailList = SubscriberSwing.createSubscribersEmailList();
+        String[] booksTitleList = BookSwing.createBookTitleList();
 
-        Gui.labelMaker(panel,"Saisissez le titre du livre: ",10,70);
-        JTextField titleField = Gui.textFieldMaker(panel,10,100);
+        Gui.labelMaker(panel,"Selectionner l'email de l'abonne: ",10,10);
+        JComboBox<String> subscriberEmailBox = Gui.comboBoxMaker(panel, subscribersEmailList,10,40);
+        Gui.labelMaker(panel,"Selectionner le titre du livre: ",10,70);
+        JComboBox<String> bookTitleBox = Gui.comboBoxMaker(panel, booksTitleList,10,100);
 
-        JButton createBtn = Gui.buttonMaker(panel,"Enregistrer",130);
+        subscriberEmailBox.addActionListener(e -> {
+            String subscriberEmail = subscriberEmailBox.getSelectedItem().toString();
 
-        createBtn.addActionListener(e -> {
-            String loanerEmail = emailField.getText();
-            String bookTitle = titleField.getText();
-            try{
-                Loan newLoan = new Loan(loanerEmail.trim(), bookTitle.trim());
-                JOptionPane.showMessageDialog(null,
-                        "Le pret a bien été enregistré :" + newLoan,
-                        "Information",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }catch(NullPointerException err){
-                JOptionPane.showMessageDialog(null,
-                        "La saisie du livre ou de l'abonné est invalide." + err.getMessage(),
-                        "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
-            }
+            bookTitleBox.addActionListener(ev -> {
+                String bookTitle = bookTitleBox.getSelectedItem().toString();
+
+                JButton createBtn = Gui.buttonMaker(panel,"Enregistrer",130);
+
+                createBtn.addActionListener(eve -> {
+                    try{
+                        Loan newLoan = new Loan(subscriberEmail, bookTitle);
+                        JOptionPane.showMessageDialog(null,
+                                "Le pret a bien été enregistré :" + newLoan,
+                                "Information",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }catch(NullPointerException err){
+                        JOptionPane.showMessageDialog(null,
+                                "La saisie du livre ou de l'abonné est invalide." + err.getMessage(),
+                                "Erreur",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+            });
         });
 
+        JButton backButton = Gui.buttonMaker(panel,"Retour",190);
+        backButton.addActionListener(e -> frame.dispose());
 
     }
 
-    public static void returnLoan() {}
+    public static void returnLoan() {
+        JFrame frame = Gui.setFrame();
+        JPanel panel = Gui.setPanel(frame);
 
-    public static void modifyLoan() {}
+        JTextField subscriberEmailField = Gui.textFieldMaker(panel,10,10);
+        JButton searchButton = Gui.buttonMaker(panel,"Rechercher",40);
+
+        ArrayList<Loan> subscribersLoan =  new ArrayList<>();
+
+        searchButton.addActionListener(e ->{
+            for (Loan loan : Loan.loansList) {
+                if (loan.getSubscriber().getEmail().equals(subscriberEmailField.getText())) {
+                    subscribersLoan.add(loan);
+                }
+            }
+
+            JComboBox<Loan> loanBox = Gui.comboBoxMaker(panel, 10,100);
+            for (Loan loan : subscribersLoan){
+                loanBox.addItem(loan);
+            }
+
+            loanBox.setRenderer(new DefaultListCellRenderer() {
+                public Component getListCellRendererComponent(
+                        JList<?> list, Loan value, int index,
+                        boolean isSelected, boolean cellHasFocus){
+                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    if(value instanceof Loan){
+                        Loan l = value;
+                        setText(l.getBook() + " / " + l.getSubscriber());
+                    }
+                    return this;
+                }
+            });
+
+            loanBox.addActionListener(e1 -> {
+                String loanReturn = loanBox.getSelectedItem().toString();
+                Display.print(loanReturn);
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Etes vous sur de vouloir valider le retour :" + loanReturn,
+                        "Confirmation",
+                        JOptionPane.YES_NO_OPTION);
+                if(response == JOptionPane.YES_OPTION){
+                    Loan.loansList.remove(loanBox.getSelectedIndex());
+                    JOptionPane.showMessageDialog(panel, "Le retour du pret a bien été enregistré.",
+                            "Information", JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
+                }else{
+                    frame.dispose();
+                    returnLoan();
+                }
+            });
+
+        });
+
+        JButton backButton = Gui.buttonMaker(panel,"Retour",190);
+        backButton.addActionListener(e -> frame.dispose());
+    }
+
+    public static void modifyLoan() {
+        JFrame frame = Gui.setFrame();
+        JPanel panel = Gui.setPanel(frame);
+
+        JTextField subscriberEmailField = Gui.textFieldMaker(panel,10,10);
+        JButton searchButton = Gui.buttonMaker(panel,"Rechercher",40);
+
+        ArrayList<Loan> subscribersLoan =  new ArrayList<>();
+
+        searchButton.addActionListener(e ->{
+            for (Loan loan : Loan.loansList) {
+                if (loan.getSubscriber().getEmail().equals(subscriberEmailField.getText())) {
+                    subscribersLoan.add(loan);
+                }
+            }
+
+            JComboBox<Loan> loanBox = Gui.comboBoxMaker(panel, 10,100);
+            for (Loan loan : subscribersLoan){
+                loanBox.addItem(loan);
+            }
+
+            loanBox.setRenderer(new DefaultListCellRenderer() {
+                public Component getListCellRendererComponent(
+                        JList<?> list, Loan value, int index,
+                        boolean isSelected, boolean cellHasFocus){
+                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    if(value instanceof Loan){
+                        Loan l = value;
+                        setText(l.getBook() + " / " + l.getSubscriber());
+                    }
+                    return this;
+                }
+            });
+
+            loanBox.addActionListener(e1 -> {
+                try {
+                    int addDaysLoanReturnDate = Integer.parseInt(JOptionPane.showInputDialog(panel,
+                            "Saisissez le nombre de jour de prologation du pret:"));
+                    if (addDaysLoanReturnDate > 0) {
+                        Loan loanToModify = (Loan)loanBox.getSelectedItem();
+                        try {
+                            loanToModify.setReturnDate(loanToModify.getReturnDate().plusDays(addDaysLoanReturnDate));
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        JOptionPane.showMessageDialog(panel, loanToModify, "Information", JOptionPane.INFORMATION_MESSAGE);
+                    }else {
+                        JOptionPane.showMessageDialog(panel,"Saisie Invalide","Erreur",JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(panel,"Saisie Invalide","Erreur",JOptionPane.ERROR_MESSAGE);
+                }
+
+            });
+
+        });
+
+        JButton backButton = Gui.buttonMaker(panel,"Retour",190);
+        backButton.addActionListener(e -> frame.dispose());
+    }
 }

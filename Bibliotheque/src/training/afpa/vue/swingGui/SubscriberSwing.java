@@ -25,6 +25,16 @@ public class SubscriberSwing {
         return subscribersMatrice;
     }
 
+    public static String[] createSubscribersEmailList(){
+        String[] subscribersEmailList = new String[Subscriber.subscribersList.size()];
+        int i = 0;
+        for (Subscriber subscriber : Subscriber.subscribersList){
+            subscribersEmailList[i] = subscriber.getEmail();
+            i++;
+        }
+        return subscribersEmailList;
+    }
+
     /**
      * MENU SUBSCRIBER SWING
      */

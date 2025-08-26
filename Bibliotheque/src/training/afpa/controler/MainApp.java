@@ -5,8 +5,7 @@ import training.afpa.vue.swingGui.BookSwing;
 import training.afpa.vue.swingGui.Gui;
 import training.afpa.vue.swingGui.LoanSwing;
 import training.afpa.vue.swingGui.SubscriberSwing;
-import training.afpa.vue.terminal.Display;
-import training.afpa.vue.terminal.UserInput;
+import training.afpa.vue.terminal.*;
 
 import javax.swing.*;
 
@@ -71,13 +70,13 @@ public class MainApp {
                     UserInput.in.close();
                     break;
                 case "1":
-                    Loan.loanMenu();
+                    LoanTerminal.loanMenu();
                     break;
                 case "2":
-                    Subscriber.subscriberMenu();
+                    SubscriberTerminal.subscriberMenu();
                     break;
                 case "3":
-                    Book.bookMenu();
+                    BookTerminal.bookMenu();
                     break;
                 default:
                     Display.error("Menu : Saisie invalide");
@@ -139,6 +138,7 @@ public class MainApp {
         new Subscriber("Jeanne", "Perrin", "jeanne.perrin@mistral.com");
 
         new Loan("test@test.fr","1984");
+        new Loan("test@test.fr","L'Alchimiste");
 
     }
 

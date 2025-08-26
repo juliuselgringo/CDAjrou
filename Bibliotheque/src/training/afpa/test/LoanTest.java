@@ -43,8 +43,9 @@ class LoanTest {
     @Test
     public void toString_ValidInputs(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        assertEquals("\nPret{Date du pret: " + LocalDate.now().format(formatter) + ", Date de retour: " +
-                        LocalDate.now().plusDays(7).format(formatter) + ", Titre: Book1, Emprunteur: Adele Boulanger}\n",
+        assertEquals("pret{Date du pret: " + LocalDate.now().format(formatter) + ", Date de retour: " +
+                        LocalDate.now().plusDays(7).format(formatter) +
+                        ", Titre: Book1, Emprunteur: adele.boulanger@afpa.training}\n",
                         loan10.toString());
     }
 

@@ -98,9 +98,8 @@ public class BookSwing {
                         "Ce Livre existe déjà.",
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
-            } else if (newQuantity <= 0) {
-
-            } else{
+            }
+            else{
                 try{
                     Book newBook = new Book(newTitle, newAuthor, newIsbn, newQuantity);
                     JOptionPane.showMessageDialog(null,
@@ -246,7 +245,6 @@ public class BookSwing {
         });
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",100);
-
         backButton.addActionListener(e -> frame.dispose());
     }
 
