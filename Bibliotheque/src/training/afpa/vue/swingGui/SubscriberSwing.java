@@ -109,6 +109,7 @@ public class SubscriberSwing {
                             "Nouvel abonné enregitré: " + newSubscriber,
                             "Information",
                             JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
                 }
                 catch(Exception err){
                     Display.error(err.getMessage());
@@ -133,13 +134,13 @@ public class SubscriberSwing {
         JPanel panel = Gui.setPanel(frame);
 
         try{
-            Gui.labelMaker(panel,"Saisissez l'email de l'abonné à supprimer: ",10,10);
-            JTextField emailField = Gui.textFieldMaker(panel,10,40);
+            String[] subscribersEmailList = SubscriberSwing.createSubscribersEmailList();
+            JComboBox emailBox = Gui.comboBoxMaker(panel, subscribersEmailList,10,10);
 
             JButton deleteBtn = Gui.buttonMaker(panel,"Supprimer",70);
 
             deleteBtn.addActionListener(e -> {
-                String subscriberEmailToRemove = emailField.getText().trim();
+                String subscriberEmailToRemove = (String)emailBox.getSelectedItem();
                 Subscriber subscriberToRemove = Subscriber.searchSubscriberByEmail(subscriberEmailToRemove);
                 if (subscriberToRemove != null) {
                     Subscriber.subscribersList.remove(subscriberToRemove);
@@ -147,6 +148,7 @@ public class SubscriberSwing {
                             "L'abonne a été supprimer avec succes!",
                             "Information",
                             JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
                 } else {
                     JOptionPane.showMessageDialog(null,
                             "L'abonne n'existe pas!",
@@ -176,13 +178,13 @@ public class SubscriberSwing {
         JPanel panel = Gui.setPanel(frame);
 
         try{
-            Gui.labelMaker(panel,"Saisissez l'email de l'abonné à supprimer: ",10,10);
-            JTextField emailField = Gui.textFieldMaker(panel,10,40);
+            String[] subscribersEmailList = SubscriberSwing.createSubscribersEmailList();
+            JComboBox emailBox = Gui.comboBoxMaker(panel, subscribersEmailList,10,10);
 
             JButton modifyBtn = Gui.buttonMaker(panel,"Modifier",70);
 
             modifyBtn.addActionListener(e -> {
-                String subscriberEmailToModify = emailField.getText().trim();
+                String subscriberEmailToModify = (String)emailBox.getSelectedItem();
                 Subscriber subscriberToModify = Subscriber.searchSubscriberByEmail(subscriberEmailToModify);
                 if (subscriberToModify != null) {
                     String newLastName = JOptionPane.showInputDialog(null,
@@ -192,6 +194,7 @@ public class SubscriberSwing {
                             "Le nom de famille a été modifié avec succes!",
                             "Information",
                             JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
                 } else {
                     JOptionPane.showMessageDialog(null,
                             "L'abonne n'existe pas!",
@@ -220,38 +223,39 @@ public class SubscriberSwing {
         JPanel panel = Gui.setPanel(frame);
 
 
-            Gui.labelMaker(panel,"Saisissez l'email de l'abonné à supprimer: ",10,10);
-            JTextField emailField = Gui.textFieldMaker(panel,10,40);
+        String[] subscribersEmailList = SubscriberSwing.createSubscribersEmailList();
+        JComboBox emailBox = Gui.comboBoxMaker(panel, subscribersEmailList,10,10);
 
-            JButton modifyBtn = Gui.buttonMaker(panel,"Modifier",70);
+        JButton modifyBtn = Gui.buttonMaker(panel,"Modifier",70);
 
-            modifyBtn.addActionListener(e -> {
-                String subscriberEmailToModify = emailField.getText().trim();
-                Subscriber subscriberToModify = Subscriber.searchSubscriberByEmail(subscriberEmailToModify);
-                if (subscriberToModify != null) {
-                    String newEmail = JOptionPane.showInputDialog(null,
-                            "Saissez le nouvel email de l'abonné: ");
-                    try{
-                        subscriberToModify.setEmail(newEmail);
-                        JOptionPane.showMessageDialog(null,
-                                "L'email a été modifié avec succes!",
-                                "Information",
-                                JOptionPane.INFORMATION_MESSAGE);
-                    }
-                    catch(Exception err){
-                        Display.error(err.getMessage());
-                        JOptionPane.showMessageDialog(null,
-                                err.getMessage(),
-                                "Erreur",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
+        modifyBtn.addActionListener(e -> {
+            String subscriberEmailToModify = (String)emailBox.getSelectedItem();
+            Subscriber subscriberToModify = Subscriber.searchSubscriberByEmail(subscriberEmailToModify);
+            if (subscriberToModify != null) {
+                String newEmail = JOptionPane.showInputDialog(null,
+                        "Saissez le nouvel email de l'abonné: ");
+                try{
+                    subscriberToModify.setEmail(newEmail);
                     JOptionPane.showMessageDialog(null,
-                            "L'abonne n'existe pas!",
+                            "L'email a été modifié avec succes!",
+                            "Information",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
+                }
+                catch(Exception err){
+                    Display.error(err.getMessage());
+                    JOptionPane.showMessageDialog(null,
+                            err.getMessage(),
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                 }
-            });
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "L'abonne n'existe pas!",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",130);
 

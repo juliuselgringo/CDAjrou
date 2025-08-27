@@ -1,7 +1,6 @@
 package training.afpa.vue.swingGui;
 
 import training.afpa.model.Loan;
-import training.afpa.vue.terminal.Display;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,6 +77,7 @@ public class LoanSwing {
                                 "Le pret a bien été enregistré :" + newLoan,
                                 "Information",
                                 JOptionPane.INFORMATION_MESSAGE);
+                        frame.dispose();
                     }catch(NullPointerException err){
                         JOptionPane.showMessageDialog(null,
                                 "La saisie du livre ou de l'abonné est invalide." + err.getMessage(),
@@ -97,45 +97,33 @@ public class LoanSwing {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
-        JTextField subscriberEmailField = Gui.textFieldMaker(panel,10,10);
+        String[] subscribersEmailList = SubscriberSwing.createSubscribersEmailList();
+        JComboBox emailBox = Gui.comboBoxMaker(panel, subscribersEmailList,10,10);
+
         JButton searchButton = Gui.buttonMaker(panel,"Rechercher",40);
 
         ArrayList<Loan> subscribersLoan =  new ArrayList<>();
 
         searchButton.addActionListener(e ->{
             for (Loan loan : Loan.loansList) {
-                if (loan.getSubscriber().getEmail().equals(subscriberEmailField.getText())) {
+                if (loan.getSubscriber().getEmail().equals(emailBox.getSelectedItem())) {
                     subscribersLoan.add(loan);
                 }
             }
 
-            JComboBox<Loan> loanBox = Gui.comboBoxMaker(panel, 10,100);
+            JComboBox loanBox = Gui.comboBoxMaker(panel, 10,100);
             for (Loan loan : subscribersLoan){
                 loanBox.addItem(loan);
             }
 
-            loanBox.setRenderer(new DefaultListCellRenderer() {
-                public Component getListCellRendererComponent(
-                        JList<?> list, Loan value, int index,
-                        boolean isSelected, boolean cellHasFocus){
-                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                    if(value instanceof Loan){
-                        Loan l = value;
-                        setText(l.getBook() + " / " + l.getSubscriber());
-                    }
-                    return this;
-                }
-            });
-
             loanBox.addActionListener(e1 -> {
-                String loanReturn = loanBox.getSelectedItem().toString();
-                Display.print(loanReturn);
+                Loan loanReturn = (Loan)loanBox.getSelectedItem();
                 int response = JOptionPane.showConfirmDialog(null,
                         "Etes vous sur de vouloir valider le retour :" + loanReturn,
                         "Confirmation",
                         JOptionPane.YES_NO_OPTION);
                 if(response == JOptionPane.YES_OPTION){
-                    Loan.loansList.remove(loanBox.getSelectedIndex());
+                    Loan.loansList.remove(loanReturn);
                     JOptionPane.showMessageDialog(panel, "Le retour du pret a bien été enregistré.",
                             "Information", JOptionPane.INFORMATION_MESSAGE);
                     frame.dispose();
@@ -155,35 +143,24 @@ public class LoanSwing {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
-        JTextField subscriberEmailField = Gui.textFieldMaker(panel,10,10);
+        String[] subscribersEmailList = SubscriberSwing.createSubscribersEmailList();
+        JComboBox emailBox = Gui.comboBoxMaker(panel, subscribersEmailList,10,10);
+
         JButton searchButton = Gui.buttonMaker(panel,"Rechercher",40);
 
         ArrayList<Loan> subscribersLoan =  new ArrayList<>();
 
         searchButton.addActionListener(e ->{
             for (Loan loan : Loan.loansList) {
-                if (loan.getSubscriber().getEmail().equals(subscriberEmailField.getText())) {
+                if (loan.getSubscriber().getEmail().equals(emailBox.getSelectedItem())) {
                     subscribersLoan.add(loan);
                 }
             }
 
-            JComboBox<Loan> loanBox = Gui.comboBoxMaker(panel, 10,100);
+            JComboBox loanBox = Gui.comboBoxMaker(panel, 10,100);
             for (Loan loan : subscribersLoan){
                 loanBox.addItem(loan);
             }
-
-            loanBox.setRenderer(new DefaultListCellRenderer() {
-                public Component getListCellRendererComponent(
-                        JList<?> list, Loan value, int index,
-                        boolean isSelected, boolean cellHasFocus){
-                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                    if(value instanceof Loan){
-                        Loan l = value;
-                        setText(l.getBook() + " / " + l.getSubscriber());
-                    }
-                    return this;
-                }
-            });
 
             loanBox.addActionListener(e1 -> {
                 try {
@@ -197,6 +174,7 @@ public class LoanSwing {
                             throw new RuntimeException(ex);
                         }
                         JOptionPane.showMessageDialog(panel, loanToModify, "Information", JOptionPane.INFORMATION_MESSAGE);
+                        frame.dispose();
                     }else {
                         JOptionPane.showMessageDialog(panel,"Saisie Invalide","Erreur",JOptionPane.ERROR_MESSAGE);
                     }

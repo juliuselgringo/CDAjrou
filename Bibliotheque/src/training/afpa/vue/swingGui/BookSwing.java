@@ -106,6 +106,7 @@ public class BookSwing {
                             "Nouveau livre enregitré: " + newBook,
                             "Information",
                             JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
                 }
                 catch(Exception err){
                     Display.error(err.getMessage());
