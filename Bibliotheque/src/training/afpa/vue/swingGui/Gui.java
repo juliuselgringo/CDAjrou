@@ -93,7 +93,6 @@ public class Gui {
         JButton button = new JButton(sentence);
         button.setBounds(10, positionY, 300, 20);
         panel.add(button);
-
         return button;
     }
 
