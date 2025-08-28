@@ -1,6 +1,7 @@
 package training.afpa.controler;
 
 import training.afpa.model.*;
+import training.afpa.vue.SwingDesigner.MenuPrincipal;
 import training.afpa.vue.swingGui.BookSwing;
 import training.afpa.vue.swingGui.Gui;
 import training.afpa.vue.swingGui.LoanSwing;
@@ -13,8 +14,19 @@ public class MainApp {
 
     public static void main(String[] args) {
         //MainApp.terminalProgram();
-        MainApp.swingProgram();
+        //MainApp.swingProgram();
+        MainApp.swingDesignerProgram();
 
+    }
+
+    public static void swingDesignerProgram(){
+        try{
+            MainApp.libraryCreation();
+        }catch(Exception e){
+            System.err.println("Erreur dans le programme d'initialisation: " + e.getMessage());
+            System.exit(1);
+        }
+        MenuPrincipal mainMenu = new MenuPrincipal();
     }
 
     /**

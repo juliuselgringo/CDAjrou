@@ -6,11 +6,14 @@ import training.afpa.vue.terminal.Display;
 import javax.swing.*;
 
 public class SubscriberSwing {
+
+    private static String[] tableHeaders = {"prénom","nom","email","date d'inscription"};
+
     /**
      * CREER UNE MATRICE SUBSCRIBER
      * @return String[][]
      */
-    private static String[][] createSubscribersMatrice(){
+    public static String[][] createSubscribersMatrice(){
         String[][] subscribersMatrice = new String[Subscriber.subscribersList.size()][4];
         int i = 0;
         for(Subscriber subscriber : Subscriber.subscribersList){
@@ -48,7 +51,7 @@ public class SubscriberSwing {
         JButton modifySubscriberLastNameButton = Gui.buttonMaker(panel, "Modifer le nom d'un Abonné", 100);
         JButton modifySubscriberEmailButton = Gui.buttonMaker(panel, "Modifer l'email d'un Abonné", 130);
 
-        String[] tableHeaders = {"prénom","nom","email","date d'inscription"};
+
 
         Gui.tableMaker(panel,createSubscribersMatrice(),tableHeaders,500,10,700,900);
         JButton refreshButton = Gui.buttonMaker(panel, "Raffraichir",930);
@@ -78,7 +81,10 @@ public class SubscriberSwing {
      * CREER ABONNE SWING
      */
     public static void createSubscriber(){
-        JFrame frame = Gui.setFrame();
+        JFrame frame = new JFrame();
+        frame.setSize(800,600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         JPanel panel = Gui.setPanel(frame);
 
 
@@ -143,12 +149,20 @@ public class SubscriberSwing {
                 String subscriberEmailToRemove = (String)emailBox.getSelectedItem();
                 Subscriber subscriberToRemove = Subscriber.searchSubscriberByEmail(subscriberEmailToRemove);
                 if (subscriberToRemove != null) {
-                    Subscriber.subscribersList.remove(subscriberToRemove);
-                    JOptionPane.showMessageDialog(null,
-                            "L'abonne a été supprimer avec succes!",
-                            "Information",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    frame.dispose();
+                    int response = JOptionPane.showConfirmDialog(null,
+                            "Etes-vous sur de vouloir supprimer cet abonné?",
+                            "Confirmation", JOptionPane.YES_NO_OPTION);
+                    if (response == JOptionPane.YES_OPTION) {
+                        Subscriber.subscribersList.remove(subscriberToRemove);
+                        JOptionPane.showMessageDialog(null,
+                                "L'abonne a été supprimer avec succes!",
+                                "Information",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        frame.dispose();
+                    }else {
+                        frame.dispose();
+                    }
+
                 } else {
                     JOptionPane.showMessageDialog(null,
                             "L'abonne n'existe pas!",
@@ -174,7 +188,10 @@ public class SubscriberSwing {
     }
 
     public static void modifySubscriberLastName(){
-        JFrame frame = Gui.setFrame();
+        JFrame frame = new JFrame();
+        frame.setSize(800,600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         JPanel panel = Gui.setPanel(frame);
 
         try{
@@ -219,7 +236,10 @@ public class SubscriberSwing {
     }
 
     public static void modifySubscriberEmail(){
-        JFrame frame = Gui.setFrame();
+        JFrame frame = new JFrame();
+        frame.setSize(800,600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         JPanel panel = Gui.setPanel(frame);
 
 

@@ -35,10 +35,10 @@ public class BookSwing {
         JPanel panel = Gui.setPanel(frame);
 
         Gui.labelMaker(panel,"Menu Livre",10,10);
-        JButton createSubscriberButton = Gui.buttonMaker(panel, "Nouveau Livre", 40);
-        JButton deleteSubscriberButton = Gui.buttonMaker(panel, "Supprimer un Livre", 70);
-        JButton modifySubscriberLastNameButton = Gui.buttonMaker(panel, "Modifer la quantité d'un livre", 100);
-        JButton modifySubscriberEmailButton = Gui.buttonMaker(panel, "Consulter un livre", 130);
+        JButton createBookButton = Gui.buttonMaker(panel, "Nouveau Livre", 40);
+        JButton deleteBookButton = Gui.buttonMaker(panel, "Supprimer un Livre", 70);
+        JButton modifyBookQuantityButton = Gui.buttonMaker(panel, "Modifer la quantité d'un livre", 100);
+        JButton searchBookByTitleButton = Gui.buttonMaker(panel, "Consulter un livre", 130);
 
         Gui.tableMaker(panel,createBooksMatrice(),tableHeaders,500,10,700,900);
         JButton refreshButton = Gui.buttonMaker(panel, "Raffraichir",930);
@@ -48,13 +48,13 @@ public class BookSwing {
             BookSwing.swingMenu();
         });
 
-        createSubscriberButton.addActionListener(e -> createBook());
+        createBookButton.addActionListener(e -> createBook());
 
-        deleteSubscriberButton.addActionListener(e -> deleteBook());
+        deleteBookButton.addActionListener(e -> deleteBook());
 
-        modifySubscriberLastNameButton.addActionListener(e -> modifyBookQuantity());
+        modifyBookQuantityButton.addActionListener(e -> modifyBookQuantity());
 
-        modifySubscriberEmailButton.addActionListener(e -> searchABookByTitle());
+        searchBookByTitleButton.addActionListener(e -> searchABookByTitle());
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",190);
 
@@ -65,7 +65,10 @@ public class BookSwing {
      * CREER UN NOUVEAU LIVRE
      */
     public static void createBook() {
-        JFrame frame = Gui.setFrame();
+        JFrame frame = new JFrame();
+        frame.setSize(800,600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         JPanel panel = Gui.setPanel(frame);
 
 
@@ -77,10 +80,7 @@ public class BookSwing {
         JTextField newIsbnField = Gui.textFieldMaker(panel,10,160);
         Gui.labelMaker(panel,"Saisissez la quatité du livre: ",10,190);
         JTextField newQuantityField = Gui.textFieldMaker(panel,10,220);
-
-
         JButton saveBtn = Gui.buttonMaker(panel,"Enregistrer",250);
-
         saveBtn.addActionListener(e -> {
             String newTitle = newTitleField.getText().trim();
             String newAuthor = newAuthorField.getText().trim();
@@ -165,8 +165,12 @@ public class BookSwing {
      * MODIFIER LA QUANTITE D UN LIVRE
      */
     public static void modifyBookQuantity() {
-        JFrame frame = Gui.setFrame();
+        JFrame frame = new JFrame();
+        frame.setSize(800,600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         JPanel panel = Gui.setPanel(frame);
+
         String[] bookTitleList = new String[Book.booksList.size()];
         int i = 0;
         for(Book book : Book.booksList){
@@ -224,7 +228,10 @@ public class BookSwing {
      * CHERCHER UN LIVRE PAR TITRE
      */
     public static void searchABookByTitle() {
-        JFrame frame = Gui.setFrame();
+        JFrame frame = new JFrame();
+        frame.setSize(400,300);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         JPanel panel = Gui.setPanel(frame);
 
         String[] bookTitleList = createBookTitleList();
@@ -232,13 +239,18 @@ public class BookSwing {
         JComboBox<String> bookBox = Gui.comboBoxMaker(panel,bookTitleList,10,40);
 
         bookBox.addActionListener(e -> {
-            JFrame frame2 = Gui.setFrame();
+            frame.dispose();
+            JFrame frame2 = new JFrame();
+            frame2.setSize(1500,500);
+            frame2.setLocationRelativeTo(null);
+            frame2.setVisible(true);
             JPanel panel2 = Gui.setPanel(frame2);
+
             String titleToModify = bookBox.getSelectedItem().toString();
             Book searchedBook = Book.searchBookByTitle(titleToModify);
             String[][] searchedBookMatrice = {{titleToModify,searchedBook.getAuthor(), searchedBook.getIsbn(),
                     searchedBook.getIsbn(), searchedBook.getQuantity()+""}};
-            Gui.tableMaker(panel2, searchedBookMatrice,tableHeaders,500,10,700,900);
+            Gui.tableMaker(panel2, searchedBookMatrice,tableHeaders,500,10,700,300);
 
             JButton backButton = Gui.buttonMaker(panel2,"Retour",10);
 

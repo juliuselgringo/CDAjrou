@@ -28,7 +28,7 @@ public class Gui {
      */
     public static JPanel setPanel(JFrame frame){
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(40, 42, 54));
+        panel.setBackground(new Color(119,103,176));
         frame.add(panel);
         panel.setLayout(null);
 
