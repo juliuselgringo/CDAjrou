@@ -8,8 +8,8 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="8e09" binding="contentPane" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="10" bottom="10" right="10"/>
+      <grid id="8e09" binding="contentPane" layout-manager="GridLayoutManager" row-count="5" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+        <margin top="0" left="20" bottom="100" right="20"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -21,10 +21,10 @@
         </properties>
         <border type="none"/>
         <children>
-          <grid id="3f4fc" binding="centralPane" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="3f4fc" binding="centralPane" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-8951888"/>
@@ -62,31 +62,33 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="5bc84" class="javax.swing.JButton" binding="button1" default-binding="true">
+                  <component id="5bc84" class="javax.swing.JButton" binding="createButton">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-6512737"/>
-                      <text value="Button"/>
+                      <icon value="training/afpa/vue/icones/ajouter-un-bouton.png"/>
+                      <text value="Nouveau pret"/>
                     </properties>
                   </component>
-                  <component id="4dbf" class="javax.swing.JButton" binding="button2" default-binding="true">
+                  <component id="4dbf" class="javax.swing.JButton" binding="deleteButton">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-6512737"/>
-                      <text value="Button"/>
+                      <icon value="training/afpa/vue/icones/bouton-supprimer.png"/>
+                      <text value="Retour de pret"/>
                     </properties>
                   </component>
-                  <component id="72e58" class="javax.swing.JButton" binding="button3" default-binding="true">
+                  <component id="72e58" class="javax.swing.JButton" binding="modifyButton">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-6512737"/>
-                      <text value="Button"/>
+                      <text value="Modifier la date de retour"/>
                     </properties>
                   </component>
                   <component id="27a0e" class="javax.swing.JButton" binding="backButton">
@@ -101,12 +103,22 @@
                   </component>
                 </children>
               </grid>
+              <component id="4796e" class="javax.swing.JButton" binding="refreshButton">
+                <constraints>
+                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-526086"/>
+                  <icon value="training/afpa/vue/icones/rafraichir.png"/>
+                  <text value="METTRE A JOUR LE TABLEAU"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="480e7" binding="titlePane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="117" height="56"/>
               </grid>
             </constraints>
@@ -131,10 +143,10 @@
               </component>
             </children>
           </grid>
-          <grid id="1077b" binding="footerPane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="1077b" binding="footerPane" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="-1" height="1"/>
               </grid>
             </constraints>
@@ -142,8 +154,53 @@
               <background color="-8951888"/>
             </properties>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="3aa70" class="javax.swing.JLabel" binding="labelEmailBox">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Sélectionner l'email de l'abonné pour le retour de pret"/>
+                </properties>
+              </component>
+              <component id="403bf" class="javax.swing.JComboBox" binding="emailBox">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <editable value="false"/>
+                  <enabled value="true"/>
+                  <model/>
+                </properties>
+              </component>
+            </children>
           </grid>
+          <component id="52f78" class="javax.swing.JComboBox" binding="loanBox">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <enabled value="true"/>
+              <model/>
+            </properties>
+          </component>
+          <component id="aaf6f" class="javax.swing.JLabel" binding="labelLoanBox">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Sélectionner le pret à supprimer "/>
+            </properties>
+          </component>
+          <component id="61046" class="javax.swing.JButton" binding="delButton">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enregistrer le retour"/>
+            </properties>
+          </component>
         </children>
       </grid>
     </children>

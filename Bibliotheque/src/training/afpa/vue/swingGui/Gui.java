@@ -2,11 +2,11 @@ package training.afpa.vue.swingGui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.function.Function;
 
 public class Gui {
 
     /**
+     * CREER UN FULL SCREEN
      * @return JFrame
      */
     public static JFrame setFrame(){
@@ -20,6 +20,18 @@ public class Gui {
         return frame;
     }
 
+    /**
+     * CREER UN POP UP
+     * @return JFrame
+     */
+    public static JFrame setPopUpFrame(){
+        JFrame frame = new JFrame();
+        frame.setSize(800,600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        return frame;
+    }
 
     /**
      * JPANEL

@@ -165,10 +165,7 @@ public class BookSwing {
      * MODIFIER LA QUANTITE D UN LIVRE
      */
     public static void modifyBookQuantity() {
-        JFrame frame = new JFrame();
-        frame.setSize(800,600);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        JFrame frame = Gui.setPopUpFrame();
         JPanel panel = Gui.setPanel(frame);
 
         String[] bookTitleList = new String[Book.booksList.size()];

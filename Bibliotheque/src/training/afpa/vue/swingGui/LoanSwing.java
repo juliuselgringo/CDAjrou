@@ -51,7 +51,7 @@ public class LoanSwing {
     }
 
     public static void createLoan() {
-        JFrame frame = Gui.setFrame();
+        JFrame frame = Gui.setPopUpFrame();
         JPanel panel = Gui.setPanel(frame);
 
         String[] subscribersEmailList = SubscriberSwing.createSubscribersEmailList();
@@ -140,7 +140,7 @@ public class LoanSwing {
     }
 
     public static void modifyLoan() {
-        JFrame frame = Gui.setFrame();
+        JFrame frame = Gui.setPopUpFrame();
         JPanel panel = Gui.setPanel(frame);
 
         String[] subscribersEmailList = SubscriberSwing.createSubscribersEmailList();
