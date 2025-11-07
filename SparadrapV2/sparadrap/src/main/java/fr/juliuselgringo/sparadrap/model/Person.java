@@ -1,0 +1,112 @@
+package fr.juliuselgringo.sparadrap.model;
+
+import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
+
+/**
+ * représente une personne physique
+ */
+public class Person {
+
+    private String firstName;
+    private String lastName;
+    private Contact contact;
+
+    /**
+     * CONSTURCTOR
+     * @param firstName String
+     * @param lastName String
+     * @param contact Contact
+     * @throws InputException String
+     */
+    public Person(String firstName, String lastName, Contact contact) throws InputException {
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
+        this.contact = contact;
+    }
+
+    /**
+     * CONSTRUCTOR
+     */
+    public Person(){}
+
+    /**
+     * GETTER firstName
+     * @return String
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * SETTER firstName
+     * @param firstName String
+     * @throws InputException String
+     */
+    public void setFirstName(String firstName) throws InputException {
+        final String regexFirstName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?";
+        firstName = firstName.trim();
+        if(firstName == null || firstName.isEmpty()) {
+            throw new InputException("Le prénom ne peut être vide ou null");
+        } else if (!firstName.matches(regexFirstName)) {
+            throw new InputException("Le prénom doit commencer par une majuscule" +
+                    "\nà chaque particule (pour les prénoms composés)" +
+                    "\net ne doit pas avoir d'accent ni trait d'union");
+        }else {
+            this.firstName = firstName;
+        }
+    }
+
+    /**
+     * GETTER lastName
+     * @return String
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * SETTER lastName
+     * @param lastName String
+     * @throws InputException String
+     */
+    public void setLastName(String lastName) throws InputException {
+        final String regexLastName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?";
+        lastName = lastName.trim();
+        if(lastName == null || lastName.isEmpty()) {
+            throw  new InputException("Le nom ne peut être vide ou null");
+        } else if (!lastName.matches(regexLastName)) {
+            throw new InputException("Le nom doit commencer par une majuscule et ne doit pas avoir d'accent ni trait d'union");
+        }else{
+            this.lastName = lastName;
+        }
+    }
+
+    /**
+     * GETTER contact
+     * @return Contact
+     */
+    public Contact getContact() {
+        return this.contact;
+    }
+
+    /**
+     * SETTER contact
+     * @param contact Contact
+     * @throws InputException String
+     */
+    public void setContact(Contact contact) throws InputException {
+        this.contact = contact;
+    }
+
+    /**
+     * TO STRING
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return "Personne{" + "Prénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
+                ", Coordonnées: " + this.getContact() + '}';
+    }
+
+
+}
