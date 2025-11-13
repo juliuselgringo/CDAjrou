@@ -21,7 +21,18 @@ public class Person {
     public Person(String firstName, String lastName, Contact contact) throws InputException {
         this.setFirstName(firstName);
         this.setLastName(lastName);
-        this.contact = contact;
+        this.setContact(contact);
+    }
+
+    /**
+     * 
+     * @param firstName
+     * @param lastName
+     * @throws InputException String
+     */
+    public Person(String firstName, String lastName) throws InputException{
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
     }
 
     /**

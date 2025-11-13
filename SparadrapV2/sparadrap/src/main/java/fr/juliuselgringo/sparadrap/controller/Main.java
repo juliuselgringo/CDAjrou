@@ -1,10 +1,14 @@
 package fr.juliuselgringo.sparadrap.controller;
 
+import fr.juliuselgringo.sparadrap.DB.ConnectionDB;
+import fr.juliuselgringo.sparadrap.DB.ContactCRUD;
+import fr.juliuselgringo.sparadrap.DB.MutualCRUD;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.*;
 import fr.juliuselgringo.sparadrap.view.*;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 /**
  * classe principale qui gère le programme
@@ -23,8 +27,29 @@ public class Main {
      * @throws InputException String
      */
     public static void main(String[] args) throws IOException, InputException {
-        Main.developpmentDataInput();
-        ProgramSwing.generalMenu();
+
+        //Main.developpmentDataInput();
+        //ProgramSwing.generalMenu();
+
+        Main.testDB();
+    }
+
+    private static void testDB() throws InputException{
+
+        Connection con = ConnectionDB.propertiesConnection();
+        System.out.println("AFFICHE TOUT LES CONTACTS: ");
+        System.out.println(ContactCRUD.selectAllContact(con));
+        System.out.println("\nRECHERCHE PAR ID DANS CONTACT: ");
+        System.out.println(ContactCRUD.selectContactById(con, 4));
+        /*
+        System.out.println("\nInsertion d'un nouveau contact: ");
+        Contact contactToInsert = new Contact("69 rue de la pisse chaude", "11000","Carcassonne","06 12 18 11 13","testinsert@test.com");
+        contactCRUD.insertNewContact(con, contactToInsert);
+        */
+        System.out.println("\naffiche toute les mutuelles: ");
+        System.out.println(MutualCRUD.selectAllMutual(con));
+        ConnectionDB.closeConnectionDB(con);
+        
     }
 
     /**

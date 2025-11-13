@@ -15,6 +15,7 @@ import java.util.Comparator;
  */
 public class Customer extends Person {
 
+    private Integer customerId;
     private String socialSecurityId;
     private LocalDate dateOfBirth;
     private Mutual mutual;
@@ -65,11 +66,31 @@ public class Customer extends Person {
     }
 
     /**
+     * constructor
+     * @param firstName
+     * @param lastName
+     * @param socialSecurityId
+     * @throws InputException String
+     */
+    public Customer (String firstName, String lastName, String socialSecurityId) throws InputException{
+        super(firstName, lastName);
+        
+    }
+
+    /**
      * CONSTRUCTOR
      */
     public Customer(){
         super();
         customersList.add(this);
+    }
+
+    /**
+     * getter customerId
+     * @return Integer
+     */
+    public Integer getCustomerId(){
+        return this.customerId;
     }
 
     /**

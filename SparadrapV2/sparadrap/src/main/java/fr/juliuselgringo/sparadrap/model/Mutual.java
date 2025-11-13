@@ -115,7 +115,7 @@ public class Mutual {
         return "\nNom: " + this.getName() +
                 "\n" +
                 this.getContact() +
-                "\nTaux: " + this.getRate();
+                "\nTaux: " + this.getRate() + "\n";
     }
 
     /**

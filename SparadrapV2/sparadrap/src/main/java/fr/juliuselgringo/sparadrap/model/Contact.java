@@ -7,6 +7,7 @@ import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
  */
 public class Contact {
 
+    private Integer contactId;
     private String address;
     private String postalCode;
     private String town;
@@ -43,6 +44,14 @@ public class Contact {
      * CONSTRUCTOR
      */
     public Contact() {}
+
+    /**
+     * getter contactId
+     * @return Integer
+     */
+    public Integer getContactId(){
+        return this.contactId;
+    }
 
     /**
      * GETTER address
@@ -172,7 +181,7 @@ public class Contact {
     public String toString() {
         return "\nContact" +
                 "\nAdresse: " + this.getAddress() +
-                "\n Code postal: " + this.getPostalCode() +
+                "\nCode postal: " + this.getPostalCode() +
                 "\nVille: " + this.getTown() +
                 "\nTéléphone: " + this.getPhone() +
                 "\nEmail: " + this.getEmail();
