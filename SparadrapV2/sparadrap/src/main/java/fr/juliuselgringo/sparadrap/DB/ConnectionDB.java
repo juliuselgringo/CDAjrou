@@ -1,20 +1,19 @@
 package fr.juliuselgringo.sparadrap.DB;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-
-import javax.management.RuntimeErrorException;
+import org.apache.logging.log4j.*;
 
 /**
  * classe permettant de gérer la connexion à mysql
  */
 public class ConnectionDB{
+
+    private static final Logger logger = LogManager.getLogger(MutualCRUD.class);
 
     /**
      * connexion à mysql
@@ -37,6 +36,7 @@ public class ConnectionDB{
 
         }catch(IOException e){
             System.err.printf("Error loading properties file: ", e.getMessage());
+            logger.error("Error loading properties file: ", e.getMessage());
         }
 
         // connexion à la DB
@@ -58,8 +58,10 @@ public class ConnectionDB{
 
         }catch(ClassNotFoundException e){
             System.err.println("Error loading JDBC Driver: " + e.getMessage());
+            logger.error("Error loading JDBC Driver: " + e.getMessage());
         }catch(SQLException e){
             System.err.println("Error connection MySql: " + e.getMessage());
+            logger.error("Error connection MySql: " + e.getMessage());
         }
 
         return connection;
@@ -80,7 +82,8 @@ public class ConnectionDB{
 
             }catch(SQLException e){
 
-            System.err.println("Error closing connection");
+                System.err.println("Error closing connection");
+                logger.error("Error closing connection" + e.getMessage());
 
             }
         }

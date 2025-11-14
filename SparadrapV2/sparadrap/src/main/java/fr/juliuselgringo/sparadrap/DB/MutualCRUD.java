@@ -3,12 +3,15 @@ package fr.juliuselgringo.sparadrap.DB;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.*;
 
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Contact;
 import fr.juliuselgringo.sparadrap.model.Mutual;
 
 public class MutualCRUD {
+
+    private static final Logger logger = LogManager.getLogger(MutualCRUD.class);
     
     public static List<Mutual> selectAllMutual(Connection con) throws InputException{
         
@@ -39,6 +42,7 @@ public class MutualCRUD {
 
         }catch(SQLException e){
             System.out.println("Error selecting all mutual: " + e.getMessage());
+            logger.error("Error selecting all mutual: " + e);
         }
         
         

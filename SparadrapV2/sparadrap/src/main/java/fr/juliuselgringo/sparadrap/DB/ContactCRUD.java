@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.*;
+
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Contact;
 
@@ -12,6 +14,8 @@ import fr.juliuselgringo.sparadrap.model.Contact;
  */
 public class ContactCRUD {
     
+    private static final Logger logger = LogManager.getLogger(ContactCRUD.class);
+
     /**
      * select * from contact
      * @param con Connection
@@ -41,8 +45,10 @@ public class ContactCRUD {
                 contactsList.add(contact);
             }
             
-        }catch(SQLException e){
-            throw new RuntimeException(e);
+        } catch(SQLException e) {
+            System.out.println("Erreur lors de la sélection des contacts: " + e.getMessage());
+            logger.error("Erreur lors de la sélection des contacts: " + e.getMessage());
+            return new ArrayList<>();  // Liste vide au lieu de crash
         }
 
         return contactsList;
@@ -70,6 +76,7 @@ public class ContactCRUD {
             
             while(res.next()){
                 
+                contact.setContactId(contactId);
                 contact.setAddress(res.getString("address"));
                 contact.setPostalCode(res.getString("postal_code"));
                 contact.setTown(res.getString("town"));
@@ -81,6 +88,7 @@ public class ContactCRUD {
 
         }catch(SQLException e){
             System.out.println("Error getting contact by Id: " + contactId + " / " + e.getMessage());
+            logger.error("Error getting contact by Id: " + contactId + " / " + e.getMessage());
         }
 
         return contact;
@@ -90,8 +98,9 @@ public class ContactCRUD {
      * insert into contact
      * @param con Connection
      * @param contact Contact
+     * @return Integer
      */
-    public static void insertNewContact(Connection con, Contact contact){
+    public static Integer insertNewContact(Connection con, Contact contact){
 
         // id créé par mysql (auto_increment)
         Integer newContactId = 0;
@@ -121,9 +130,68 @@ public class ContactCRUD {
             }
         }catch(SQLException e){
             System.err.println("Error inserting contact: " + e.getMessage());
+            logger.error("Error inserting contact: " + e.getMessage());
+        }
+
+        return newContactId;
+    }
+
+
+    /**
+     * update contact
+     * @param con Connection
+     * @param contact Contact
+     */
+    public static void updateContact(Connection con, Contact contact){
+
+        String updateContactReq = "UPDATE contact SET address=?, postal_code=?, town=?, phone=?, email=? WHERE contact_id=?";
+
+        Integer contactId = contact.getContactId();
+
+        try{
+            PreparedStatement pstmt = con.prepareStatement(updateContactReq);
+
+            pstmt.setString(1, contact.getAddress());
+            pstmt.setString(2, contact.getPostalCode());
+            pstmt.setString(3, contact.getTown());
+            pstmt.setString(4, contact.getPhone());
+            pstmt.setString(5, contact.getEmail());
+
+            pstmt.setInt(6, contactId);
+
+            pstmt.executeUpdate();
+            System.out.println("Update success for contactId: " + contactId);
+        }catch(SQLException e){
+            System.err.println("Error udating contact: " + e);
+            logger.error("Error udating contact: " + e);
+        }
+    }
+    
+
+    /**
+     * delete contact
+     * @param con Connection
+     * @param contact Contact
+     */
+    public static void deleteContact(Connection con, Contact contact){
+
+        String deleteContactReq = "DELETE FROM contact WHERE contact_id=?";
+
+        Integer contactId = contact.getContactId();
+
+        try{
+            PreparedStatement pstmt = con.prepareStatement(deleteContactReq);
+
+            pstmt.setInt(1, contactId);
+
+            pstmt.executeUpdate();
+            System.out.println("Delete success for contactId: " + contactId);
+        
+        }catch(SQLException e){
+            System.err.println("Error Delete contact: " + e);
+            logger.error("Error Delete contact: " + e);
         }
 
     }
-    
 
 }

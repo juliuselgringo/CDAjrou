@@ -53,6 +53,10 @@ public class Contact {
         return this.contactId;
     }
 
+    public void setContactId(Integer contactId){
+        this.contactId = contactId;
+    }
+
     /**
      * GETTER address
      * @return String
