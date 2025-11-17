@@ -28,8 +28,8 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, InputException {
 
-        //Main.developpmentDataInput();
-        //ProgramSwing.generalMenu();
+        // Main.developpmentDataInput();
+        // ProgramSwing.generalMenu();
 
         Main.testDB();
     }
