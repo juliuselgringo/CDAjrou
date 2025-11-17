@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.controller;
 
+import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.DB.ConnectionDB;
 import fr.juliuselgringo.sparadrap.DB.ContactCRUD;
 import fr.juliuselgringo.sparadrap.DB.MutualCRUD;
@@ -30,15 +31,24 @@ public class Main {
 
         // Main.developpmentDataInput();
         // ProgramSwing.generalMenu();
+        // Main.testConnectionDB();
 
-        Main.testDB();
+        Main.testSingleton();
+    }
+
+    private static void testSingleton() throws IOException, InputException {
+
+        Singleton.getInstanceDB();
+
+
+        Singleton.closeInstanceDB();
     }
 
     /**
      * méthode qui permet de tester les fonctionnalités de la DB
      * @throws InputException
      */
-    private static void testDB() throws InputException{
+    private static void testConnectionDB() throws InputException{
 
         Connection con = ConnectionDB.propertiesConnection();
 

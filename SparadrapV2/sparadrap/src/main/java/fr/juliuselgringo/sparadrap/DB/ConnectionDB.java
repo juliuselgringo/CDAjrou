@@ -13,7 +13,7 @@ import org.apache.logging.log4j.*;
  */
 public class ConnectionDB{
 
-    private static final Logger logger = LogManager.getLogger(MutualCRUD.class);
+    private static final Logger logger = LogManager.getLogger(ConnectionDB.class);
 
     /**
      * connexion à mysql
