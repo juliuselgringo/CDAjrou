@@ -1,3 +1,77 @@
-2025-11-14 09:11:51.798 [main] ERROR fr.juliuselgringo.sparadrap.DB.MutualCRUD - Error selecting all mutual: java.sql.SQLSyntaxErrorException: Table 'sparadrap.murual' doesn't exist
-2025-11-14 09:23:09.439 [main] ERROR fr.juliuselgringo.sparadrap.DB.MutualCRUD - Error selecting all mutual: java.sql.SQLSyntaxErrorException: Table 'sparadrap.murual' doesn't exist
-2025-11-14 10:17:02.439 [main] ERROR fr.juliuselgringo.sparadrap.DB.MutualCRUD - Error selecting all mutual: java.sql.SQLSyntaxErrorException: Table 'sparadrap.murual' doesn't exist
+2025-11-18 10:56:51.250 [main] ERROR fr.juliuselgringo.sparadrap.DAO.ContactDAO - Erreur lors de la sélection des contacts: java.sql.SQLSyntaxErrorException: Table 'sparadrap.conact' doesn't exist
+2025-11-18 14:43:13.368 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:43:13.379 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:43:13.403 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:43:13.404 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:43:25.484 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:43:25.485 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:44:51.502 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:44:51.505 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:44:51.518 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:44:51.519 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:45:06.150 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:45:06.163 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:45:06.186 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:45:06.187 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:50:05.613 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:50:05.627 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:50:05.649 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:50:05.650 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:50:08.012 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:50:08.013 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:51:02.588 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:51:04.889 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:51:04.890 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:51:04.892 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:51:04.907 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:51:04.908 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:56:48.807 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:56:48.821 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:56:48.843 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:56:48.844 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:56:59.195 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:56:59.197 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:57:07.906 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:57:10.756 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:57:10.758 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:57:10.759 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:57:10.774 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 14:57:10.775 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:04:57.782 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:04:57.795 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:04:57.816 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:04:57.818 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:05:48.282 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:05:48.293 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:05:48.315 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:05:48.316 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:06:27.279 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:06:27.291 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:06:27.316 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:06:27.317 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:07:54.107 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:07:54.117 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:07:54.136 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:07:54.138 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:16:08.398 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error selecting all mutual: java.sql.SQLSyntaxErrorException: Column 'id' not found.
+2025-11-18 15:16:08.419 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error selecting all mutual: java.sql.SQLSyntaxErrorException: Column 'id' not found.
+2025-11-18 15:17:05.998 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:06.013 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:06.034 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:06.036 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:10.833 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:10.834 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:17.424 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error updating mutual: Unknown column 'id' in 'where clause'
+2025-11-18 15:17:18.924 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:18.925 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:18.940 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:18.942 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:27.639 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:27.640 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:27.653 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:17:27.655 [AWT-EventQueue-0] INFO  fr.juliuselgringo.sparadrap.DAO.connection.Singleton - Connection already existing
+2025-11-18 15:37:33.603 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error updating mutual: Unknown column 'id' in 'where clause'
+2025-11-18 15:42:46.244 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error updating mutual: Unknown column 'id' in 'where clause'
+2025-11-18 15:47:15.394 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error updating mutual: Unknown column 'id' in 'where clause'
+2025-11-18 15:48:15.056 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error updating mutual: Unknown column 'id' in 'where clause'
+2025-11-18 15:49:33.518 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error updating mutual: Unknown column 'id' in 'where clause'

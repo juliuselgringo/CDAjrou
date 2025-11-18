@@ -1,5 +1,7 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
+import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.*;
 import fr.juliuselgringo.sparadrap.utility.Gui;
@@ -8,6 +10,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * classe qui permet l'affichage des fonctions liées aux mutelles
@@ -26,6 +29,10 @@ public class MutualSwing {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
+        MutualDAO mutualDAO = new MutualDAO();
+        List<Mutual> mutualsList = mutualDAO.getAll();
+        mutualDAO.closeConnection();
+
         Gui.labelMaker(panel,"Sélectionner une mutuelle dans le tableau: ",10,10);
 
         JTable table = setTable(panel);
@@ -39,7 +46,7 @@ public class MutualSwing {
         detailButton.addActionListener(e -> {
             int row = table.getSelectedRow();
             if(row >= 0) {
-                Mutual mutual = Mutual.mutualsList.get(row);
+                Mutual mutual = mutualsList.get(row);
                 displayMutual(mutual);
             }
         });
@@ -47,7 +54,7 @@ public class MutualSwing {
         modifyButton.addActionListener(e -> {
             int row = table.getSelectedRow();
             if(row >= 0) {
-                Mutual mutual = Mutual.mutualsList.get(row);
+                Mutual mutual = mutualsList.get(row);
                 mutualForm(mutual, "modify", frame);
             }
         });
@@ -55,7 +62,7 @@ public class MutualSwing {
         deleteButton.addActionListener(e -> {
             int row = table.getSelectedRow();
             if(row >= 0) {
-                Mutual mutual = Mutual.mutualsList.get(row);
+                Mutual mutual = mutualsList.get(row);
                 try {
                     deleteMutual(mutual,frame);
                 } catch (InputException ex) {
@@ -77,7 +84,7 @@ public class MutualSwing {
         displayMutualCustomersListButton.addActionListener(e -> {
             int row = table.getSelectedRow();
             if(row >= 0) {
-                Mutual mutual = Mutual.mutualsList.get(row);
+                Mutual mutual = mutualsList.get(row);
                 try {
                     displayMutualCustomersList(mutual);
                 } catch (InputException ex) {
@@ -88,7 +95,10 @@ public class MutualSwing {
         });
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
-        back2Button.addActionListener(ev -> frame.dispose());
+        back2Button.addActionListener(ev -> {
+            frame.dispose();
+            ProgramSwing.generalMenu();
+        });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
         exitButton2.addActionListener(eve -> System.exit(0));
@@ -116,7 +126,7 @@ public class MutualSwing {
      * @return JTable
      */
     public static JTable setTable(JPanel panel){
-        String[] header = new String[]{"Nom","Adresse","Code Postal","Ville","Téléphone", "Email", "Taux de remboursement"};
+        String[] header = new String[]{"id", "Nom","Adresse","Code Postal","Ville","Téléphone", "Email", "Taux de remboursement"};
         JTable table = Gui.tableMaker(panel, Mutual.createMutualMatrice(),header,800, 40,800,800);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -132,6 +142,10 @@ public class MutualSwing {
     public static void mutualForm(Mutual mutual, String type, JFrame frame1){
         JFrame frame = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frame);
+
+        MutualDAO mutualDAO = new MutualDAO();
+        List<Mutual> mutualsList = mutualDAO.getAll();
+        mutualDAO.closeConnection();
 
         Contact contact = mutual.getContact();
 
@@ -169,9 +183,6 @@ public class MutualSwing {
 
         JButton back2Button = Gui.buttonMaker(panel,"Annuler",480);
         back2Button.addActionListener(ev -> {
-            if(type.equals("create")){
-                Mutual.mutualsList.remove(mutual);
-            }
             frame1.dispose();
             frame.dispose();
             mutualMenu();
@@ -179,21 +190,30 @@ public class MutualSwing {
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
-            if(type.equals("create")){
-                Mutual.mutualsList.remove(mutual);
-            }
             System.exit(0);
         });
 
         save.addActionListener(ev -> {
             try {
                 mutual.setName(nameField.getText());
-                mutual.getContact().setAddress(addressField.getText());
-                mutual.getContact().setPostalCode(postalField.getText());
-                mutual.getContact().setTown(townField.getText());
-                mutual.getContact().setPhone(phoneField.getText());
-                mutual.getContact().setEmail(emailField.getText());
+                contact.setAddress(addressField.getText());
+                contact.setPostalCode(postalField.getText());
+                contact.setTown(townField.getText());
+                contact.setPhone(phoneField.getText());
+                contact.setEmail(emailField.getText());
                 mutual.setRate(Double.parseDouble(rateField.getText()));
+                // enregistrement dans la DB
+                ContactDAO contactDAO = new ContactDAO();
+                MutualDAO mutualDao = new MutualDAO();
+                if(type.equals("create")){
+                    contactDAO.create(contact);
+                    mutualDao.create(mutual);
+                    mutualDao.closeConnection();
+                }else{
+                    contactDAO.update(contact);
+                    mutualDao.update(mutual);
+                    mutualDao.closeConnection();
+                }
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
@@ -216,7 +236,9 @@ public class MutualSwing {
     public static void deleteMutual(Mutual mutual,JFrame frame) throws InputException, IOException {
         int resp = JOptionPane.showConfirmDialog(null,"Etes vous sur de vouloir supprimer cette mutuelle?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) {
-            Mutual.mutualsList.remove(mutual);
+            MutualDAO mutualDAO = new MutualDAO();
+            mutualDAO.delete(mutual);
+            mutualDAO.closeConnection();
             JOptionPane.showMessageDialog(null, "La mutuelle a été supprimé avec succès", "Information", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
             mutualMenu();

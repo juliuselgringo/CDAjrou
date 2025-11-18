@@ -55,6 +55,34 @@ public class Customer extends Person {
 
     /**
      * CONSTRUCTOR
+     * @param customerId Integer
+     * @param firstName String
+     * @param lastName String
+     * @param contact Contact
+     * @param socialSecurityId String
+     * @param dateOfBirth String
+     * @param mutual Mutual
+     * @param doctor Doctor
+     * @throws InputException String
+     */
+    public Customer(Integer customerId, String firstName, String lastName, Contact contact,String socialSecurityId,
+                    String dateOfBirth, Mutual mutual, Doctor doctor) throws InputException {
+        super(firstName, lastName, contact);
+        this.customerId = customerId;
+        setSocialSecurityId(socialSecurityId);
+        setDateOfBirth(dateOfBirth);
+        this.mutual =  mutual;
+        this.mutual.mutualCustomersList.add(this);
+        this.doctor = doctor;
+        customersList.add(this);
+        try {
+            customersList.sort(Comparator.comparing(Customer::getLastName));
+        }catch(NullPointerException npe){};
+        this.doctor.setDoctorCustomersList(this);
+    }
+
+    /**
+     * CONSTRUCTOR
      * @param firstName String
      * @param lastName String
      * @param contact Contact
@@ -91,6 +119,15 @@ public class Customer extends Person {
      */
     public Integer getCustomerId(){
         return this.customerId;
+    }
+
+    /**
+     * setter customerId Integer
+     * @param customerId
+     * @throws InputException
+     */
+    public void setCustomerId(Integer customerId) throws InputException {
+        this.customerId = customerId;
     }
 
     /**

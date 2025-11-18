@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.sql.DriverManager;
 
+/**
+ * Classe qui sécurise une connection unique
+ */
 public class Singleton {
 
     private static final Logger logger = LogManager.getLogger(Singleton.class);
@@ -18,6 +21,9 @@ public class Singleton {
 
     private final String PATHCONF = "configDB.properties";
 
+    /**
+     * constructeur de la connexion
+     */
     private Singleton() {
 
         try(InputStream is = Singleton.class.getClassLoader().getResourceAsStream(PATHCONF)){
@@ -35,8 +41,6 @@ public class Singleton {
 
             connection = DriverManager.getConnection(url, user, password);
 
-            System.out.println("Connected to database successfully");
-
         }catch(IOException | ClassNotFoundException e){
             System.err.printf("Error loading driver: ", e.getMessage());
             logger.error("Error loading driver: ", e);
@@ -47,6 +51,10 @@ public class Singleton {
 
     }
 
+    /**
+     * créateur de l'instance de connexion
+     * @return Connection
+     */
     public static Connection getInstanceDB() {
 
         try{
@@ -55,8 +63,7 @@ public class Singleton {
                 new Singleton();
 
             }else{
-                System.out.println("Connection already existing");
-                logger.error("Connection already existing");
+                logger.info("Connection already existing");
             }
         } catch (SQLException e) {
             System.err.printf("Error getting database connection: ", e.getMessage());
@@ -67,15 +74,21 @@ public class Singleton {
 
     }
 
+    /**
+     * getter connexion
+     * @return Connection
+     */
     private static Connection getConnection() {
         return connection;
     }
 
+    /**
+     * ferme la connection
+     */
     public static void closeInstanceDB() {
         try{
             if(getConnection() != null && !getConnection().isClosed()){
                 getConnection().close();
-                System.out.println("Connection closed");
             }
         } catch (SQLException e) {
             System.err.printf("Error closing connection: ", e.getMessage());

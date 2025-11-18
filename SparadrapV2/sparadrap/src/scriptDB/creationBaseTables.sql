@@ -17,8 +17,8 @@ CREATE TABLE contact(
 
 CREATE TABLE mutual(
    mutual_id INT AUTO_INCREMENT,
-   rate DOUBLE NOT NULL,
    mutual_name VARCHAR(30) NOT NULL,
+   rate DOUBLE NOT NULL,
    contact_id INT,
    PRIMARY KEY(mutual_id),
    FOREIGN KEY(contact_id) REFERENCES Contact(contact_id)

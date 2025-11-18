@@ -42,6 +42,25 @@ public class Contact {
 
     /**
      * CONSTRUCTOR
+     * @param contactId Integer
+     * @param address String
+     * @param postalCode String
+     * @param town String
+     * @param phone String
+     * @param email String
+     * @throws InputException String
+     */
+    public Contact(Integer contactId, String address, String postalCode, String town, String phone, String email) throws InputException {
+        this.contactId = contactId;
+        setAddress(address);
+        setPostalCode(postalCode);
+        setTown(town);
+        setPhone(phone);
+        setEmail(email);
+    }
+
+    /**
+     * CONSTRUCTOR
      */
     public Contact() {}
 
@@ -53,6 +72,10 @@ public class Contact {
         return this.contactId;
     }
 
+    /**
+     * setter contactId
+     * @param contactId Integer
+     */
     public void setContactId(Integer contactId){
         this.contactId = contactId;
     }
@@ -188,7 +211,7 @@ public class Contact {
                 "\nCode postal: " + this.getPostalCode() +
                 "\nVille: " + this.getTown() +
                 "\nTéléphone: " + this.getPhone() +
-                "\nEmail: " + this.getEmail();
+                "\nEmail: " + this.getEmail() + "\n";
     }
 
 

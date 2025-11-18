@@ -1,36 +1,39 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * classe docteur ayant comme classe parent Person
  */
-public class Doctor extends Person implements Serializable {
+public class Doctor extends Person {
 
+    private Integer doctorId;
     /**
      * numéro d'agéement
      */
     private String agreementId;
 
     /**
-     * liste des clients de chaque médecin
+     * CONSTRUCTOR
+     * @param doctorId Integer
+     * @param firstName String
+     * @param lastName String
+     * @param contact Contact
+     * @param agreementId String
+     * @throws InputException String
      */
-    private ArrayList<Customer> doctorCustomersList = new ArrayList<>();
-
-    /**
-     * liste des prescriptions de chaque médecin
-     */
-    private ArrayList<Prescription> doctorPrescriptionsList = new ArrayList<>();
-
-    /**
-     * liste des médecins
-     */
-    public static ArrayList<Doctor> doctorsList = new ArrayList<Doctor>();
+    public Doctor(Integer doctorId, String firstName, String lastName, Contact contact, String agreementId) throws InputException {
+        super(firstName, lastName, contact);
+        this.doctorId = doctorId;
+        setAgreementId(agreementId);
+    }
 
     /**
      * CONSTRUCTOR
@@ -43,10 +46,6 @@ public class Doctor extends Person implements Serializable {
     public Doctor(String firstName, String lastName, Contact contact, String agreementId) throws InputException {
         super(firstName, lastName, contact);
         setAgreementId(agreementId);
-        doctorsList.add(this);
-        try {
-            doctorsList.sort(Comparator.comparing(Doctor::getLastName));
-        }catch(NullPointerException npe){};
     }
 
     /**
@@ -54,7 +53,22 @@ public class Doctor extends Person implements Serializable {
      */
     public Doctor() {
         super();
-        doctorsList.add(this);
+    }
+
+    /**
+     * getter doctorId
+     * @return Integer
+     */
+    public Integer getDoctorId() {
+        return doctorId;
+    }
+
+    /**
+     * setter doctorId
+     * @param doctorId Integer
+     */
+    public void setDoctorId(Integer doctorId) {
+        this.doctorId = doctorId;
     }
 
     /**
@@ -79,50 +93,6 @@ public class Doctor extends Person implements Serializable {
         }else {
             this.agreementId = agreementId;
         }
-    }
-
-    /**
-     * GETTER doctorCustomersList
-     * @return ArrayList
-     */
-    public ArrayList<Customer> getDoctorCustomersList() {
-        return this.doctorCustomersList;
-    }
-
-    /**
-     * SETTER doctorCustomersList
-     * @param customer Customer
-     * @throws InputException String
-     */
-    public void setDoctorCustomersList(Customer customer) throws InputException {
-        for (Customer c : doctorCustomersList) {
-            if(customer.equals(c)){
-                throw new InputException("Ce patient est déjà dans la liste du docteur");
-            }
-        }
-        this.doctorCustomersList.add(customer);
-    }
-
-    /**
-     * GETTER doctorPrescriptionsList
-     * @return ArrayList
-     */
-    public ArrayList getDoctorPrescriptionsList(){
-        return this.doctorPrescriptionsList;
-    }
-
-    /**
-     * SETTER doctorPrescritpionList
-     * @param prescription Prescription
-     * @throws InputException String
-     */
-    public void setDoctorPrescriptionsList(Prescription prescription) throws InputException {
-        for(Prescription p : doctorPrescriptionsList){
-            if(p.equals(prescription)){
-                throw new InputException("Cette prescription est déjà dans la liste du docteur");
-            }
-        }
-        this.doctorPrescriptionsList.add(prescription);
     }
 
     /**
@@ -152,6 +122,9 @@ public class Doctor extends Person implements Serializable {
      * @return String[][]
      */
     public static String[][] createDoctorsMatrice(){
+        DoctorDAO doctorDAO = new DoctorDAO();
+        List<Doctor> doctorsList = doctorDAO.getAll();
+        doctorDAO.closeConnection();
         String[][] matrices = new String[doctorsList.size()][5];
         int i = 0;
         try {
@@ -171,8 +144,11 @@ public class Doctor extends Person implements Serializable {
      * CREER UNE MATRICE DES PATIENTS
      * @return String[][]
      */
-    public String[][] createCustomersMatrice(){
-        String[][] matrices = new String[this.doctorCustomersList.size()][5];
+    public static String[][] createCustomersMatrice(){
+        DoctorDAO doctorDAO = new DoctorDAO();
+        List<Doctor> doctorsList = doctorDAO.getAll();
+        doctorDAO.closeConnection();
+        String[][] matrices = new String[doctorCustomersList.size()][5];
         int i = 0;
         for (Customer customer : this.doctorCustomersList) {
             matrices[i][0] = customer.getFirstName();

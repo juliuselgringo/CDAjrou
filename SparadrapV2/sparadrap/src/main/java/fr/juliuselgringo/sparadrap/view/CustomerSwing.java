@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.*;
 import fr.juliuselgringo.sparadrap.utility.Display;
@@ -9,6 +10,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * classe qui gère l'affichage des fonctions client
@@ -139,6 +141,10 @@ public class CustomerSwing {
         JFrame frame = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frame);
 
+        MutualDAO mutualDAO = new MutualDAO();
+        List<Mutual> mutualsList = mutualDAO.getAll();
+        mutualDAO.closeConnection();
+
         Contact contact = customer.getContact();
 
         Gui.labelMaker(panel,"Prénom: ",10,10);
@@ -184,7 +190,7 @@ public class CustomerSwing {
 
         Gui.labelMaker(panel,"Mutuelle: ",10,310);
         JComboBox mutualBox = Gui.comboBoxMaker(panel,10,340,700);
-        for(Mutual mutual : Mutual.mutualsList){
+        for(Mutual mutual : mutualsList){
             mutualBox.addItem(mutual);
         }
 

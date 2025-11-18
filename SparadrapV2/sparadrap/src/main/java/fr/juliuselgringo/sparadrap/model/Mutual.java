@@ -1,14 +1,17 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * classe mutuelle
  */
 public class Mutual {
 
+    private Integer mutualId;
     private String name;
     private Contact contact;
     private Double rate;
@@ -18,10 +21,21 @@ public class Mutual {
      */
     public ArrayList<Customer> mutualCustomersList = new ArrayList<>();
 
+
     /**
-     * liste de mutuelles
+     * CONSTRUCTOR
+     * @param mutualId Integer
+     * @param name String
+     * @param contact Contact
+     * @param rate Double
+     * @throws InputException String
      */
-    public static ArrayList<Mutual> mutualsList = new ArrayList<>();
+    public Mutual(Integer mutualId, String name, Contact contact, Double rate) throws InputException {
+        this.mutualId = mutualId;
+        setName(name);
+        this.contact = contact;
+        setRate(rate);
+    }
 
     /**
      * CONSTRUCTOR
@@ -34,14 +48,27 @@ public class Mutual {
         setName(name);
         this.contact = contact;
         setRate(rate);
-        mutualsList.add(this);
     }
 
     /**
      * CONSTRUCTOR
      */
-    public Mutual(){
-        mutualsList.add(this);
+    public Mutual(){}
+
+    /**
+     * getter mutualId
+     * @return Integer
+     */
+    public Integer getMutualId() {
+        return mutualId;
+    }
+
+    /**
+     * setter mutualId
+     * @param mutualId Integer
+     */
+    public void setMutualId(Integer mutualId) {
+        this.mutualId = mutualId;
     }
 
     /**
@@ -63,7 +90,7 @@ public class Mutual {
         if(name.isEmpty() || name == null) {
             throw new InputException("Le nom de la mutuelle ne peut être vide");
         } else if (!name.matches(regexName)) {
-            throw new InputException("Le prénom doit commencer par une majuscule et ne doit pas avoir d'accent ni trait d'union");
+            throw new InputException("Le nom doit commencer par une majuscule et ne doit pas avoir d'accent ni trait d'union");
         }else {
             this.name = name;
         }
@@ -123,17 +150,21 @@ public class Mutual {
      * @return String[][]
      */
     public static String[][] createMutualMatrice(){
-        String[][] matrice = new String[Mutual.mutualsList.size()][7];
+        MutualDAO mutualDAO = new MutualDAO();
+        List<Mutual> mutualsList = mutualDAO.getAll();
+        mutualDAO.closeConnection();
+        String[][] matrice = new String[mutualsList.size()][8];
         int i = 0;
         try {
-            for (Mutual mutual : Mutual.mutualsList) {
-                matrice[i][0] = mutual.getName();
-                matrice[i][1] = mutual.getContact().getAddress();
-                matrice[i][2] = mutual.getContact().getPostalCode();
-                matrice[i][3] = mutual.getContact().getTown();
-                matrice[i][4] = mutual.getContact().getPhone();
-                matrice[i][5] = mutual.getContact().getEmail();
-                matrice[i][6] = mutual.getRate().toString();
+            for (Mutual mutual : mutualsList) {
+                matrice[i][0] = mutual.getMutualId().toString();
+                matrice[i][1] = mutual.getName();
+                matrice[i][2] = mutual.getContact().getAddress();
+                matrice[i][3] = mutual.getContact().getPostalCode();
+                matrice[i][4] = mutual.getContact().getTown();
+                matrice[i][5] = mutual.getContact().getPhone();
+                matrice[i][6] = mutual.getContact().getEmail();
+                matrice[i][7] = mutual.getRate().toString();
 
                 i++;
             }
