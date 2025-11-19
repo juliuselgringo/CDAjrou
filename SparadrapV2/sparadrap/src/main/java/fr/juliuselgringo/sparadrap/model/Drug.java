@@ -14,6 +14,7 @@ import java.util.Comparator;
  */
 public class Drug {
 
+    private Integer drugId;
     private String name;
     private String categoryName;
     private Double price;
@@ -85,9 +86,49 @@ public class Drug {
 
     /**
      * CONSTRUCTOR
+     * @param drugId Integer
+     * @param name String
+     * @param categoryName String
+     * @param price Double
+     * @param productDate String
+     * @param quantity int
+     * @param underPrescription Boolean
+     * @throws InputException String
+     */
+    public Drug(Integer drugId, String name, String categoryName, Double price, String productDate,
+                int quantity, Boolean underPrescription) throws InputException {
+        this.drugId = drugId;
+        this.setName(name);
+        this.setCategoryName(categoryName);
+        this.setPrice(price);
+        this.setProductionDate(productDate);
+        this.setQuantity(quantity);
+        this.setUnderPrescription(underPrescription);
+        drugsList.add(this);
+        drugsList.sort(Comparator.comparing(Drug::getName));
+    }
+
+    /**
+     * CONSTRUCTOR
      */
     public Drug(){
         drugsList.add(this);
+    }
+
+    /**
+     * getter drugId
+     * @return Integer
+     */
+    public Integer getDrugId(){
+        return this.drugId;
+    }
+
+    /**
+     * setter drugId
+     * @param drugId Integer
+     */
+    public void setDrugId(Integer drugId){
+        this.drugId = drugId;
     }
 
     /**

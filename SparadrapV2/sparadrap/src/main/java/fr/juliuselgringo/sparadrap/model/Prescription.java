@@ -1,5 +1,7 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
+import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 
@@ -27,9 +29,10 @@ import java.io.IOException;
  */
 public class Prescription {
 
+    private Integer prescriptionId;
     private LocalDate prescriptionDate;
-    private String doctorLastName;
-    private String customerLastName;
+    private Integer doctorId;
+    private Integer customerId;
     private Map<Drug, Integer> drugsQuantityPrescriptionsList = new HashMap<>();
 
     /**
@@ -42,20 +45,52 @@ public class Prescription {
     /**
      * CONSTRUCTOR
      * @param prescriptionDateIn String
-     * @param doctorLastNameIn String
-     * @param customerLastNameIn String
+     * @param doctorId Integer
+     * @param customerId Integer
      * @throws InputException String
      */
-    public Prescription(String prescriptionDateIn, String doctorLastNameIn, String customerLastNameIn) throws InputException {
+    public Prescription(String prescriptionDateIn, Integer doctorId, Integer customerId) throws InputException {
         this.setPrescriptionDate(prescriptionDateIn);
-        this.setDoctorLastName(doctorLastNameIn);
-        this.setCustomerLastName(customerLastNameIn);
+        this.setDoctorId(doctorId);
+        this.setCustomerId(customerId);
     }
+
+    /**
+     * CONSTRUCTOR
+     * @param prescriptionId Integer
+     * @param prescriptionDateIn String
+     * @param doctorId Integer
+     * @param customerId Integer
+     * @throws InputException String
+     */
+    public Prescription(Integer prescriptionId, String prescriptionDateIn, Integer doctorId, Integer customerId) throws InputException {
+        this.prescriptionId = prescriptionId;
+        this.setPrescriptionDate(prescriptionDateIn);
+        this.setDoctorId(doctorId);
+        this.setCustomerId(customerId);
+    }
+
 
     /**
      * CONSTRUCTOR
      */
     public Prescription(){};
+
+    /**
+     * getter prescriptionId
+     * @return Integer
+     */
+    public Integer getPrescriptionId() {
+        return prescriptionId;
+    }
+
+    /**
+     * setter prescriptionId
+     * @param prescriptionId Integer
+     */
+    public void setPrescriptionId(Integer prescriptionId) {
+        this.prescriptionId = prescriptionId;
+    }
 
     /**
      * GETTER prescriptionDate
@@ -90,58 +125,63 @@ public class Prescription {
     }
 
     /**
-     * GETTER doctorLastName
-     * @return String
+     * GETTER doctorId
+     * @return Integer
      */
-    public String getDoctorLastName() {
-        return this.doctorLastName;
+    public Integer getDoctorId() {
+        return this.doctorId;
     }
 
     /**
-     * SETTER doctorLastName
-     * @param doctorLastNameIn String
+     * SETTER doctorId
+     * @param doctorId Integer
      * @throws InputException String
      */
-    public void setDoctorLastName(String doctorLastNameIn) throws InputException {
-        String doctorLastNameInSt = doctorLastNameIn.trim();
-        for (Doctor doctor : Doctor.doctorsList){
+    public void setDoctorId(Integer doctorId) throws InputException {
+        DoctorDAO doctorDAO = new DoctorDAO();
+        List<Doctor> doctorsList = doctorDAO.getAll();
+        doctorDAO.closeConnection();
+
+        for (Doctor doctor : doctorsList){
             try {
-                if (doctor.getLastName().equals(doctorLastNameInSt)) {
-                    this.doctorLastName = doctorLastNameInSt;
-                    doctor.setDoctorPrescriptionsList(this);
+                if (doctor.getDoctorId().equals(doctorId)) {
+                    this.doctorId = doctorId;
                     return;
                 }
             }catch(NullPointerException npe){}
         }
-        if(this.doctorLastName == null){
+        if(this.doctorId == null){
             throw new InputException("Ce medecin n'est pas enregistré.");
         }
     }
 
     /**
-     * GETTER custormerLastName
-     * @return String
+     * GETTER custormerId
+     * @return Integer
      */
-    public String getCustomerLastName() {
-        return this.customerLastName;
+    public Integer getCustomerId() {
+        return this.customerId;
     }
 
     /**
-     * SETTER customerLastName
-     * @param customerLastNameIn String
+     * SETTER customerId
+     * @param customerId Integer
      * @throws InputException String
      */
-    public void setCustomerLastName(String customerLastNameIn) throws InputException {
-        String customerLastNameInTrimed = customerLastNameIn.trim();
-        for (Customer customer : Customer.customersList){
+    public void setCustomerId(Integer customerId) throws InputException {
+        CustomerDAO customerDAO = new CustomerDAO();
+        List<Customer> customersList = customerDAO.getAll();
+        customerDAO.closeConnection();
+
+        for (Customer customer : customersList){
             try {
-                if (customer.getLastName().equals(customerLastNameInTrimed)) {
-                    this.customerLastName = customerLastNameInTrimed;
+                if (customer.getCustomerId().equals(customerId)) {
+                    this.customerId = customerId;
                     return;
                 }
             }catch(NullPointerException npe){}
         }
-        if(this.customerLastName == null){
+        if(this.customerId == null){
             throw new InputException("Ce client n'est pas enregistré.");
         }
     }
@@ -185,10 +225,16 @@ public class Prescription {
      */
     @Override
     public String toString() {
+        DoctorDAO doctorDAO = new DoctorDAO();
+        Doctor doctor = doctorDAO.getById(this.doctorId);
+        CustomerDAO customerDAO = new CustomerDAO();
+        Customer customer = customerDAO.getById(this.customerId);
+        customerDAO.closeConnection();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return "Date: " + this.getPrescriptionDate().format(formatter) +
-                "\nNom du medecin: " + this.getDoctorLastName() +
-                "\nNom du client:  " + this.getCustomerLastName() +
+                "\nNom du medecin: " + doctor.getLastName() +
+                "\nNom du client:  " + customer.getLastName() +
                 "\nListe des médicament: " + this.getDrugsQuantityToString();
     }
 
@@ -197,10 +243,16 @@ public class Prescription {
      * @return String
      */
     public String toStringForPdf(){
+        DoctorDAO doctorDAO = new DoctorDAO();
+        Doctor doctor = doctorDAO.getById(this.doctorId);
+        CustomerDAO customerDAO = new CustomerDAO();
+        Customer customer = customerDAO.getById(this.customerId);
+        customerDAO.closeConnection();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return " // " + this.getPrescriptionDate().format(formatter) +
-                " / Medecin: " + this.getDoctorLastName() +
-                " / Client:  " + this.getCustomerLastName() +
+                " / Medecin: " + doctor.getLastName() +
+                " / Client:  " + customer.getLastName() +
                 " / Médicaments: " + this.getDrugsQuantityToString();
     }
 
@@ -221,8 +273,12 @@ public class Prescription {
      * @throws IOException String
      */
     public void savePrescriptionAsPdf() throws IOException {
+        CustomerDAO customerDAO = new CustomerDAO();
+        Customer customer = customerDAO.getById(this.customerId);
+        customerDAO.closeConnection();
+
         String pathHistoric = "historic/"
-                + this.getCustomerLastName() + this.prescriptionDate + ".pdf";
+                + customer.getLastName() + this.prescriptionDate + ".pdf";
         try(PDDocument document = new PDDocument()){
             PDPage page = new PDPage();
             document.addPage(page);
@@ -295,4 +351,17 @@ public class Prescription {
         }
     }
 
+    public Customer getCustomer(){
+        CustomerDAO customerDAO = new CustomerDAO();
+        Customer customer = customerDAO.getById(this.getCustomerId());
+        customerDAO.closeConnection();
+        return customer;
+    }
+
+    public Doctor getDoctor(){
+        DoctorDAO doctorDAO = new DoctorDAO();
+        Doctor doctor = doctorDAO.getById(this.getDoctorId());
+        doctorDAO.closeConnection();
+        return doctor;
+    }
 }

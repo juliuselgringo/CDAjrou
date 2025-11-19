@@ -78,10 +78,7 @@ public class PrescriptionSwing {
         JPanel panel = Gui.setPanel(frame);
 
         Gui.labelMaker(panel, "Sélectionner un client",10,10);
-        JComboBox customerBox = Gui.comboBoxMaker(panel, 10,40,300);
-        for(Customer customer : Customer.customersList){
-            customerBox.addItem(customer);
-        }
+        JComboBox customerBox = CustomerSwing.getCustomerBox(panel,40);
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",490);
         backButton.addActionListener(e3 -> frame.dispose());

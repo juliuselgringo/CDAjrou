@@ -1,14 +1,18 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
+import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
+import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.utility.Display;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.List;
 
 /**
  * classe client qui a pour classe parent Person
@@ -20,12 +24,6 @@ public class Customer extends Person {
     private LocalDate dateOfBirth;
     private Mutual mutual;
     private Doctor doctor;
-    private ArrayList<Prescription> customerPrescriptionsList = new ArrayList();
-
-    /**
-     * liste des clients
-     */
-    public static ArrayList<Customer> customersList = new ArrayList<>();
 
     /**
      * CONSTRUCTOR
@@ -46,11 +44,6 @@ public class Customer extends Person {
         this.mutual =  mutual;
         this.mutual.mutualCustomersList.add(this);
         this.doctor = doctor;
-        customersList.add(this);
-        try {
-            customersList.sort(Comparator.comparing(Customer::getLastName));
-        }catch(NullPointerException npe){};
-        this.doctor.setDoctorCustomersList(this);
     }
 
     /**
@@ -74,11 +67,6 @@ public class Customer extends Person {
         this.mutual =  mutual;
         this.mutual.mutualCustomersList.add(this);
         this.doctor = doctor;
-        customersList.add(this);
-        try {
-            customersList.sort(Comparator.comparing(Customer::getLastName));
-        }catch(NullPointerException npe){};
-        this.doctor.setDoctorCustomersList(this);
     }
 
     /**
@@ -90,7 +78,6 @@ public class Customer extends Person {
      */
     public Customer(String firstName, String lastName, Contact contact) throws InputException {
         super(firstName, lastName, contact);
-        customersList.add(this);
     }
 
     /**
@@ -110,7 +97,6 @@ public class Customer extends Person {
      */
     public Customer(){
         super();
-        customersList.add(this);
     }
 
     /**
@@ -157,6 +143,7 @@ public class Customer extends Person {
 
     /**
      * GETTER dateOfBirth
+     *
      * @return LocalDate
      */
     public LocalDate getDateOfBirth() {
@@ -221,20 +208,16 @@ public class Customer extends Person {
 
     /**
      *  GETTER customerPrescriptionsList
-     * @return ArrayList
+     * @return List
      */
-    public ArrayList getCustomerPrescriptionsList() {
-        return customerPrescriptionsList;
-    }
+    public List<Prescription> getCustomerPrescriptionsList() {
+        List<Prescription> prescriptionsList = new ArrayList<>();
 
-    /**
-     * SETTER customerPrescriptionsList
-     * @param prescription Prescription
-     */
-    public void setCustomerPrescriptionsList(Prescription prescription) {
-        this.customerPrescriptionsList.add(prescription);
-    }
+        PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+       // ajouter méthode de recherche des prescriptions à partir de customerLastName
 
+        return prescriptionsList;
+    }
 
     /**
      * TO STRING
@@ -262,29 +245,25 @@ public class Customer extends Person {
     }
 
     /**
-     * SUPPRIMER UN CLIENT
-     * @throws IOException String
-     */
-    public void deleteCustomer() throws IOException {
-        customersList.remove(this);
-    }
-
-    /**
      * CREER UNE MATRICE DES CLIENTS
      * @return String[][]
      */
     public static String[][] createCustomersMatrice(){
-        String[][] matrices = new String[customersList.size()][6];
+        CustomerDAO customerDAO = new CustomerDAO();
+        List<Customer> customersList = customerDAO.getAll();
+        customerDAO.closeConnection();
+        String[][] matrices = new String[customersList.size()][7];
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         int i = 0;
         try {
             for (Customer customer : customersList) {
-                matrices[i][0] = customer.getFirstName();
-                matrices[i][1] = customer.getLastName();
-                matrices[i][2] = customer.getDateOfBirth().format(formatter);
-                matrices[i][3] = customer.getContact().getPhone();
-                matrices[i][4] = customer.getMutual().getName() + " " + customer.getMutual().getContact().getPostalCode();
-                matrices[i][5] = customer.getDoctor().getLastName() + " " + customer.getDoctor().getContact().getPostalCode();
+                matrices[i][0] = customer.getCustomerId().toString();
+                matrices[i][1] = customer.getFirstName();
+                matrices[i][2] = customer.getLastName();
+                matrices[i][3] = customer.getDateOfBirth().format(formatter);
+                matrices[i][4] = customer.getContact().getPhone();
+                matrices[i][5] = customer.getMutual().getName() + " " + customer.getMutual().getContact().getPostalCode();
+                matrices[i][6] = customer.getDoctor().getLastName() + " " + customer.getDoctor().getContact().getPostalCode();
                 i++;
             }
         }catch(NullPointerException npe){};
@@ -292,37 +271,25 @@ public class Customer extends Person {
     }
 
     /**
-     * RECHERCHER UN CLIENT PAR SON NOM DE FAMILLE
-     * @param lastName String
-     * @return Customer
-     * @throws InputException String
-     */
-    public static Customer getCustomerByLastName(String lastName) throws InputException {
-        Customer customerToReturn = null;
-        try {
-            for (Customer customer : customersList) {
-                if (customer.getLastName().equals(lastName)) {
-                    customerToReturn = customer;
-                }
-            }
-        }catch(NullPointerException npe){};
-        if(customerToReturn == null){
-            throw new InputException("Ce client n'est pas enregistré");
-        }
-        return customerToReturn;
-    }
-
-    /**
      * CREER UNE MATRICE DES PRESCRIPTION D UN CLIENT
      * @return String[][]
      */
     public String[][] createCustomerPrescriptionsMatrice(){
-        String[][] matrice = new String[this.customerPrescriptionsList.size()][3];
+
+        PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+        List<Prescription> prescriptionsList = prescriptionDAO.getAll();
+
+        String[][] matrice = new String[prescriptionsList.size()][3];
         int i = 0;
-        for(Prescription prescription : this.customerPrescriptionsList){
+        for(Prescription prescription : prescriptionsList){
+            CustomerDAO customerDAO = new CustomerDAO();
+            Customer customer = customerDAO.getById(prescription.getCustomerId());
+            DoctorDAO doctorDAO = new DoctorDAO();
+            Doctor doctor = doctorDAO.getById(prescription.getDoctorId());
+
             matrice[i][0] = prescription.getPrescriptionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            matrice[i][1] = prescription.getCustomerLastName();
-            matrice[i][2] = prescription.getDoctorLastName();
+            matrice[i][1] = customer.getLastName();
+            matrice[i][2] = doctor.getLastName();
             i++;
         }
         return matrice;

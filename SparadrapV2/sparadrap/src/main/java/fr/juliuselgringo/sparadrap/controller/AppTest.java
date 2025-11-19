@@ -162,7 +162,7 @@ public class AppTest {
 
 
             Purchase purchase2 = new Purchase(true);
-            Prescription prescription2 = new Prescription("29-08-2025", "Martin", "Petit");
+            Prescription prescription2 = new Prescription("29-08-2025", 2, 2);
             purchase2.setPrescrition(prescription2);
             purchase2.setPurchaseDrugsQuantity(dafalgan, 1);
             purchase2.setPurchaseDrugsQuantity(amoxicilline, 1);
@@ -170,7 +170,7 @@ public class AppTest {
             purchase2.setPurchaseDetails();
 
             Purchase purchase3 = new Purchase(true);
-            Prescription prescription3 = new Prescription("12-08-2025", "Dupont", "Lefevre");
+            Prescription prescription3 = new Prescription("12-08-2025", 1, 1);
             purchase3.setPrescrition(prescription3);
             purchase3.setPurchaseDrugsQuantity(dafalgan, 1);
             purchase3.setPurchaseDrugsQuantity(amoxicilline, 1);
@@ -178,7 +178,7 @@ public class AppTest {
             purchase3.setPurchaseDetails();
 
             Purchase purchase4 = new Purchase("07-07-2025", true);
-            Prescription prescription4 = new Prescription("22-06-2025", "Dupont", "Lefevre");
+            Prescription prescription4 = new Prescription("22-06-2025", 1, 1);
             purchase4.setPrescrition(prescription4);
             purchase4.setPurchaseDrugsQuantity(dafalgan, 1);
             purchase4.setPurchaseDrugsQuantity(amoxicilline, 1);

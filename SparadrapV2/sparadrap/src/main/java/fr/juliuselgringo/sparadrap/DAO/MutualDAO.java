@@ -116,7 +116,7 @@ public class MutualDAO extends DAO<Mutual> {
     public List<Mutual> getAll() {
         List<Mutual> mutualsList = new ArrayList<>();
 
-        String allMutual = "SELECT * FROM mutual";
+        String allMutual = "SELECT * FROM mutual ORDER BY mutual_name";
 
         try{
             //declaration statement

@@ -238,6 +238,8 @@ public class MutualSwing {
         if (resp == JOptionPane.YES_OPTION) {
             MutualDAO mutualDAO = new MutualDAO();
             mutualDAO.delete(mutual);
+            ContactDAO contactDAO = new ContactDAO();
+            contactDAO.delete(mutual.getContact());
             mutualDAO.closeConnection();
             JOptionPane.showMessageDialog(null, "La mutuelle a été supprimé avec succès", "Information", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();

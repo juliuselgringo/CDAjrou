@@ -125,15 +125,16 @@ public class Doctor extends Person {
         DoctorDAO doctorDAO = new DoctorDAO();
         List<Doctor> doctorsList = doctorDAO.getAll();
         doctorDAO.closeConnection();
-        String[][] matrices = new String[doctorsList.size()][5];
+        String[][] matrices = new String[doctorsList.size()][6];
         int i = 0;
         try {
             for (Doctor doctor : doctorsList) {
-                matrices[i][0] = doctor.getFirstName();
-                matrices[i][1] = doctor.getLastName();
-                matrices[i][2] = doctor.getAgreementId();
-                matrices[i][3] = doctor.getContact().getPhone();
-                matrices[i][4] = doctor.getContact().getEmail();
+                matrices[i][0] = doctor.getDoctorId().toString();
+                matrices[i][1] = doctor.getFirstName();
+                matrices[i][2] = doctor.getLastName();
+                matrices[i][3] = doctor.getAgreementId();
+                matrices[i][4] = doctor.getContact().getPhone();
+                matrices[i][5] = doctor.getContact().getEmail();
                 i++;
             }
         }catch(NullPointerException npe){};
@@ -145,12 +146,13 @@ public class Doctor extends Person {
      * @return String[][]
      */
     public static String[][] createCustomersMatrice(){
-        DoctorDAO doctorDAO = new DoctorDAO();
-        List<Doctor> doctorsList = doctorDAO.getAll();
-        doctorDAO.closeConnection();
+       List<Customer> doctorCustomersList = null;
+
+       // ajouter customerDAO -> liste des clients where doctor = this.doctor
+
         String[][] matrices = new String[doctorCustomersList.size()][5];
         int i = 0;
-        for (Customer customer : this.doctorCustomersList) {
+        for (Customer customer : doctorCustomersList) {
             matrices[i][0] = customer.getFirstName();
             matrices[i][1] = customer.getLastName();
             matrices[i][2] = customer.getSocialSecurityId();
@@ -166,12 +168,20 @@ public class Doctor extends Person {
      * @return String[][]
      */
     public String[][] createPrescriptionsMatrice(){
-        String[][] matrices = new String[this.doctorPrescriptionsList.size()][3];
+        List<Prescription> doctorPrescriptionsList = null;
+
+        // ajouter prescriptionDAO -> liste des prescriptions where doctorLastName = this.doctor.getLastName()
+
+        String[][] matrices = new String[doctorPrescriptionsList.size()][3];
         int i = 0;
-        for (Prescription prescription : this.doctorPrescriptionsList) {
+        for (Prescription prescription : doctorPrescriptionsList) {
+            DoctorDAO doctorDAO = new DoctorDAO();
+            Doctor doctor = doctorDAO.getById(prescription.getPrescriptionId());
+            doctorDAO.closeConnection();
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             matrices[i][0] = prescription.getPrescriptionDate().format(formatter);
-            matrices[i][1] = prescription.getCustomerLastName();
+            matrices[i][1] = doctor.getLastName();
             try {
                 matrices[i][2] = prescription.purchaseNumber.toString();
             }catch(NullPointerException npe){};
@@ -186,6 +196,10 @@ public class Doctor extends Person {
      * @return Doctor
      */
     public static Doctor searchDoctorByName(String lastName){
+        DoctorDAO doctorDAO = new DoctorDAO();
+        List<Doctor> doctorsList = doctorDAO.getAll();
+        doctorDAO.closeConnection();
+
         Doctor doctorToReturn = null;
         for (Doctor doctor : doctorsList) {
             if (doctor.getLastName().equals(lastName)) {

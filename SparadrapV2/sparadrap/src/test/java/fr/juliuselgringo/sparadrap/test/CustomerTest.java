@@ -83,6 +83,7 @@ class CustomerTest {
         assertEquals("Mutual", test.getMutual().getName());
     }
 
+    /*
     @Test
     public void setAndGetCustomerPrescriptionList() throws InputException {
         Doctor doctor = new Doctor();
@@ -117,4 +118,6 @@ class CustomerTest {
         assertEquals("Mu 54000",Customer.createCustomersMatrice()[0][4]);
         assertEquals("Jean 54000",Customer.createCustomersMatrice()[0][5]);
     }
+    */
+
 }

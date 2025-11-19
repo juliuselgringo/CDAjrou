@@ -1,5 +1,9 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.ContenirCRUD;
+import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
+import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
+import fr.juliuselgringo.sparadrap.DAO.PurchaseDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.*;
 import fr.juliuselgringo.sparadrap.view.ProgramSwing;
@@ -8,6 +12,7 @@ import fr.juliuselgringo.sparadrap.utility.Gui;
 import javax.swing.*;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +23,8 @@ public class PurchaseSwing {
     /**
      * titre des colonnes de table historique des commandes
      */
-    public static final String[] purchaseHistoryTableHeaders = new String []{"Date","Numéro de commande", "Nom du clients", "Nom du médicament", "Quantite"};
+    public static final String[] purchaseHistoryTableHeaders = new String []{"Date","Numéro de commande",
+            "Nom du clients", "Nom du médicament", "Quantite"};
 
     /**
      * constucteur par défaut
@@ -80,7 +86,7 @@ public class PurchaseSwing {
                 Doctor doctor = (Doctor) doctorBox.getSelectedItem();
                 String prescriptionDate = dateField.getText();
                 try {
-                    Prescription newPrescription = new Prescription(prescriptionDate, doctor.getLastName(), customer.getLastName());
+                    Prescription newPrescription = new Prescription(prescriptionDate, doctor.getDoctorId(), customer.getCustomerId());
                     newPrescriptionPurchase.setPrescrition(newPrescription);
                     createPurchase(newPrescriptionPurchase);
                     newPrescription.purchaseNumber = newPrescriptionPurchase.getPurchaseNumber();
@@ -147,14 +153,19 @@ public class PurchaseSwing {
         saveButton.addActionListener(e -> {
             newPurchase.setPurchaseDetails();
             if(newPurchase.getWithPrescription()){
-                Customer customer = null;
-                try {
-                    customer = Customer.getCustomerByLastName(newPurchase.getPrescription().getCustomerLastName());
-                } catch (InputException ex) {
-                    throw new RuntimeException(ex);
-                }
+
+                CustomerDAO customerDAO = new CustomerDAO();
+                Customer customer = customerDAO.getById(newPurchase.getPrescription().getCustomerId());
+
                 // enregistrement de la commande+prescription sur le client
-                customer.setCustomerPrescriptionsList(newPurchase.getPrescription());
+                PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+                prescriptionDAO.create(newPurchase.getPrescription());
+                PurchaseDAO purchaseDAO = new PurchaseDAO();
+                purchaseDAO.create(newPurchase);
+                ContenirCRUD contenirCRUD = new ContenirCRUD();
+                contenirCRUD.create(newPurchase, newPurchase.getPurchaseDrugsQuantity());
+                contenirCRUD.closeConnection();
+
                 try {
                     // création et enregistrement du pdf de le prescription
                     newPurchase.getPrescription().savePrescriptionAsPdf();
@@ -169,24 +180,12 @@ public class PurchaseSwing {
 
         JButton cancelButton = Gui.buttonMaker(purchasePanel,"Annuler",220);
         cancelButton.addActionListener(e ->  {
-            cancelPurchase(newPurchase);
-            //suppression de la prescription de la liste du médecin
-            if(newPurchase.getWithPrescription()){
-                Doctor doctor = Doctor.searchDoctorByName(newPurchase.getPrescription().getDoctorLastName());
-                doctor.getDoctorPrescriptionsList().remove(newPurchase.getPrescription());
-            }
             purchaseFrame.dispose();
             ProgramSwing.generalMenu();
         });
 
         JButton exitButton = Gui.buttonMaker(purchasePanel, "Quitter", 250);
         exitButton.addActionListener(e -> {
-            cancelPurchase(newPurchase);
-            //suppression de la prescription de la liste du médecin
-            if(newPurchase.getWithPrescription()){
-                Doctor doctor = Doctor.searchDoctorByName(newPurchase.getPrescription().getDoctorLastName());
-                doctor.getDoctorPrescriptionsList().remove(newPurchase.getPrescription());
-            }
             System.exit(0);
         });
     }
@@ -264,10 +263,14 @@ public class PurchaseSwing {
      * @return Double
      */
     public static Double getMutualRateByPrescription(Prescription prescription) {
-        String customerLastName = prescription.getCustomerLastName();
+        Integer customerId = prescription.getCustomerId();
+        CustomerDAO customerDAO = new CustomerDAO();
+        List<Customer> customersList = customerDAO.getAll();
+        customerDAO.closeConnection();
+
         Mutual mutual = null;
-        for(Customer customer : Customer.customersList){
-            if(customer.getLastName().equals(customerLastName)){
+        for(Customer customer : customersList){
+            if(customer.getCustomerId().equals(customerId)){
                 mutual = customer.getMutual();
             }
         }

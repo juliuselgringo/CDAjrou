@@ -1,5 +1,7 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
+import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Contact;
 import fr.juliuselgringo.sparadrap.model.Doctor;
@@ -10,6 +12,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * classe qui permet d'afficher toute les fonctions liées au médecin
@@ -25,11 +28,15 @@ public class DoctorSwing {
      * PAGE MEDECIN
      */
     public static void doctorMenu() {
-        JFrame frame = Gui.setFrame();
-        JPanel panel = Gui.setPanel(frame);
+        JFrame frameMenu = Gui.setFrame();
+        JPanel panel = Gui.setPanel(frameMenu);
 
-        Gui.labelMaker(panel, "Sélectionner un médecin:",10,10);
-        JComboBox doctorBox = getDoctorBox(panel,40);
+        DoctorDAO doctorDAO = new DoctorDAO();
+        List<Doctor> doctorsList = doctorDAO.getAll();
+        doctorDAO.closeConnection();
+
+        Gui.labelMaker(panel, "Sélectionner un médecin dans le tableau:",10,10);
+
         JButton detailButton = Gui.buttonMaker(panel,"Détails du médecin", 130);
         JButton modifyButton = Gui.buttonMaker(panel, "Modifier un médecin",160);
         JButton deleteButton = Gui.buttonMaker(panel, "Supprimer un médecin",190);
@@ -37,61 +44,74 @@ public class DoctorSwing {
         JButton customersListButton = Gui.buttonMaker(panel, "Listes des patients", 250);
         JButton prescriptionsListButton = Gui.buttonMaker(panel, "Liste des prescriptions", 280);
 
-        String[] header = new String[]{"Prénom","Nom","N° d'agréement","Téléphone","Email"};
+        String[] header = new String[]{"id", "Prénom","Nom","N° d'agréement","Téléphone","Email"};
         JTable table = Gui.tableMaker(panel,Doctor.createDoctorsMatrice(),header,800, 40,800,800);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         detailButton.addActionListener(e1 -> {
-            Doctor doctor = (Doctor) doctorBox.getSelectedItem();
-            displayDoctor(doctor);
+            int row = table.getSelectedRow();
+            if(row >= 0){
+                Doctor doctor = doctorsList.get(row);
+                displayDoctor(doctor);
+            }
+
         });
 
-        modifyButton.addActionListener(e2 -> formDoctor((Doctor) doctorBox.getSelectedItem(),
-                "modify", frame));
+        modifyButton.addActionListener(e2 -> {
+            int row = table.getSelectedRow();
+            if(row >= 0){
+                Doctor doctor = doctorsList.get(row);
+                formDoctor(doctor, "modify", frameMenu);
+            }
+
+        });
 
         deleteButton.addActionListener(e3 ->{
-            Doctor doctor= (Doctor)doctorBox.getSelectedItem();
-            try {
-                deleteDoctor(doctor, frame);
-            } catch (InputException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            int row = table.getSelectedRow();
+            if(row >= 0){
+                Doctor doctor = doctorsList.get(row);
+                try {
+                    deleteDoctor(doctor, frameMenu);
+                } catch (InputException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
         });
 
         createButton.addActionListener(e4 -> {
             try {
-                createDoctor(frame);
+                createDoctor(frameMenu);
             } catch (InputException e) {
                 throw new RuntimeException(e);
             }
         });
 
         customersListButton.addActionListener(e5 -> {
-            Doctor doctor = (Doctor) doctorBox.getSelectedItem();
-            displayDoctorCustomersList(doctor);
+            int row = table.getSelectedRow();
+            if(row >= 0) {
+                Doctor doctor = doctorsList.get(row);
+                displayDoctorCustomersList(doctor);
+            }
         });
 
         prescriptionsListButton.addActionListener(e6 -> {
-            Doctor doctor = (Doctor) doctorBox.getSelectedItem();
-            displayDoctorPrescriptionsList(doctor);
-        });
-
-        table.getSelectionModel().addListSelectionListener(e -> {
-            if(e.getValueIsAdjusting()) {
-                int selectedRow = table.getSelectedRow();
-                if(selectedRow >= 0){
-                    Doctor doctor = Doctor.doctorsList.get(selectedRow);
-                    displayDoctor(doctor);
-                }
+            int row = table.getSelectedRow();
+            if(row >= 0) {
+                Doctor doctor = doctorsList.get(row);
+                displayDoctorPrescriptionsList(doctor);
             }
         });
 
         Gui.tableMaker(panel,Doctor.createDoctorsMatrice(),header,800, 40,800,800);
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",490);
-        backButton.addActionListener(ev -> frame.dispose());
+        backButton.addActionListener(ev -> {
+            frameMenu.dispose();
+            ProgramSwing.generalMenu();
+        });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
         exitButton.addActionListener(e -> System.exit(0));
@@ -105,8 +125,12 @@ public class DoctorSwing {
      * @return JComboBox
      */
     public static JComboBox getDoctorBox(JPanel panel,int y) {
+        DoctorDAO doctorDAO = new DoctorDAO();
+        List<Doctor> doctorsList = doctorDAO.getAll();
+        doctorDAO.closeConnection();
+
         JComboBox doctorBox = Gui.comboBoxMaker(panel,10,y,400);
-        for(Doctor doctor : Doctor.doctorsList){
+        for(Doctor doctor : doctorsList){
             doctorBox.addItem(doctor);
         }
         return doctorBox;
@@ -133,11 +157,16 @@ public class DoctorSwing {
      * String type "create" ou "momdify"
      * @param doctor Doctor
      * @param type String
-     * @param frame1 JFrame
+     * @param frameMenu JFrame
      */
-    public static void formDoctor(Doctor doctor, String type, JFrame frame1) {
-        JFrame frame = Gui.setPopUpFrame(800, 1000);
-        JPanel panel = Gui.setPanel(frame);
+    public static void formDoctor(Doctor doctor, String type, JFrame frameMenu) {
+        JFrame frameForm = Gui.setPopUpFrame(800, 1000);
+        JPanel panel = Gui.setPanel(frameForm);
+
+        DoctorDAO doctorDAO = new DoctorDAO();
+        List<Doctor> doctorsList = doctorDAO.getAll();
+        doctorDAO.closeConnection();
+
         Contact contact = doctor.getContact();
 
         Gui.labelMaker(panel, "Prénom: ", 10, 10);
@@ -177,19 +206,13 @@ public class DoctorSwing {
 
         JButton back2Button = Gui.buttonMaker(panel, "Annuler", 480);
         back2Button.addActionListener(ev -> {
-            if (type.equals("create")) {
-                Doctor.doctorsList.remove(doctor);
-            }
-            frame1.dispose();
-            frame.dispose();
+            frameMenu.dispose();
+            frameForm.dispose();
             doctorMenu();
         });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
-            if (type.equals("create")) {
-                Doctor.doctorsList.remove(doctor);
-            }
             System.exit(0);
         });
 
@@ -203,11 +226,22 @@ public class DoctorSwing {
                 contact.setEmail(emailField.getText());
                 contact.setAddress(addressField.getText());
                 contact.setPostalCode(postalField.getText());
-                Doctor.doctorsList.sort(Comparator.comparing(Doctor::getLastName));
+
+                DoctorDAO doctorDao = new DoctorDAO();
+                ContactDAO contactDao = new ContactDAO();
+                if(type.equals("create")){
+                    contactDao.create(contact);
+                    doctorDao.create(doctor);
+                    doctorDao.closeConnection();
+                }else{
+                    contactDao.update(contact);
+                    doctorDao.update(doctor);
+                    doctorDao.closeConnection();
+                }
                 JOptionPane.showMessageDialog(null, "Vos modification ont bien été enregitré",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
-                frame.dispose();
-                frame1.dispose();
+                frameForm.dispose();
+                frameMenu.dispose();
                 doctorMenu();
             } catch (InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
@@ -240,7 +274,11 @@ public class DoctorSwing {
                 "Etes vous sur de vouloir supprimer ce médecin" + doctor.getLastName(),
                 "Confirmation", JOptionPane.YES_NO_OPTION);
         if(resp == JOptionPane.YES_OPTION) {
-            Doctor.doctorsList.remove(doctor);
+            DoctorDAO doctorDao = new DoctorDAO();
+            doctorDao.delete(doctor);
+            ContactDAO contactDao = new ContactDAO();
+            contactDao.delete(doctor.getContact());
+            doctorDao.closeConnection();
             JOptionPane.showMessageDialog(null, "Le médecin a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
         }
@@ -281,9 +319,13 @@ public class DoctorSwing {
         table.getSelectionModel().addListSelectionListener(e -> {
             if(e.getValueIsAdjusting()) {
                 int selectedRow = table.getSelectedRow();
-                ArrayList list = doctor.getDoctorPrescriptionsList();
+
+                List<Prescription> prescriptionsList = null;
+
+                // ajouter prescriptionDAO -> liste des prescriptions where doctorLastName = this.doctor.getLastName()
+
                 if(selectedRow >= 0) {
-                    Prescription prescription = (Prescription)list.get(selectedRow);
+                    Prescription prescription = prescriptionsList.get(selectedRow);
                     PrescriptionSwing.displayPrescription(prescription);
                     frame.dispose();
                 }

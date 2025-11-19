@@ -105,6 +105,7 @@ CREATE TABLE purchase(
    purchase_id INT auto_increment,
    purchase_date DATE NOT NULL,
    with_prescription BOOLEAN NOT NULL,
+   total_price DOUBLE,
    customer_id INT,
    prescription_id INT,
    PRIMARY KEY(purchase_id),

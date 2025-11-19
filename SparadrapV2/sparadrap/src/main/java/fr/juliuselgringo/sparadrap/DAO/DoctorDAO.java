@@ -21,6 +21,11 @@ public class DoctorDAO extends DAO<Doctor> {
 
     private static final Logger logger = LogManager.getLogger(DoctorDAO.class);
 
+    /**
+     * ajouter un médecin à la table doctor
+     * @param entity Doctor
+     * @return Doctor
+     */
     @Override
     public Doctor create(Doctor entity) {
 
@@ -44,10 +49,15 @@ public class DoctorDAO extends DAO<Doctor> {
         return entity;
     }
 
+    /**
+     * modifier un medecin
+     * @param entity Doctor
+     * @return Doctor
+     */
     @Override
     public Doctor update(Doctor entity) {
 
-        String updateDoctor = "UPDATE doctor SET doctor_firstName=?, doctor_lastName=?, agreement_id=?, contact_id=? WHERE id=?";
+        String updateDoctor = "UPDATE doctor SET doctor_firstName=?, doctor_lastName=?, agreement_id=?, contact_id=? WHERE doctor_id=?";
 
         try{
             PreparedStatement pstmt = con.prepareStatement(updateDoctor);
@@ -69,10 +79,14 @@ public class DoctorDAO extends DAO<Doctor> {
 
     }
 
+    /**
+     * supprimer un medecin
+     * @param entity Doctor
+     */
     @Override
     public void delete(Doctor entity) {
 
-        String deleteDoctor = "DELETE FROM doctor WHERE id=?";
+        String deleteDoctor = "DELETE FROM doctor WHERE doctor_id=?";
 
         try{
             PreparedStatement pstmt = con.prepareStatement(deleteDoctor);
@@ -84,10 +98,14 @@ public class DoctorDAO extends DAO<Doctor> {
         }
     }
 
+    /**
+     * récupérer une liste des medecins
+     * @return List
+     */
     @Override
     public List<Doctor> getAll() {
 
-        String selectDoctor = "SELECT * FROM doctor";
+        String selectDoctor = "SELECT * FROM doctor ORDER BY doctor_lastName";
 
         List<Doctor> doctorsList = new ArrayList<>();
 
@@ -117,10 +135,15 @@ public class DoctorDAO extends DAO<Doctor> {
         return doctorsList;
     }
 
+    /**
+     * rechercher un medecin par son id
+     * @param id int
+     * @return Doctor
+     */
     @Override
     public Doctor getById(int id) {
 
-        String selectDoctorById = "SELECT * FROM doctor WHERE id=?";
+        String selectDoctorById = "SELECT * FROM doctor WHERE doctor_id=?";
 
         Doctor doctor = new Doctor();
 
@@ -150,6 +173,9 @@ public class DoctorDAO extends DAO<Doctor> {
         return  doctor;
     }
 
+    /**
+     * fermer la connexion singleton à la DB
+     */
     @Override
     public void closeConnection() {
         Singleton.closeInstanceDB();

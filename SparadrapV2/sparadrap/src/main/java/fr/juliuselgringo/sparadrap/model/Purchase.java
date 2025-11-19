@@ -14,46 +14,25 @@ import java.util.Map;
  */
 public class Purchase implements Serializable {
 
-    /**
-     * date de l'achat
-     */
+    private Integer purchaseId;
+
+
     private LocalDate purchaseDate;
-
-    /**
-     * numéro de l'achat
-     */
     private Integer purchaseNumber;
-
-    /**
-     * avec prescription ou pas
-     */
     private Boolean withPrescription;
-
-
-    /**
-     * médicaments et quantités correspondant par achat
-     */
-    private Map<Drug, Integer> purchaseDrugsQuantity = new HashMap<>();
-
-    /**
-     * prix total de l'achat
-     */
     private Double totalPrice;
-
-    /**
-     * détails de l'achat
-     */
     private String[][] purchaseDetails;
-
-    /**
-     * prescription correspondant à la commande
-     */
     private Prescription prescription;
 
     /**
      * historique des achats
      */
     public static ArrayList<Purchase> purchasesHistory = new ArrayList<Purchase>();
+
+    /**
+     * liste medicament, quantite d'une commande
+     */
+    private static Map<Drug, Integer> purchaseDrugsQuantity = new HashMap<>();
 
     /**
      * increment pour les numéros d'achat
@@ -85,6 +64,21 @@ public class Purchase implements Serializable {
         incrementPurchaseNumber++;
     }
 
+    /**
+     * getter purchaseId
+     * @return Integer
+     */
+    public Integer getPurchaseId() {
+        return this.purchaseId;
+    }
+
+    /**
+     * setter purchaseId
+     * @param purchaseId Integer
+     */
+    public void setPurchaseId(Integer purchaseId) {
+        this.purchaseId = purchaseId;
+    }
 
     /**
      * GETTER purchaseDate
@@ -197,7 +191,7 @@ public class Purchase implements Serializable {
             purchaseDetails[i][0] = this.getPurchaseDate().format(formatter);
             purchaseDetails[i][1] = this.getPurchaseNumber().toString();
             if(this.withPrescription) {
-                purchaseDetails[i][2] = this.getPrescription().getCustomerLastName();
+                purchaseDetails[i][2] = this.getPrescription().getCustomer().getLastName();
             }else {
                 purchaseDetails[i][2] = "Anonyme (achat sans prescription)";
             }
@@ -266,7 +260,7 @@ public class Purchase implements Serializable {
                 if(!purchase.getWithPrescription()){
                     purchaseMatrice[i][2] = "sans ordonnance";
                 }else {
-                    purchaseMatrice[i][2] = purchase.getPrescription().getCustomerLastName();
+                    purchaseMatrice[i][2] = purchase.getPrescription().getCustomer().getLastName();
                 }
                 i++;
             }

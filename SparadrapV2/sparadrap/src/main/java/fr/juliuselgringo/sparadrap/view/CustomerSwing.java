@@ -1,6 +1,8 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
 import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
+import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.*;
 import fr.juliuselgringo.sparadrap.utility.Display;
@@ -26,11 +28,14 @@ public class CustomerSwing {
      * PAGE CLIENT
      */
     public static void customerMenu() {
-        JFrame frame = Gui.setFrame();
-        JPanel panel = Gui.setPanel(frame);
+        JFrame frameMenu = Gui.setFrame();
+        JPanel panel = Gui.setPanel(frameMenu);
 
-        Gui.labelMaker(panel, "Sélectionner un client:",10,10);
-        JComboBox customerBox = getCustomerBox(panel,40);
+        CustomerDAO  customerDAO = new CustomerDAO();
+        List<Customer> customersList = customerDAO.getAll();
+        customerDAO.closeConnection();
+
+        Gui.labelMaker(panel, "Sélectionner un client dans le tableau:",10,10);
 
         JButton detailButton = Gui.buttonMaker(panel,"Détails du client", 130);
         JButton modifyButton = Gui.buttonMaker(panel, "Modifier un client",160);
@@ -42,44 +47,52 @@ public class CustomerSwing {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         detailButton.addActionListener(e -> {
-            Customer customer = (Customer) customerBox.getSelectedItem();
-            displayCustomer(customer);
+            int row = table.getSelectedRow();
+            if(row >= 0){
+                Customer customer = customersList.get(row);
+                displayCustomer(customer);
+            }
+
         });
 
-        modifyButton.addActionListener(ev -> formCustomer(((Customer) customerBox.getSelectedItem()),
-                "modify", frame));
+        modifyButton.addActionListener(ev -> {
+            int row =table.getSelectedRow();
+            if(row >= 0){
+                Customer customer = customersList.get(row);
+                formCustomer(customer,"modify", frameMenu);
+            }
+
+        });
 
         deleteButton.addActionListener(eve ->{
-            Customer customer = (Customer)customerBox.getSelectedItem();
-            try {
-                deleteCustomer(customer, frame);
-            } catch (InputException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            int row = table.getSelectedRow();
+            if(row >= 0){
+                Customer customer = customersList.get(row);
+                try {
+                    deleteCustomer(customer, frameMenu);
+                } catch (InputException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
         });
 
         createButton.addActionListener(ev -> {
             try {
-                createCustomer(frame);
+                createCustomer(frameMenu);
             } catch (InputException e) {
                 throw new RuntimeException(e);
             }
         });
 
-        table.getSelectionModel().addListSelectionListener(e -> {
-            if(e.getValueIsAdjusting()) {
-                int selectedRow = table.getSelectedRow();
-                if(selectedRow >= 0){
-                    Customer customer = Customer.customersList.get(selectedRow);
-                    displayCustomer(customer);
-                }
-            }
-        });
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",490);
-        backButton.addActionListener(ev -> frame.dispose());
+        backButton.addActionListener(ev -> {
+            frameMenu.dispose();
+            ProgramSwing.generalMenu();
+        });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
         exitButton.addActionListener(e -> System.exit(0));
@@ -123,8 +136,12 @@ public class CustomerSwing {
      * @return JComboBox
      */
     public static JComboBox getCustomerBox(JPanel panel,int y) {
+        CustomerDAO  customerDAO = new CustomerDAO();
+        List<Customer> customersList = customerDAO.getAll();
+        customerDAO.closeConnection();
+
         JComboBox customerBox = Gui.comboBoxMaker(panel,10, y,300);
-        for(Customer customer : Customer.customersList){
+        for(Customer customer : customersList){
             customerBox.addItem(customer);
         }
         return customerBox;
@@ -135,14 +152,16 @@ public class CustomerSwing {
      * String type "modify" ou "create"
      * @param customer Customer
      * @param type String
-     * @param frame1 JFrame
+     * @param frameMenu JFrame
      */
-    public static void formCustomer(Customer customer, String type, JFrame frame1) {
-        JFrame frame = Gui.setPopUpFrame(800,1000);
-        JPanel panel = Gui.setPanel(frame);
+    public static void formCustomer(Customer customer, String type, JFrame frameMenu) {
+        JFrame frameForm = Gui.setPopUpFrame(800,1000);
+        JPanel panel = Gui.setPanel(frameForm);
 
         MutualDAO mutualDAO = new MutualDAO();
+        DoctorDAO doctorDAO= new DoctorDAO();
         List<Mutual> mutualsList = mutualDAO.getAll();
+        List<Doctor> doctorsList = doctorDAO.getAll();
         mutualDAO.closeConnection();
 
         Contact contact = customer.getContact();
@@ -196,7 +215,7 @@ public class CustomerSwing {
 
         Gui.labelMaker(panel,"Médecin: ",10,380);
         JComboBox docBox = Gui.comboBoxMaker(panel,10,410,700);
-        for(Doctor doc : Doctor.doctorsList){
+        for(Doctor doc : doctorsList){
             docBox.addItem(doc);
         }
 
@@ -204,19 +223,13 @@ public class CustomerSwing {
 
         JButton back2Button = Gui.buttonMaker(panel,"Annuler",480);
         back2Button.addActionListener(ev -> {
-            if(type.equals("create")) {
-                Customer.customersList.remove(customer);
-            }
-            frame.dispose();
-            frame1.dispose();
+            frameForm.dispose();
+            frameMenu.dispose();
             customerMenu();
         });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
-            if(type.equals("create")) {
-                Customer.customersList.remove(customer);
-            }
             System.exit(0);
         });
 
@@ -226,13 +239,7 @@ public class CustomerSwing {
                 customer.setLastName(lastNameField.getText());
                 customer.setDateOfBirth(birthField.getText());
                 customer.setSocialSecurityId(secuField.getText());
-                if(type.equals("modify")) {
-                    customer.getMutual().mutualCustomersList.remove(customer);
-                }
                 customer.setMutual((Mutual) mutualBox.getSelectedItem());
-                if(type.equals("modify")) {
-                    customer.getDoctor().getDoctorCustomersList().remove(customer);
-                }
                 customer.setDoctor((Doctor) docBox.getSelectedItem());
                 contact.setTown(townField.getText());
                 contact.setPhone(phoneField.getText());
@@ -240,12 +247,20 @@ public class CustomerSwing {
                 contact.setAddress(addressField.getText());
                 contact.setPostalCode(postalField.getText());
 
+                CustomerDAO customerDAO = new CustomerDAO();
+                if(type.equals("create")){
+                    customerDAO.create(customer);
+                    customerDAO.closeConnection();
+                }else{
+                    customerDAO.update(customer);
+                    customerDAO.closeConnection();
+                }
+
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
-                frame.dispose();
-                frame1.dispose();
-                Customer.customersList.sort(Comparator.comparing(Customer::getLastName));
-                customerMenu();
+
+                frameForm.dispose();
+                frameMenu.dispose();
             }catch(InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
             }catch(Exception e) {
@@ -256,7 +271,7 @@ public class CustomerSwing {
     }
 
     /**
-     * CREER UN MEDECIN
+     * CREER UN CLIENT
      * @param frame JFrame
      * @throws InputException String
      */
@@ -280,7 +295,10 @@ public class CustomerSwing {
                 "Confirmation", JOptionPane.YES_NO_OPTION);
         if(resp == JOptionPane.YES_OPTION) {
 
-            customer.deleteCustomer();
+            CustomerDAO customerDAO = new CustomerDAO();
+            customerDAO.delete(customer);
+            customerDAO.closeConnection();
+
             JOptionPane.showMessageDialog(null, "Le client a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
         }

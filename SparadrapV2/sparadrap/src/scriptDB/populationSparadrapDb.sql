@@ -13,3 +13,15 @@ VALUES ("10 rue de la Sante", "75000", "Paris", "01 23 45 67 89", "contact@harmo
 INSERT INTO mutual (mutual_name, rate, contact_id) 
 VALUES ("Harmonie Mutuelle", 0.75, 1),
 ("Mgen", 0.80, 2);
+
+INSERT INTO doctor (doctor_firstName, doctor_lastName, agreement_id, contact_id)
+VALUES ("Jean", "Dupont", "12345678901", 3),
+("Marie", "Martin", "23456789012", 4),
+("Jeannot", "Ducont", "12345678901", 5),
+("Mario", "Martais", "13456789012", 6);
+
+INSERT INTO customer (customer_firstName, customer_lastName, social_security_id, customer_birthDate, mutual_id, doctor_id, contact_id)
+VALUES("Alice", "Lefevre", "275126432109848", "15-07-1985", 1, 1, 7),
+("Marc", "Petit", "185076432109818", "20-12-1975", 2, 2, 8),
+("Jacques", "Bourdin", "175126432109848", "15-01-1982", 1, 3, 9),
+("Marianne", "Petoncourt", "285076432109818", "20-12-1975", 2, 2, 10);
