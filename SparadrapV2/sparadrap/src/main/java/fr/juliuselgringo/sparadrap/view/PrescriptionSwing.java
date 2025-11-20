@@ -24,8 +24,8 @@ public class PrescriptionSwing {
      */
     public static void prescriptionMenu(){
 
-        JFrame frame = Gui.setFrame();
-        JPanel panel = Gui.setPanel(frame);
+        JFrame frameMenu = Gui.setFrame();
+        JPanel panel = Gui.setPanel(frameMenu);
 
         Gui.labelMaker(panel, "Sélectionner un médecin:",10,10);
         JComboBox doctorBox = DoctorSwing.getDoctorBox(panel,40);
@@ -42,7 +42,10 @@ public class PrescriptionSwing {
         });
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",490);
-        backButton.addActionListener(ev -> frame.dispose());
+        backButton.addActionListener(ev -> {
+            frameMenu.dispose();
+            ProgramSwing.generalMenu();
+        });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
         exitButton.addActionListener(e -> System.exit(0));

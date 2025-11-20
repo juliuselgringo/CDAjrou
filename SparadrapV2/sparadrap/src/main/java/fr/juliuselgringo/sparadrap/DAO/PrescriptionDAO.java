@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -86,7 +87,7 @@ public class PrescriptionDAO extends DAO<Prescription> {
     @Override
     public List<Prescription> getAll() {
 
-        String selectPrescription = "SELECT * FROM prescription ORDER BY prescription_date";
+        String selectPrescription = "SELECT * FROM prescription";
         List<Prescription> prescriptionsList = new ArrayList<>();
 
         try{
@@ -95,11 +96,12 @@ public class PrescriptionDAO extends DAO<Prescription> {
 
             while (res.next()) {
                 Integer prescriptionId = res.getInt("prescription_id");
-                LocalDate prescriptionDate = res.getDate("prescription_date").toLocalDate();
+                String prescriptionDate = res.getDate("prescription_date").toLocalDate()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 Integer doctorId = res.getInt("doctor_id");
                 Integer customerId = res.getInt("customer_id");
 
-                Prescription prescription = new Prescription(prescriptionId, prescriptionDate.toString(), doctorId,customerId);
+                Prescription prescription = new Prescription(prescriptionId, prescriptionDate, doctorId,customerId);
                 prescriptionsList.add(prescription);
             }
         } catch (SQLException | InputException e) {
@@ -123,7 +125,8 @@ public class PrescriptionDAO extends DAO<Prescription> {
 
             if (res.next()) {
                 prescription.setPrescriptionId(res.getInt("prescription_id"));
-                prescription.setPrescriptionDate(res.getDate("prescription_date").toString());
+                prescription.setPrescriptionDate(res.getDate("prescription_date").toLocalDate()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
                 prescription.setDoctorId(res.getInt("doctor_id"));
                 prescription.setCustomerId(res.getInt("customer_id"));
 
@@ -136,8 +139,40 @@ public class PrescriptionDAO extends DAO<Prescription> {
         return prescription;
     }
 
+    /**
+     * fermer la connexion singleton à la DB
+     */
     @Override
     public void closeConnection() {
         Singleton.closeInstanceDB();
     }
+
+    public List<Prescription> getPrescriptionListByDoctorId(int id){
+        List<Prescription> prescriptionsList = new ArrayList<>();
+
+        String selectPrescription = "SELECT * FROM prescription WHERE doctor_id = ?";
+
+        try(PreparedStatement pstmt = con.prepareStatement(selectPrescription)){
+
+            pstmt.setInt(1, id);
+
+            try(ResultSet res =  pstmt.executeQuery()){
+                while(res.next()) {
+                    Integer prescriptionId = res.getInt("prescription_id");
+                    String prescriptionDate = res.getDate("prescription_date").toLocalDate()
+                            .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    Integer doctorId = res.getInt("doctor_id");
+                    Integer customerId = res.getInt("customer_id");
+
+                    Prescription prescription = new Prescription(prescriptionId, prescriptionDate, doctorId, customerId);
+                    prescriptionsList.add(prescription);
+                }
+            }
+        } catch (SQLException | InputException e) {
+            logger.error("Error get prescriptions by doctor Id: " + e);
+        }
+
+        return prescriptionsList;
+    }
+
 }

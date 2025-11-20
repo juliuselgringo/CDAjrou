@@ -21,7 +21,7 @@ VALUES ("Jean", "Dupont", "12345678901", 3),
 ("Mario", "Martais", "13456789012", 6);
 
 INSERT INTO customer (customer_firstName, customer_lastName, social_security_id, customer_birthDate, mutual_id, doctor_id, contact_id)
-VALUES("Alice", "Lefevre", "275126432109848", "15-07-1985", 1, 1, 7),
-("Marc", "Petit", "185076432109818", "20-12-1975", 2, 2, 8),
-("Jacques", "Bourdin", "175126432109848", "15-01-1982", 1, 3, 9),
-("Marianne", "Petoncourt", "285076432109818", "20-12-1975", 2, 2, 10);
+VALUES("Alice", "Lefevre", "275126432109848", "1985-07-15", 1, 1, 7),
+("Marc", "Petit", "185076432109818", "1975-12-20", 2, 2, 8),
+("Jacques", "Bourdin", "175126432109848", "1982-01-15", 1, 3, 9),
+("Marianne", "Petoncourt", "285076432109818", "1975-12-20", 2, 2, 10);

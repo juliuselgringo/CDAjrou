@@ -1,6 +1,8 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
 import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
+import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 
 import java.io.Serializable;
@@ -168,22 +170,22 @@ public class Doctor extends Person {
      * @return String[][]
      */
     public String[][] createPrescriptionsMatrice(){
-        List<Prescription> doctorPrescriptionsList = null;
+        PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+        List<Prescription> prescriptionsList = prescriptionDAO.getPrescriptionListByDoctorId(this.getDoctorId());
 
-        // ajouter prescriptionDAO -> liste des prescriptions where doctorLastName = this.doctor.getLastName()
-
-        String[][] matrices = new String[doctorPrescriptionsList.size()][3];
+        String[][] matrices = new String[prescriptionsList.size()][5];
         int i = 0;
-        for (Prescription prescription : doctorPrescriptionsList) {
-            DoctorDAO doctorDAO = new DoctorDAO();
-            Doctor doctor = doctorDAO.getById(prescription.getPrescriptionId());
-            doctorDAO.closeConnection();
+        for (Prescription prescription : prescriptionsList) {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            matrices[i][0] = prescription.getPrescriptionDate().format(formatter);
-            matrices[i][1] = doctor.getLastName();
+            CustomerDAO customerDAO = new CustomerDAO();
+            Customer customer = customerDAO.getById(prescription.getCustomerId());
+            matrices[i][0] = prescription.getPrescriptionId().toString();
+            matrices[i][1] = prescription.getPrescriptionDate().format(formatter);
+            matrices[i][2] = customer.getLastName();
+            matrices[i][3] = this.getLastName();
             try {
-                matrices[i][2] = prescription.purchaseNumber.toString();
+                matrices[i][4] = prescription.purchaseNumber.toString();
             }catch(NullPointerException npe){};
             i++;
         }

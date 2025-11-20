@@ -19,23 +19,21 @@ public class ContenirCRUD {
 
     public ContenirCRUD() {}
 
-    public void create(Purchase purchase, Map<Drug, Integer> purchaseDrugsQuantity){
+    public void create(Integer purchaseId, Map<Drug, Integer> purchaseDrugsQuantity){
 
         for(Drug drug :  purchaseDrugsQuantity.keySet()){
-            for(Integer quantity : purchaseDrugsQuantity.values()){
-                String insertContenir = "INSERT INTO contenir (drug_id, purchase_id, buying_quantity) VALUES (?,?,?)";
+            String insertContenir = "INSERT INTO contenir (drug_id, purchase_id, buying_quantity) VALUES (?,?,?)";
 
-                try{
-                    PreparedStatement pstmt = con.prepareStatement(insertContenir);
+            try{
+                PreparedStatement pstmt = con.prepareStatement(insertContenir);
 
-                    pstmt.setInt(1, drug.getDrugId());
-                    pstmt.setInt(2, purchase.getPurchaseId());
-                    pstmt.setInt(3, quantity);
-                    pstmt.executeUpdate();
+                pstmt.setInt(1, drug.getDrugId());
+                pstmt.setInt(2, purchaseId);
+                pstmt.setInt(3, purchaseDrugsQuantity.get(drug));
+                pstmt.executeUpdate();
 
-                } catch (SQLException e) {
-                    logger.error("Error insert contenir" + e);
-                }
+            } catch (SQLException e) {
+                logger.error("Error insert contenir" + e);
             }
         }
     }

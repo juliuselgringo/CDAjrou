@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.DrugDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * classe médicament
@@ -16,7 +18,7 @@ public class Drug {
 
     private Integer drugId;
     private String name;
-    private String categoryName;
+    private Integer categoryId;
     private Double price;
     private LocalDate productionDate;
     private int quantity;
@@ -29,91 +31,51 @@ public class Drug {
     private final String regexName = "[A-Z][a-z]+([\\s][A-Z][a-z]+)?([\\s][0-9]+)?";
 
     /**
-     * liste des médicaments
-     */
-    public static ArrayList<Drug> drugsList =  new ArrayList<>();
-
-    /**
-     * liste des catégories de médicament
-     */
-    public static String[] categoriesNamesList = new String[] {
-            "Analgesiques et Anti-inflammatoires",
-            "Antibiotiques et Antibacteriens",
-            "Antituberculeux et Antilepreux",
-            "Antimycosiques",
-            "Antiviraux",
-            "Cardiologie",
-            "Dermatologie",
-            "Dietetique et Nutrition",
-            "Endocrinologie",
-            "Gastro-enterologie et hepatologie",
-            "Gynecologie obstetrique et contraception",
-            "Hematologie",
-            "Immunologie et Allergologie",
-            "Medicaments des troubles metaboliques",
-            "Neurologie",
-            "Ophtalmologie",
-            "Oto-rhino-laryngologie",
-            "Parasitologie",
-            "Pneumologie",
-            "Psychiatrie",
-            "Reanimation et toxicologie",
-            "Rhumatologie",
-            "Stomatologie",
-    };
-
-    /**
      * CONSTRUCTOR
      * @param name String
-     * @param categoryName String
+     * @param categoryId Integer
      * @param price Double
      * @param productDate String
      * @param quantity int
      * @param underPrescription Boolean
      * @throws InputException String
      */
-    public Drug(String name, String categoryName, Double price, String productDate,
+    public Drug(String name, Integer categoryId, Double price, String productDate,
                 int quantity, Boolean underPrescription) throws InputException {
         this.setName(name);
-        this.setCategoryName(categoryName);
+        this.categoryId = categoryId;
         this.setPrice(price);
         this.setProductionDate(productDate);
         this.setQuantity(quantity);
         this.setUnderPrescription(underPrescription);
-        drugsList.add(this);
-        drugsList.sort(Comparator.comparing(Drug::getName));
     }
 
     /**
      * CONSTRUCTOR
      * @param drugId Integer
      * @param name String
-     * @param categoryName String
+     * @param categoryId Integer
      * @param price Double
      * @param productDate String
      * @param quantity int
      * @param underPrescription Boolean
      * @throws InputException String
      */
-    public Drug(Integer drugId, String name, String categoryName, Double price, String productDate,
+    public Drug(Integer drugId, String name, Integer categoryId, Double price, String productDate,
                 int quantity, Boolean underPrescription) throws InputException {
         this.drugId = drugId;
         this.setName(name);
-        this.setCategoryName(categoryName);
+        this.categoryId = categoryId;
         this.setPrice(price);
         this.setProductionDate(productDate);
         this.setQuantity(quantity);
         this.setUnderPrescription(underPrescription);
-        drugsList.add(this);
-        drugsList.sort(Comparator.comparing(Drug::getName));
     }
 
     /**
      * CONSTRUCTOR
      */
-    public Drug(){
-        drugsList.add(this);
-    }
+    public Drug(){};
 
     /**
      * getter drugId
@@ -245,28 +207,20 @@ public class Drug {
     }
 
     /**
-     * GETTER name
-     * @return String
+     * GETTER categoryId
+     * @return Integer
      */
-    public String getCategoryName() {
-        return this.categoryName;
+    public Integer getCategoryId() {
+        return this.categoryId;
     }
 
     /**
-     * SETTER name
-     * @param name String
+     * SETTER categoryId
+     * @param categoryId Integer
      * @throws InputException String
      */
-    public void setCategoryName(String name) throws InputException {
-        for(String c : categoriesNamesList){
-            if (name.equals(c)) {
-                this.categoryName = name;
-                break;
-            }
-        }
-        if(this.categoryName == null){
-            throw new InputException("Cette catégorie de médicament n'existe pas");
-        }
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     /**
@@ -298,7 +252,7 @@ public class Drug {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return "\n\nNom: " + this.getName() +
-                "\nCatégorie: " + this.getCategoryName() +
+                "\nCatégorie: " + this.getCategoryId() +
                 "\nPrix: " + this.getPrice() +
                 "\nDate de production: " + this.getProductionDate().format(formatter) +
                 "\nQuantité en stock: " + this.getQuantity() +
@@ -321,13 +275,10 @@ public class Drug {
      * @throws InputException String
      */
     public static void stockUpdate(Drug drugToUpdate, int quantity) throws InputException {
-        for(Drug drug : drugsList){
-            if(drug.getName().equals(drugToUpdate.getName())){
-                drug.setQuantity(drug.getQuantity() + quantity);
-                return;
-            }
-        }
-        throw new InputException("Médicament introuvable");
+        DrugDAO drugDAO = new DrugDAO();
+        Drug drug = drugDAO.getById(drugToUpdate.getDrugId());
+        drug.setQuantity(drug.getQuantity() + quantity);
+        drugDAO.update(drug);
     }
 
     /**
@@ -335,16 +286,20 @@ public class Drug {
      * @return String[][]
      */
     public static String[][] createDrugsMatrice(){
-        String[][] matrices = new String[drugsList.size()][6];
+        DrugDAO drugDAO = new DrugDAO();
+        List<Drug> drugsList = drugDAO.getAll();
+        drugDAO.closeConnection();
+        String[][] matrices = new String[drugsList.size()][7];
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         int i = 0;
         for (Drug drug : drugsList) {
-            matrices[i][0] = drug.getName();
-            matrices[i][1] = drug.getCategoryName();
-            matrices[i][2] = drug.getPrice().toString();
-            matrices[i][3] = drug.getProductionDate().format(formatter);
-            matrices[i][4] = ((Integer)drug.getQuantity()).toString();
-            matrices[i][5] = drug.isUnderPrescription().toString();
+            matrices[i][0] = drug.getDrugId().toString();
+            matrices[i][1] = drug.getName();
+            matrices[i][2] = drug.getCategoryId().toString();
+            matrices[i][3] = drug.getPrice().toString();
+            matrices[i][4] = drug.getProductionDate().format(formatter);
+            matrices[i][5] = ((Integer)drug.getQuantity()).toString();
+            matrices[i][6] = drug.isUnderPrescription().toString();
             i++;
         }
         return matrices;

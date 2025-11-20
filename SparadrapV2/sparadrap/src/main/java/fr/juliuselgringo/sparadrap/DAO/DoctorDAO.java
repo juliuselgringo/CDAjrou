@@ -105,7 +105,7 @@ public class DoctorDAO extends DAO<Doctor> {
     @Override
     public List<Doctor> getAll() {
 
-        String selectDoctor = "SELECT * FROM doctor ORDER BY doctor_lastName";
+        String selectDoctor = "SELECT * FROM doctor";
 
         List<Doctor> doctorsList = new ArrayList<>();
 

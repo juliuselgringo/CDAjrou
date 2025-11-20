@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,11 @@ public class CustomerDAO extends DAO<Customer>{
 
     private static final Logger logger = LogManager.getLogger(CustomerDAO.class);
 
+    /**
+     * ajouter un nouveau client dans la table customer
+     * @param entity
+     * @return
+     */
     @Override
     public Customer create(Customer entity) {
 
@@ -52,6 +58,11 @@ public class CustomerDAO extends DAO<Customer>{
         return entity;
     }
 
+    /**
+     * mettre à jour un client dans la table Customer
+     * @param entity Customer
+     * @return Customer
+     */
     @Override
     public Customer update(Customer entity) {
 
@@ -79,6 +90,10 @@ public class CustomerDAO extends DAO<Customer>{
         return entity;
     }
 
+    /**
+     * Supprimer un client de la table Customer
+     * @param entity Customer
+     */
     @Override
     public void delete(Customer entity) {
 
@@ -97,10 +112,14 @@ public class CustomerDAO extends DAO<Customer>{
 
     }
 
+    /**
+     * récupérer une liste de tout les clients
+     * @return List
+     */
     @Override
     public List<Customer> getAll() {
 
-        String selectCustomer = "SELECT * FROM customer ORDER BY customer_lastName";
+        String selectCustomer = "SELECT * FROM customer";
         List<Customer> customersList = new ArrayList<>();
 
         try{
@@ -123,7 +142,9 @@ public class CustomerDAO extends DAO<Customer>{
                 DoctorDAO doctorDAO = new DoctorDAO();
                 Doctor doctor = doctorDAO.getById(doctorId);
 
-                Customer customer = new Customer(customerId, firstName, lastName, contact, socialSecurityId, birthDate.toString(), mutual, doctor);
+                String formattedBirthDate = birthDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+                Customer customer = new Customer(customerId, firstName, lastName, contact, socialSecurityId, formattedBirthDate, mutual, doctor);
                 customersList.add(customer);
 
             }
@@ -134,11 +155,16 @@ public class CustomerDAO extends DAO<Customer>{
         return customersList;
     }
 
+    /**
+     * récupérer un client à partir de son id
+     * @param id int
+     * @return Customer
+     */
     @Override
     public Customer getById(int id) {
 
         String selectCustomerById = "SELECT * FROM customer WHERE customer_id = ?";
-        Customer customer = null;
+        Customer customer = new  Customer();
 
         try{
             PreparedStatement pstmt = con.prepareStatement(selectCustomerById);
@@ -148,10 +174,12 @@ public class CustomerDAO extends DAO<Customer>{
 
             if (rs.next()) {
                 Integer customerId = rs.getInt("customer_id");
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
+                String firstName = rs.getString("customer_firstName");
+                String lastName = rs.getString("customer_lastName");
                 String socialSecurityId = rs.getString("social_security_id");
-                LocalDate birthDate = rs.getDate("birth_date").toLocalDate();
+                String birthDate = rs.getDate("customer_birthDate").toLocalDate()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
                 Integer mutualId = rs.getInt("mutual_id");
                 Integer doctorId = rs.getInt("doctor_id");
                 Integer contactId = rs.getInt("contact_id");
@@ -163,7 +191,7 @@ public class CustomerDAO extends DAO<Customer>{
                 DoctorDAO doctorDAO = new DoctorDAO();
                 Doctor doctor = doctorDAO.getById(doctorId);
 
-                customer = new Customer(customerId, firstName, lastName, contact, socialSecurityId, birthDate.toString(), mutual, doctor);
+                customer = new Customer(customerId, firstName, lastName, contact, socialSecurityId, birthDate, mutual, doctor);
 
             }
 
@@ -174,6 +202,9 @@ public class CustomerDAO extends DAO<Customer>{
         return customer;
     }
 
+    /**
+     * fermer la connexion singleton à la DB
+     */
     @Override
     public void closeConnection() {
         Singleton.closeInstanceDB();

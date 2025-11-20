@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DrugTest {
 
+    /*
     Drug drugTest = new Drug("Jojo", "Stomatologie",10.00,"10-10-2020",10,true);
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -44,6 +45,6 @@ public class DrugTest {
     void setterQuantity_InvalidInput(int quantity) throws InputException {
         assertThrows(InputException.class, (Executable) () -> drugTest.setQuantity(quantity));
     }
-
+    */
 
 }

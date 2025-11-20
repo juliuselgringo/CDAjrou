@@ -116,7 +116,7 @@ public class MutualDAO extends DAO<Mutual> {
     public List<Mutual> getAll() {
         List<Mutual> mutualsList = new ArrayList<>();
 
-        String allMutual = "SELECT * FROM mutual ORDER BY mutual_name";
+        String allMutual = "SELECT * FROM mutual";
 
         try{
             //declaration statement
@@ -158,7 +158,7 @@ public class MutualDAO extends DAO<Mutual> {
     public Mutual getById(int id) {
 
         String selectMutualById = "SELECT * FROM mutual WHERE mutual_id=?";
-        Mutual mutual = null;
+        Mutual mutual = new Mutual();
 
         try{
             PreparedStatement pstmt = con.prepareStatement(selectMutualById);

@@ -1,13 +1,17 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.DrugCategoryDAO;
+import fr.juliuselgringo.sparadrap.DAO.DrugDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Drug;
+import fr.juliuselgringo.sparadrap.model.DrugCategory;
 import fr.juliuselgringo.sparadrap.utility.Gui;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * classe qui permet d'afficher les fonctionnalités liées aux médicaments
@@ -23,8 +27,12 @@ public class DrugSwing {
      * Menu médicament
      */
     public static void drugMenu(){
-        JFrame frame = Gui.setFrame();
-        JPanel panel = Gui.setPanel(frame);
+        JFrame frameMenu = Gui.setFrame();
+        JPanel panel = Gui.setPanel(frameMenu);
+
+        DrugDAO drugDAO = new DrugDAO();
+        List<Drug> drugsList = drugDAO.getAll();
+        drugDAO.closeConnection();
 
         Gui.labelMaker(panel,"Sélectionner un médicament dans le tableau: ",10,10);
         JTable table = setTable(panel);
@@ -37,7 +45,7 @@ public class DrugSwing {
         detailButton.addActionListener(e -> {
             int row = table.getSelectedRow();
             if(row >= 0) {
-                Drug drug = Drug.drugsList.get(row);
+                Drug drug = drugsList.get(row);
                 displayDrug(drug);
             }
         });
@@ -45,25 +53,28 @@ public class DrugSwing {
         modifyButton.addActionListener(e -> {
             int row = table.getSelectedRow();
             if(row >= 0) {
-                Drug drug = Drug.drugsList.get(row);
-                formDrug(drug, "modify", frame);
+                Drug drug = drugsList.get(row);
+                formDrug(drug, "modify", frameMenu);
             }
         });
 
         deleteButton.addActionListener(e -> {
             int row = table.getSelectedRow();
             if(row >= 0) {
-                Drug drug = Drug.drugsList.get(row);
-                deleteDrug(drug,frame);
+                Drug drug = drugsList.get(row);
+                deleteDrug(drug,frameMenu);
             }
         });
 
         createButton.addActionListener(e -> {
-           createDrug(frame);
+           createDrug(frameMenu);
         });
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
-        back2Button.addActionListener(ev -> frame.dispose());
+        back2Button.addActionListener(ev -> {
+            frameMenu.dispose();
+            ProgramSwing.generalMenu();
+        });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
         exitButton2.addActionListener(eve -> System.exit(0));
@@ -91,18 +102,29 @@ public class DrugSwing {
      * type String "modify" ou "create"
      * @param drug Drug
      * @param type String
-     * @param frame1 JFrame
+     * @param frameMenu JFrame
      */
-    public static void formDrug(Drug drug, String type,JFrame frame1){
-        JFrame frame = Gui.setPopUpFrame(800,1000);
-        JPanel panel = Gui.setPanel(frame);
+    public static void formDrug(Drug drug, String type,JFrame frameMenu){
+        JFrame frameForm = Gui.setPopUpFrame(800,1000);
+        JPanel panel = Gui.setPanel(frameForm);
+
+        DrugDAO drugDAO = new DrugDAO();
+        List<Drug> drugsList = drugDAO.getAll();
+        drugDAO.closeConnection();
 
         Gui.labelMaker(panel,"Nom: ",10,10);
         JTextField nameField = Gui.textFieldMaker(panel,10,40);
         nameField.setText(drug.getName());
 
         Gui.labelMaker(panel,"Catégorie: ",400,10);
-        JComboBox categoryNameField = Gui.comboBoxMaker(panel, Drug.categoriesNamesList,400,40);
+        DrugCategoryDAO drugCategoryDAO = new DrugCategoryDAO();
+        List<DrugCategory> drugCategoryList = drugCategoryDAO.getAll();
+        drugCategoryDAO.closeConnection();
+        JComboBox categoryNameField = Gui.comboBoxMaker(panel,400,40,200);
+        for(DrugCategory drugCategory : drugCategoryList){
+            categoryNameField.addItem(drugCategory);
+        }
+
 
         Gui.labelMaker(panel,"Prix: ",10,70);
         JTextField priceField = Gui.textFieldMaker(panel,10,100);
@@ -131,35 +153,39 @@ public class DrugSwing {
 
         JButton back2Button = Gui.buttonMaker(panel,"Annuler",480);
         back2Button.addActionListener(ev -> {
-            if(type.equals("create")){
-                Drug.drugsList.remove(drug);
-            }
-            frame1.dispose();
-            frame.dispose();
+            frameMenu.dispose();
+            frameForm.dispose();
             drugMenu();
         });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
-            if(type.equals("create")){
-                Drug.drugsList.remove(drug);
-            }
             System.exit(0);
         });
 
         save.addActionListener(ev -> {
             try {
                 drug.setName(nameField.getText());
-                drug.setCategoryName(categoryNameField.getSelectedItem().toString());
+                DrugCategory drugCategory = (DrugCategory) categoryNameField.getSelectedItem();
+                drug.setCategoryId(drugCategory.getCategoryId());
                 drug.setPrice(Double.parseDouble(priceField.getText()));
                 drug.setProductionDate(productionDateField.getText());
                 drug.setQuantity(Integer.parseInt(quantityField.getText()));
                 drug.setUnderPrescription(Boolean.parseBoolean(isUnderPrescriptionField.getText()));
-                Drug.drugsList.sort(Comparator.comparing(Drug::getName));
+
+                DrugDAO drugDAO1 = new DrugDAO();
+                if(type.equals("create")){
+                    drugDAO1.create(drug);
+                    drugDAO1.closeConnection();
+                }else{
+                    drugDAO1.update(drug);
+                    drugDAO1.closeConnection();
+                }
+
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
-                frame.dispose();
-                frame1.dispose();
+                frameForm.dispose();
+                frameMenu.dispose();
                 drugMenu();
             } catch (InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -174,10 +200,13 @@ public class DrugSwing {
      * @param frame JFrame
      */
     public static void deleteDrug(Drug drug, JFrame frame){
+        DrugDAO drugDAO = new DrugDAO();
+        List<Drug> drugsList = drugDAO.getAll();
+        drugDAO.closeConnection();
         int resp = JOptionPane.showConfirmDialog(null,"Etes vous sur de vouloir supprimer ce médicament?",
                 "Confirmation",JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) {
-            Drug.drugsList.remove(drug);
+            drugsList.remove(drug);
             JOptionPane.showMessageDialog(null, "Le médicament a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
@@ -194,7 +223,7 @@ public class DrugSwing {
      * @return Jtable
      */
     public static JTable setTable(JPanel panel){
-        String[] header = new String[]{"Nom","Catégorie","Prix","Date de Production","Quantité", "Sous prescription"};
+        String[] header = new String[]{"Id", "Nom","Catégorie","Prix","Date de Production","Quantité", "Sous prescription"};
         JTable table = Gui.tableMaker(panel, Drug.createDrugsMatrice(),header,800, 40,800,800);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 

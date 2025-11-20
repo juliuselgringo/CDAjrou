@@ -1,9 +1,6 @@
 package fr.juliuselgringo.sparadrap.view;
 
-import fr.juliuselgringo.sparadrap.DAO.ContenirCRUD;
-import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
-import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
-import fr.juliuselgringo.sparadrap.DAO.PurchaseDAO;
+import fr.juliuselgringo.sparadrap.DAO.*;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.*;
 import fr.juliuselgringo.sparadrap.view.ProgramSwing;
@@ -107,9 +104,13 @@ public class PurchaseSwing {
         JFrame purchaseFrame = Gui.setFrame();
         JPanel purchasePanel = Gui.setPanel(purchaseFrame);
 
+        DrugDAO drugDAO = new DrugDAO();
+        List<Drug> drugsList = drugDAO.getAll();
+        drugDAO.closeConnection();
+
         Gui.labelMaker(purchasePanel, "Sélectionner le médicament à ajouter: ",10,10);
         JComboBox drugBox =  Gui.comboBoxMaker(purchasePanel,10,40,1000);
-        for (Drug drug : Drug.drugsList){
+        for (Drug drug : drugsList){
             drugBox.addItem(drug);
         }
         Gui.labelMaker(purchasePanel, "Saisissez la quantité à ajouter à l'achat:",10,70);
@@ -161,9 +162,9 @@ public class PurchaseSwing {
                 PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
                 prescriptionDAO.create(newPurchase.getPrescription());
                 PurchaseDAO purchaseDAO = new PurchaseDAO();
-                purchaseDAO.create(newPurchase);
+                Purchase purchaseRecorded = purchaseDAO.create(newPurchase);
                 ContenirCRUD contenirCRUD = new ContenirCRUD();
-                contenirCRUD.create(newPurchase, newPurchase.getPurchaseDrugsQuantity());
+                contenirCRUD.create(purchaseRecorded.getPurchaseId(), newPurchase.getPurchaseDrugsQuantity());
                 contenirCRUD.closeConnection();
 
                 try {
@@ -172,6 +173,13 @@ public class PurchaseSwing {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
+            }else{
+                PurchaseDAO purchaseDAO = new PurchaseDAO();
+                Purchase purchaseRecorded = purchaseDAO.create(newPurchase);
+                System.out.println(purchaseRecorded);
+                ContenirCRUD contenirCRUD = new ContenirCRUD();
+                contenirCRUD.create(purchaseRecorded.getPurchaseId(), newPurchase.getPurchaseDrugsQuantity());
+                contenirCRUD.closeConnection();
             }
             JOptionPane.showMessageDialog(null, "La commande a été enregistré avec succès");
             purchaseFrame.dispose();

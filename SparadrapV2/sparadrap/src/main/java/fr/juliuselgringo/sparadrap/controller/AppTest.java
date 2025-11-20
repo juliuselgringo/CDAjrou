@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.controller;
 
+import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
 import fr.juliuselgringo.sparadrap.DB.ConnectionDB;
 import fr.juliuselgringo.sparadrap.DB.MutualCRUD;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
@@ -23,40 +24,8 @@ public class AppTest {
     private static void testConnectionDB() throws InputException{
 
         Connection con = ConnectionDB.propertiesConnection();
-
-        /*
-        System.out.println("AFFICHE TOUT LES CONTACTS: ");
-        System.out.println(ContactCRUD.selectAllContact(con));
-        */
-
-        /*
-        System.out.println("\nRECHERCHE PAR ID DANS CONTACT: ");
-        System.out.println(ContactCRUD.selectContactById(con, 4));
-        */
-
-        /*
-        System.out.println("\nInsertion d'un nouveau contact: ");
-        Contact contactToInsert = new Contact("69 rue de la pisse chaude", "11000","Carcassonne","06 12 18 11 13","testinsert@test.com");
-        contactCRUD.insertNewContact(con, contactToInsert);
-        */
-
-        /*
-        System.out.println("\nModifier un contact: ");
-        Contact contactToUpdate = ContactCRUD.selectContactById(con, 11);
-        contactToUpdate.setAddress("69 rue de la piste chaude");
-        ContactCRUD.updateContact(con,contactToUpdate);
-        */
-
-        /*
-        System.out.println("\nsupprimer un contact: ");
-        Contact contactToDelete = ContactCRUD.selectContactById(con, 11);
-        ContactCRUD.deleteContact(con, contactToDelete );
-        */
-
-
-        System.out.println("\naffiche toute les mutuelles: ");
-        System.out.println(MutualCRUD.selectAllMutual(con));
-
+        CustomerDAO customerDAO = new CustomerDAO();
+        System.out.println(customerDAO.getAll());
 
 
         ConnectionDB.closeConnectionDB(con);
@@ -130,16 +99,16 @@ public class AppTest {
 */
 
             //_______________________MEDICAMENTS___________________________
-            Drug dafalgan = new Drug("Dafalgan", "Analgesiques et Anti-inflammatoires", 9.99, "03-12-2024", 50, false);
-            Drug amoxicilline = new Drug("Amoxicilline", "Antibiotiques et Antibacteriens", 12.50, "15-01-2025", 30, true);
-            Drug ventoline = new Drug("Ventoline", "Immunologie et Allergologie", 15.75, "20-01-2025", 20, true);
-            Drug levothyrox = new Drug("Levothyrox", "Endocrinologie", 8.90, "05-02-2025", 90, false);
-            Drug dolirhume = new Drug("Dolirhume", "Analgesiques et Anti-inflammatoires", 6.49, "30-06-2025", 40, false);
-            Drug seroplex = new Drug("Seroplex", "Neurologie", 22.30, "10-08-2025", 28, true);
-            Drug smecta = new Drug("Smecta", "Gastro-enterologie et hepatologie", 4.20, "01-02-2025", 60, false);
-            Drug lisinopril = new Drug("Lisinopril", "Cardiologie", 7.80, "18-07-2025", 30, true);
-            Drug doliprane = new Drug("Doliprane", "Analgesiques et Anti-inflammatoires", 5.99, "10-02-2025", 50, false);
-            Drug zyrtec = new Drug("Zyrtec", "Immunologie et Allergologie", 10.25, "25-06-2025", 15, false);
+            Drug dafalgan = new Drug("Dafalgan", 1, 9.99, "03-12-2024", 50, false);
+            Drug amoxicilline = new Drug("Amoxicilline", 2, 12.50, "15-01-2025", 30, true);
+            Drug ventoline = new Drug("Ventoline", 13, 15.75, "20-01-2025", 20, true);
+            Drug levothyrox = new Drug("Levothyrox", 9, 8.90, "05-02-2025", 90, false);
+            Drug dolirhume = new Drug("Dolirhume", 1, 6.49, "30-06-2025", 40, false);
+            Drug seroplex = new Drug("Seroplex", 15, 22.30, "10-08-2025", 28, true);
+            Drug smecta = new Drug("Smecta", 10, 4.20, "01-02-2025", 60, false);
+            Drug lisinopril = new Drug("Lisinopril", 6, 7.80, "18-07-2025", 30, true);
+            Drug doliprane = new Drug("Doliprane", 1, 5.99, "10-02-2025", 50, false);
+            Drug zyrtec = new Drug("Zyrtec", 13, 10.25, "25-06-2025", 15, false);
             /*
             Drug.drugsList.add(dafalgan);
             Drug.drugsList.add(amoxicilline);

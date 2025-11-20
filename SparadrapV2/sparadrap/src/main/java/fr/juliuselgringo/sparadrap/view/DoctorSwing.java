@@ -2,6 +2,7 @@ package fr.juliuselgringo.sparadrap.view;
 
 import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
 import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
+import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Contact;
 import fr.juliuselgringo.sparadrap.model.Doctor;
@@ -312,17 +313,17 @@ public class DoctorSwing {
         JFrame frame = Gui.setPopUpFrame(800,500);
         JPanel panel = Gui.setPanel(frame);
         frame.setTitle("Liste des prescriptions");
-        String[] header = new String[]{"Date","Nom du patient","Numéro de commande"};
+        String[] header = new String[]{"Id", "Date","Nom du patient", "Nom du médecin","Numéro de commande"};
 
         JTable table = Gui.tableMaker(panel, doctor.createPrescriptionsMatrice(), header,10,10,700,300);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getSelectionModel().addListSelectionListener(e -> {
             if(e.getValueIsAdjusting()) {
-                int selectedRow = table.getSelectedRow();
-
-                List<Prescription> prescriptionsList = null;
 
                 // ajouter prescriptionDAO -> liste des prescriptions where doctorLastName = this.doctor.getLastName()
+                int selectedRow = table.getSelectedRow();
+                PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+                List<Prescription> prescriptionsList = prescriptionDAO.getPrescriptionListByDoctorId(doctor.getDoctorId());
 
                 if(selectedRow >= 0) {
                     Prescription prescription = prescriptionsList.get(selectedRow);

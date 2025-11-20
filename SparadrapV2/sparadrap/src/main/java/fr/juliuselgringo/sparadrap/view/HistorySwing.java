@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.DrugDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Drug;
 import fr.juliuselgringo.sparadrap.model.Purchase;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,7 +95,10 @@ public class HistorySwing {
         });
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",380);
-        backButton.addActionListener(ev -> frame.dispose());
+        backButton.addActionListener(ev -> {
+            frame.dispose();
+            ProgramSwing.generalMenu();
+        });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 410);
         exitButton.addActionListener(e -> {
@@ -163,6 +168,10 @@ public class HistorySwing {
         JFrame frame = Gui.setPopUpFrame(1600,500);
         JPanel panel = Gui.setPanel(frame);
 
+        DrugDAO drugDAO = new DrugDAO();
+        List<Drug> drugsList = drugDAO.getAll();
+        drugDAO.closeConnection();
+
         String[] header = {"Médicament", "Quantité"};
         ArrayList<Purchase> purchaseListToDisplay = Purchase.searchPurchaseByPeriod(startDate, endDate);
         String[][] purchaseHistoryMatrice = new String[100][2];
@@ -178,12 +187,12 @@ public class HistorySwing {
         }
 
         Map<String, Integer> totalOutMap =  new HashMap<>();
-        for(Drug drug : Drug.drugsList){
+        for(Drug drug : drugsList){
             drug.setTotalOut(0);
         }
         try {
             for (String[] out : purchaseHistoryMatrice) {
-                for (Drug drug : Drug.drugsList) {
+                for (Drug drug : drugsList) {
                     if (out[0].equals(drug.getName())) {
                         drug.setTotalOut(drug.getTotalOut() + Integer.parseInt(out[1]));
                         totalOutMap.put(out[0], drug.getTotalOut());
