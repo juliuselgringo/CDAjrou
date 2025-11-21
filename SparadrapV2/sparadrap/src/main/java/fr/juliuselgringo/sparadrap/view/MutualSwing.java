@@ -2,6 +2,7 @@ package fr.juliuselgringo.sparadrap.view;
 
 import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
 import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
+import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.*;
 import fr.juliuselgringo.sparadrap.utility.Gui;
@@ -31,7 +32,6 @@ public class MutualSwing {
 
         MutualDAO mutualDAO = new MutualDAO();
         List<Mutual> mutualsList = mutualDAO.getAll();
-        mutualDAO.closeConnection();
 
         Gui.labelMaker(panel,"Sélectionner une mutuelle dans le tableau: ",10,10);
 
@@ -101,7 +101,10 @@ public class MutualSwing {
         });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
-        exitButton2.addActionListener(eve -> System.exit(0));
+        exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -117,7 +120,10 @@ public class MutualSwing {
         back2Button.addActionListener(ev -> frame.dispose());
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
-        exitButton2.addActionListener(eve -> System.exit(0));
+        exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -145,9 +151,9 @@ public class MutualSwing {
 
         MutualDAO mutualDAO = new MutualDAO();
         List<Mutual> mutualsList = mutualDAO.getAll();
-        mutualDAO.closeConnection();
 
-        Contact contact = mutual.getContact();
+        ContactDAO contactDAO = new ContactDAO();
+        Contact contact = contactDAO.getById(mutual.getContactId());
 
         Gui.labelMaker(panel,"Nom: ",10,10);
         JTextField nameField = Gui.textFieldMaker(panel,10,40);
@@ -190,6 +196,7 @@ public class MutualSwing {
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
             System.exit(0);
         });
 
@@ -203,16 +210,13 @@ public class MutualSwing {
                 contact.setEmail(emailField.getText());
                 mutual.setRate(Double.parseDouble(rateField.getText()));
                 // enregistrement dans la DB
-                ContactDAO contactDAO = new ContactDAO();
                 MutualDAO mutualDao = new MutualDAO();
                 if(type.equals("create")){
                     contactDAO.create(contact);
                     mutualDao.create(mutual);
-                    mutualDao.closeConnection();
                 }else{
                     contactDAO.update(contact);
                     mutualDao.update(mutual);
-                    mutualDao.closeConnection();
                 }
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
@@ -239,8 +243,9 @@ public class MutualSwing {
             MutualDAO mutualDAO = new MutualDAO();
             mutualDAO.delete(mutual);
             ContactDAO contactDAO = new ContactDAO();
-            contactDAO.delete(mutual.getContact());
-            mutualDAO.closeConnection();
+            Contact contact = contactDAO.getById(mutual.getContactId());
+            contactDAO.delete(contact);
+
             JOptionPane.showMessageDialog(null, "La mutuelle a été supprimé avec succès", "Information", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
             mutualMenu();
@@ -257,7 +262,7 @@ public class MutualSwing {
     public static void createMutual(JFrame frame) throws InputException {
         Contact contact = new Contact();
         Mutual newMutual = new Mutual();
-        newMutual.setContact(contact);
+        newMutual.setContactId(contact.getContactId());
         mutualForm(newMutual,"create",frame);
     }
 
@@ -297,6 +302,9 @@ public class MutualSwing {
         back2Button.addActionListener(ev -> frame.dispose());
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 430);
-        exitButton2.addActionListener(eve -> System.exit(0));
+        exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 }

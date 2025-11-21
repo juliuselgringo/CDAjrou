@@ -31,9 +31,7 @@ public class MutualCRUD {
                 Double rate = res.getDouble("rate");
                 Integer contactId = res.getInt("contact_id");
 
-                Contact contact = ContactCRUD.selectContactById(con, contactId);
-
-                Mutual mutual = new Mutual(mutualName, contact, rate);
+                Mutual mutual = new Mutual(mutualName, contactId, rate);
 
                 mutualsList.add(mutual);
             }

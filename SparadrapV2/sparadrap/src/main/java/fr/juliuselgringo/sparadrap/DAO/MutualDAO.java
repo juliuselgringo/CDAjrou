@@ -39,7 +39,7 @@ public class MutualDAO extends DAO<Mutual> {
 
             pstmt.setString(1, entity.getName());
             pstmt.setDouble(2, entity.getRate());
-            pstmt.setInt(3, entity.getContact().getContactId());
+            pstmt.setInt(3, entity.getContactId());
 
             pstmt.executeUpdate();
 
@@ -72,7 +72,7 @@ public class MutualDAO extends DAO<Mutual> {
 
             pstmt.setString(1, entity.getName());
             pstmt.setDouble(2, entity.getRate());
-            pstmt.setInt(3, entity.getContact().getContactId());
+            pstmt.setInt(3, entity.getContactId());
             pstmt.setInt(4, entity.getMutualId());
 
             pstmt.executeUpdate();
@@ -131,9 +131,7 @@ public class MutualDAO extends DAO<Mutual> {
                 Double rate = res.getDouble("rate");
                 Integer contactId = res.getInt("contact_id");
 
-                ContactDAO contactDAO = new ContactDAO();
-
-                Mutual mutual = new Mutual(mutualId, mutualName, contactDAO.getById(contactId), rate);
+                Mutual mutual = new Mutual(mutualId, mutualName, contactId, rate);
 
                 mutualsList.add(mutual);
             }
@@ -170,7 +168,7 @@ public class MutualDAO extends DAO<Mutual> {
                 mutual.setMutualId(rs.getInt("mutual_id"));
                 mutual.setName(rs.getString("mutual_name"));
                 mutual.setRate(rs.getDouble("rate"));
-                mutual.setContact(new ContactDAO().getById(rs.getInt("contact_id")));
+                mutual.setContactId(rs.getInt("contact_id"));
 
             }
 

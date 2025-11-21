@@ -1,8 +1,10 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
 import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
 import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
 import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
+import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.*;
 import fr.juliuselgringo.sparadrap.utility.Display;
@@ -33,7 +35,6 @@ public class CustomerSwing {
 
         CustomerDAO  customerDAO = new CustomerDAO();
         List<Customer> customersList = customerDAO.getAll();
-        customerDAO.closeConnection();
 
         Gui.labelMaker(panel, "Sélectionner un client dans le tableau:",10,10);
 
@@ -95,7 +96,10 @@ public class CustomerSwing {
         });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -113,20 +117,28 @@ public class CustomerSwing {
             JFrame frame = Gui.setPopUpFrame(800,500);
             JPanel panel = Gui.setPanel(frame);
 
-            Gui.textAreaMaker(panel, customer.getMutual().toString(),10,10,700,300 );
+            MutualDAO mutualDAO = new MutualDAO();
+            Mutual mutual = mutualDAO.getById(customer.getMutualId());
+            Gui.textAreaMaker(panel, mutual.toString(),10,10,700,300 );
 
             JButton back2Button = Gui.buttonMaker(panel,"Retour",400);
             back2Button.addActionListener(ev -> frame.dispose());
 
             JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 430);
-            exitButton2.addActionListener(eve -> System.exit(0));
+            exitButton2.addActionListener(eve -> {
+                Singleton.closeInstanceDB();
+                System.exit(0);
+            });
         });
 
         JButton back2Button = Gui.buttonMaker(customerPanel,"Retour",400);
         back2Button.addActionListener(ev -> customerFrame.dispose());
 
         JButton exitButton2 = Gui.buttonMaker(customerPanel, "Quitter", 430);
-        exitButton2.addActionListener(eve -> System.exit(0));
+        exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -138,7 +150,6 @@ public class CustomerSwing {
     public static JComboBox getCustomerBox(JPanel panel,int y) {
         CustomerDAO  customerDAO = new CustomerDAO();
         List<Customer> customersList = customerDAO.getAll();
-        customerDAO.closeConnection();
 
         JComboBox customerBox = Gui.comboBoxMaker(panel,10, y,300);
         for(Customer customer : customersList){
@@ -162,9 +173,9 @@ public class CustomerSwing {
         DoctorDAO doctorDAO= new DoctorDAO();
         List<Mutual> mutualsList = mutualDAO.getAll();
         List<Doctor> doctorsList = doctorDAO.getAll();
-        mutualDAO.closeConnection();
 
-        Contact contact = customer.getContact();
+        ContactDAO contactDAO = new ContactDAO();
+        Contact contact = contactDAO.getById(customer.getContactId());
 
         Gui.labelMaker(panel,"Prénom: ",10,10);
         JTextField firstNameField = Gui.textFieldMaker(panel,10,40);
@@ -230,6 +241,7 @@ public class CustomerSwing {
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
             System.exit(0);
         });
 
@@ -239,8 +251,8 @@ public class CustomerSwing {
                 customer.setLastName(lastNameField.getText());
                 customer.setDateOfBirth(birthField.getText());
                 customer.setSocialSecurityId(secuField.getText());
-                customer.setMutual((Mutual) mutualBox.getSelectedItem());
-                customer.setDoctor((Doctor) docBox.getSelectedItem());
+                customer.setMutualId(((Mutual) mutualBox.getSelectedItem()).getMutualId());
+                customer.setDoctorId(((Doctor) docBox.getSelectedItem()).getDoctorId());
                 contact.setTown(townField.getText());
                 contact.setPhone(phoneField.getText());
                 contact.setEmail(emailField.getText());
@@ -250,10 +262,8 @@ public class CustomerSwing {
                 CustomerDAO customerDAO = new CustomerDAO();
                 if(type.equals("create")){
                     customerDAO.create(customer);
-                    customerDAO.closeConnection();
                 }else{
                     customerDAO.update(customer);
-                    customerDAO.closeConnection();
                 }
 
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
@@ -276,9 +286,7 @@ public class CustomerSwing {
      * @throws InputException String
      */
     public static void createCustomer(JFrame frame) throws InputException {
-        Contact contact = new Contact();
         Customer customer = new Customer();
-        customer.setContact(contact);
         formCustomer(customer, "create",frame);
     }
 
@@ -297,7 +305,6 @@ public class CustomerSwing {
 
             CustomerDAO customerDAO = new CustomerDAO();
             customerDAO.delete(customer);
-            customerDAO.closeConnection();
 
             JOptionPane.showMessageDialog(null, "Le client a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);

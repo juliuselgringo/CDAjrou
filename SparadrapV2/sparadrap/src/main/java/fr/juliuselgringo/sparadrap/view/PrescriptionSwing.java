@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.model.Customer;
 import fr.juliuselgringo.sparadrap.model.Doctor;
 import fr.juliuselgringo.sparadrap.model.Prescription;
@@ -48,7 +49,10 @@ public class PrescriptionSwing {
         });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -69,7 +73,10 @@ public class PrescriptionSwing {
         backButton.addActionListener(ev -> frame.dispose());
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 380);
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -87,7 +94,10 @@ public class PrescriptionSwing {
         backButton.addActionListener(e3 -> frame.dispose());
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
-        exitButton.addActionListener(e4 -> System.exit(0));
+        exitButton.addActionListener(e4 -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
 
         customerBox.addActionListener(e -> {
            Customer customer = (Customer)customerBox.getSelectedItem();

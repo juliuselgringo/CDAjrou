@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
 import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
 import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
 import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
@@ -27,12 +28,12 @@ public class Doctor extends Person {
      * @param doctorId Integer
      * @param firstName String
      * @param lastName String
-     * @param contact Contact
+     * @param contactId Integer
      * @param agreementId String
      * @throws InputException String
      */
-    public Doctor(Integer doctorId, String firstName, String lastName, Contact contact, String agreementId) throws InputException {
-        super(firstName, lastName, contact);
+    public Doctor(Integer doctorId, String firstName, String lastName, Integer contactId, String agreementId) throws InputException {
+        super(firstName, lastName, contactId);
         this.doctorId = doctorId;
         setAgreementId(agreementId);
     }
@@ -41,12 +42,12 @@ public class Doctor extends Person {
      * CONSTRUCTOR
      * @param firstName String
      * @param lastName String
-     * @param contact Contact
+     * @param contactId Integer
      * @param agreementId String
      * @throws InputException String
      */
-    public Doctor(String firstName, String lastName, Contact contact, String agreementId) throws InputException {
-        super(firstName, lastName, contact);
+    public Doctor(String firstName, String lastName, Integer contactId, String agreementId) throws InputException {
+        super(firstName, lastName, contactId);
         setAgreementId(agreementId);
     }
 
@@ -115,7 +116,7 @@ public class Doctor extends Person {
         return "\nDocteur" +
                 "\nPrénom: " + this.getFirstName() +
                 "\nNom: " + this.getLastName() +
-                "\n"  + this.getContact() +
+                "\n"  + this.getContactId() +
                 "\nN° d'agréement: " + this.getAgreementId();
     }
 
@@ -131,12 +132,14 @@ public class Doctor extends Person {
         int i = 0;
         try {
             for (Doctor doctor : doctorsList) {
+                ContactDAO contactDAO = new ContactDAO();
+                Contact contact = contactDAO.getById(doctor.getContactId());
                 matrices[i][0] = doctor.getDoctorId().toString();
                 matrices[i][1] = doctor.getFirstName();
                 matrices[i][2] = doctor.getLastName();
                 matrices[i][3] = doctor.getAgreementId();
-                matrices[i][4] = doctor.getContact().getPhone();
-                matrices[i][5] = doctor.getContact().getEmail();
+                matrices[i][4] = contact.getPhone();
+                matrices[i][5] = contact.getEmail();
                 i++;
             }
         }catch(NullPointerException npe){};
@@ -155,11 +158,13 @@ public class Doctor extends Person {
         String[][] matrices = new String[doctorCustomersList.size()][5];
         int i = 0;
         for (Customer customer : doctorCustomersList) {
+            ContactDAO contactDAO = new ContactDAO();
+            Contact contact = contactDAO.getById(customer.getContactId());
             matrices[i][0] = customer.getFirstName();
             matrices[i][1] = customer.getLastName();
             matrices[i][2] = customer.getSocialSecurityId();
-            matrices[i][3] = customer.getContact().getPhone();
-            matrices[i][4] = customer.getContact().getEmail();
+            matrices[i][3] = contact.getPhone();
+            matrices[i][4] = contact.getEmail();
             i++;
         }
         return matrices;

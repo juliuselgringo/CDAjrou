@@ -31,13 +31,17 @@ public class PrescriptionDAO extends DAO<Prescription> {
         String insertPrescription = "INSERT INTO prescription (prescription_date, customer_id, doctor_id) VALUES (?, ?, ?)";
 
         try{
-            PreparedStatement pstmt = con.prepareStatement(insertPrescription);
+            PreparedStatement pstmt = con.prepareStatement(insertPrescription, PreparedStatement.RETURN_GENERATED_KEYS);
 
             pstmt.setDate(1, java.sql.Date.valueOf(entity.getPrescriptionDate()));
             pstmt.setInt(2, entity.getCustomerId());
             pstmt.setInt(3, entity.getDoctorId());
 
             pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                entity.setPrescriptionId(rs.getInt(1));
+            }
 
         } catch (SQLException e) {
             logger.error("Error insert prescription: " + e);
@@ -147,27 +151,31 @@ public class PrescriptionDAO extends DAO<Prescription> {
         Singleton.closeInstanceDB();
     }
 
+    /**
+     * liste des prescriptions d'un médecin
+     * @param id int
+     * @return List
+     */
     public List<Prescription> getPrescriptionListByDoctorId(int id){
         List<Prescription> prescriptionsList = new ArrayList<>();
-
         String selectPrescription = "SELECT * FROM prescription WHERE doctor_id = ?";
 
-        try(PreparedStatement pstmt = con.prepareStatement(selectPrescription)){
-
+        try{
+            PreparedStatement pstmt = con.prepareStatement(selectPrescription);
             pstmt.setInt(1, id);
 
-            try(ResultSet res =  pstmt.executeQuery()){
-                while(res.next()) {
-                    Integer prescriptionId = res.getInt("prescription_id");
-                    String prescriptionDate = res.getDate("prescription_date").toLocalDate()
-                            .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    Integer doctorId = res.getInt("doctor_id");
-                    Integer customerId = res.getInt("customer_id");
+            ResultSet res =  pstmt.executeQuery();
+            while(res.next()) {
+                Integer prescriptionId = res.getInt("prescription_id");
+                String prescriptionDate = res.getDate("prescription_date").toLocalDate()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                Integer doctorId = res.getInt("doctor_id");
+                Integer customerId = res.getInt("customer_id");
 
-                    Prescription prescription = new Prescription(prescriptionId, prescriptionDate, doctorId, customerId);
-                    prescriptionsList.add(prescription);
-                }
+                Prescription prescription = new Prescription(prescriptionId, prescriptionDate, doctorId, customerId);
+                prescriptionsList.add(prescription);
             }
+
         } catch (SQLException | InputException e) {
             logger.error("Error get prescriptions by doctor Id: " + e);
         }

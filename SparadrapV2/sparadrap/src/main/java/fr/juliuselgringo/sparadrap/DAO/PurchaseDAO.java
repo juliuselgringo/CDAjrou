@@ -1,10 +1,7 @@
 package fr.juliuselgringo.sparadrap.DAO;
 
 import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
-import fr.juliuselgringo.sparadrap.model.Customer;
-import fr.juliuselgringo.sparadrap.model.Doctor;
-import fr.juliuselgringo.sparadrap.model.Drug;
-import fr.juliuselgringo.sparadrap.model.Purchase;
+import fr.juliuselgringo.sparadrap.model.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,20 +34,23 @@ public class PurchaseDAO extends DAO<Purchase> {
                     entity.setPurchaseId(rs.getInt(1));
                 }
             } catch (SQLException e) {
-                logger.error("Error insert purchase" + e);
+                logger.error("Error insert purchase: " + e);
             }
         }else{
             String insertPurchase = "INSERT INTO purchase (purchase_date, with_prescription, total_price, " +
-                                    "customer_id, doctor_id) VALUES (?, ?, ?, ?, ?)";
+                                    "customer_id, prescription_id) VALUES (?, ?, ?, ?, ?)";
 
             try{
                 PreparedStatement pstmt = con.prepareStatement(insertPurchase, PreparedStatement.RETURN_GENERATED_KEYS);
 
+                PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+                Prescription prescription = prescriptionDAO.getById(entity.getPrescriptionId());
+
                 pstmt.setDate(1, java.sql.Date.valueOf(entity.getPurchaseDate()));
                 pstmt.setBoolean(2, entity.getWithPrescription());
                 pstmt.setDouble(3, entity.getTotalPrice());
-                pstmt.setInt(4, entity.getPrescription().getCustomerId());
-                pstmt.setInt(5, entity.getPrescription().getDoctorId());
+                pstmt.setInt(4, prescription.getCustomerId());
+                pstmt.setInt(5, entity.getPrescriptionId());
 
                 pstmt.executeUpdate();
 
@@ -60,7 +60,7 @@ public class PurchaseDAO extends DAO<Purchase> {
                 }
 
             } catch (SQLException e) {
-                logger.error("Error insert purchase" + e);
+                logger.error("Error insert purchase under prescription: " + e);
             }
         }
 

@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
 import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 
@@ -13,7 +14,7 @@ public class Mutual {
 
     private Integer mutualId;
     private String name;
-    private Contact contact;
+    private Integer contactId;
     private Double rate;
 
     /**
@@ -26,27 +27,27 @@ public class Mutual {
      * CONSTRUCTOR
      * @param mutualId Integer
      * @param name String
-     * @param contact Contact
+     * @param contactId Integer
      * @param rate Double
      * @throws InputException String
      */
-    public Mutual(Integer mutualId, String name, Contact contact, Double rate) throws InputException {
+    public Mutual(Integer mutualId, String name, Integer contactId, Double rate) throws InputException {
         this.mutualId = mutualId;
         setName(name);
-        this.contact = contact;
+        this.contactId = contactId;
         setRate(rate);
     }
 
     /**
      * CONSTRUCTOR
      * @param name String
-     * @param contact Contact
+     * @param contactId Integer
      * @param rate Double
      * @throws InputException String
      */
-    public Mutual(String name, Contact contact, Double rate) throws InputException {
+    public Mutual(String name, Integer contactId, Double rate) throws InputException {
         setName(name);
-        this.contact = contact;
+        this.contactId = contactId;
         setRate(rate);
     }
 
@@ -97,19 +98,19 @@ public class Mutual {
     }
 
     /**
-     * GETTER contact
-     * @return Contact
+     * GETTER contactId
+     * @return Integer
      */
-    public Contact getContact() {
-        return this.contact;
+    public Integer getContactId() {
+        return this.contactId;
     }
 
     /**
-     * SETTER contact
-     * @param contact Contact
+     * SETTER contactId
+     * @param contactId Integer
      */
-    public void setContact(Contact contact) {
-        this.contact = contact;
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
     /**
@@ -141,7 +142,7 @@ public class Mutual {
     public String toString() {
         return "\nNom: " + this.getName() +
                 "\n" +
-                this.getContact() +
+                this.getContactId() +
                 "\nTaux: " + this.getRate() + "\n";
     }
 
@@ -152,18 +153,19 @@ public class Mutual {
     public static String[][] createMutualMatrice(){
         MutualDAO mutualDAO = new MutualDAO();
         List<Mutual> mutualsList = mutualDAO.getAll();
-        mutualDAO.closeConnection();
+        ContactDAO contactDAO = new ContactDAO();
         String[][] matrice = new String[mutualsList.size()][8];
         int i = 0;
         try {
             for (Mutual mutual : mutualsList) {
+                Contact contact = contactDAO.getById(mutual.getContactId());
                 matrice[i][0] = mutual.getMutualId().toString();
                 matrice[i][1] = mutual.getName();
-                matrice[i][2] = mutual.getContact().getAddress();
-                matrice[i][3] = mutual.getContact().getPostalCode();
-                matrice[i][4] = mutual.getContact().getTown();
-                matrice[i][5] = mutual.getContact().getPhone();
-                matrice[i][6] = mutual.getContact().getEmail();
+                matrice[i][2] = contact.getAddress();
+                matrice[i][3] = contact.getPostalCode();
+                matrice[i][4] = contact.getTown();
+                matrice[i][5] = contact.getPhone();
+                matrice[i][6] = contact.getEmail();
                 matrice[i][7] = mutual.getRate().toString();
 
                 i++;
@@ -181,11 +183,13 @@ public class Mutual {
         String[][] matrice = new String[this.mutualCustomersList.size()][5];
         int i = 0;
         for(Customer customer : this.mutualCustomersList){
+            ContactDAO contactDAO = new ContactDAO();
+            Contact contact = contactDAO.getById(customer.getContactId());
             matrice[i][0] = customer.getLastName();
             matrice[i][1] = customer.getFirstName();
             matrice[i][2] = customer.getSocialSecurityId();
-            matrice[i][3] = customer.getContact().getEmail();
-            matrice[i][4] = customer.getContact().getPhone();
+            matrice[i][3] = contact.getEmail();
+            matrice[i][4] = contact.getPhone();
             i++;
         }
         return matrice;

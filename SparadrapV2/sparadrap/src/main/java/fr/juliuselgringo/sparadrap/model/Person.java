@@ -9,19 +9,19 @@ public class Person {
 
     private String firstName;
     private String lastName;
-    private Contact contact;
+    private Integer contactId;
 
     /**
      * CONSTURCTOR
      * @param firstName String
      * @param lastName String
-     * @param contact Contact
+     * @param contactId Integer
      * @throws InputException String
      */
-    public Person(String firstName, String lastName, Contact contact) throws InputException {
+    public Person(String firstName, String lastName, Integer contactId) throws InputException {
         this.setFirstName(firstName);
         this.setLastName(lastName);
-        this.setContact(contact);
+        this.setContactId(contactId);
     }
 
     /**
@@ -93,20 +93,20 @@ public class Person {
     }
 
     /**
-     * GETTER contact
-     * @return Contact
+     * GETTER contactId
+     * @return Integer
      */
-    public Contact getContact() {
-        return this.contact;
+    public Integer getContactId() {
+        return this.contactId;
     }
 
     /**
-     * SETTER contact
-     * @param contact Contact
+     * SETTER contactId
+     * @param contactId Integer
      * @throws InputException String
      */
-    public void setContact(Contact contact) throws InputException {
-        this.contact = contact;
+    public void setContactId(Integer contactId) throws InputException {
+        this.contactId = contactId;
     }
 
     /**
@@ -116,7 +116,7 @@ public class Person {
     @Override
     public String toString() {
         return "Personne{" + "Prénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
-                ", Coordonnées: " + this.getContact() + '}';
+                ", Coordonnées: " + this.getContactId() + '}';
     }
 
 

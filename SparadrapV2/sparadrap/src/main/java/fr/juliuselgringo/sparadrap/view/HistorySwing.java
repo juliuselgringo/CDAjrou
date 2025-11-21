@@ -1,6 +1,8 @@
 package fr.juliuselgringo.sparadrap.view;
 
 import fr.juliuselgringo.sparadrap.DAO.DrugDAO;
+import fr.juliuselgringo.sparadrap.DAO.PurchaseDAO;
+import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Drug;
 import fr.juliuselgringo.sparadrap.model.Purchase;
@@ -33,7 +35,10 @@ public class HistorySwing {
 
         Gui.labelMaker(panel, "Sélectionner une commande à afficher:",10,10);
         JComboBox historyBox = Gui.comboBoxMaker(panel,10,40,1500);
-        for (Purchase purchase : Purchase.purchasesHistory){
+
+        PurchaseDAO purchaseDAO = new PurchaseDAO();
+        List<Purchase> purchasesHistory = purchaseDAO.getAll();
+        for (Purchase purchase : purchasesHistory){
             historyBox.addItem(purchase);
         }
 
@@ -88,7 +93,7 @@ public class HistorySwing {
             if(e.getValueIsAdjusting()){
                 int selectedRow = table.getSelectedRow();
                 if(selectedRow >= 0){
-                    Purchase purchase = Purchase.purchasesHistory.get(selectedRow);
+                    Purchase purchase = purchasesHistory.get(selectedRow);
                     purchaseDetails(purchase);
                 }
             }
@@ -102,6 +107,7 @@ public class HistorySwing {
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 410);
         exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
             System.exit(0);
         });
 
@@ -136,6 +142,7 @@ public class HistorySwing {
 
         JButton exitButton = Gui.buttonMaker(panel2, "Quitter", 270);
         exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
             System.exit(0);
         });
     }
@@ -154,6 +161,7 @@ public class HistorySwing {
 
         JButton exitButton = Gui.buttonMaker(panel2, "Quitter", 310);
         exitButton.addActionListener(e1 -> {
+            Singleton.closeInstanceDB();
             System.exit(0);
         });
     }
@@ -170,7 +178,6 @@ public class HistorySwing {
 
         DrugDAO drugDAO = new DrugDAO();
         List<Drug> drugsList = drugDAO.getAll();
-        drugDAO.closeConnection();
 
         String[] header = {"Médicament", "Quantité"};
         ArrayList<Purchase> purchaseListToDisplay = Purchase.searchPurchaseByPeriod(startDate, endDate);
@@ -208,6 +215,7 @@ public class HistorySwing {
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 410);
         exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
             System.exit(0);
         });
     }

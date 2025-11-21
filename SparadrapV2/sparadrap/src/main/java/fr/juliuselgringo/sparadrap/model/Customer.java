@@ -1,8 +1,6 @@
 package fr.juliuselgringo.sparadrap.model;
 
-import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
-import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
-import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
+import fr.juliuselgringo.sparadrap.DAO.*;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.utility.Display;
 
@@ -22,28 +20,27 @@ public class Customer extends Person {
     private Integer customerId;
     private String socialSecurityId;
     private LocalDate dateOfBirth;
-    private Mutual mutual;
-    private Doctor doctor;
+    private Integer mutualId;
+    private Integer doctorId;
 
     /**
      * CONSTRUCTOR
      * @param firstName String
      * @param lastName String
-     * @param contact Contact
+     * @param contactId Integer
      * @param socialSecurityId String
      * @param dateOfBirth String
-     * @param mutual Mutual
-     * @param doctor Doctor
+     * @param mutualId Integer
+     * @param doctorId Integer
      * @throws InputException String
      */
-    public Customer(String firstName, String lastName, Contact contact,String socialSecurityId,
-                    String dateOfBirth, Mutual mutual, Doctor doctor) throws InputException {
-        super(firstName, lastName, contact);
+    public Customer(String firstName, String lastName, Integer contactId,String socialSecurityId,
+                    String dateOfBirth, Integer mutualId, Integer doctorId) throws InputException {
+        super(firstName, lastName, contactId);
         setSocialSecurityId(socialSecurityId);
         setDateOfBirth(dateOfBirth);
-        this.mutual =  mutual;
-        this.mutual.mutualCustomersList.add(this);
-        this.doctor = doctor;
+        this.mutualId =  mutualId;
+        this.doctorId = doctorId;
     }
 
     /**
@@ -51,40 +48,39 @@ public class Customer extends Person {
      * @param customerId Integer
      * @param firstName String
      * @param lastName String
-     * @param contact Contact
+     * @param contactId Interger
      * @param socialSecurityId String
      * @param dateOfBirth String
-     * @param mutual Mutual
-     * @param doctor Doctor
+     * @param mutualId Integer
+     * @param doctorId Integer
      * @throws InputException String
      */
-    public Customer(Integer customerId, String firstName, String lastName, Contact contact,String socialSecurityId,
-                    String dateOfBirth, Mutual mutual, Doctor doctor) throws InputException {
-        super(firstName, lastName, contact);
+    public Customer(Integer customerId, String firstName, String lastName, Integer contactId,String socialSecurityId,
+                    String dateOfBirth, Integer mutualId, Integer doctorId) throws InputException {
+        super(firstName, lastName, contactId);
         this.customerId = customerId;
         setSocialSecurityId(socialSecurityId);
         setDateOfBirth(dateOfBirth);
-        this.mutual =  mutual;
-        this.mutual.mutualCustomersList.add(this);
-        this.doctor = doctor;
+        this.mutualId =  mutualId;
+        this.doctorId = doctorId;
     }
 
     /**
      * CONSTRUCTOR
      * @param firstName String
      * @param lastName String
-     * @param contact Contact
+     * @param contactId Integer
      * @throws InputException String
      */
-    public Customer(String firstName, String lastName, Contact contact) throws InputException {
-        super(firstName, lastName, contact);
+    public Customer(String firstName, String lastName, Integer contactId) throws InputException {
+        super(firstName, lastName, contactId);
     }
 
     /**
      * constructor
-     * @param firstName
-     * @param lastName
-     * @param socialSecurityId
+     * @param firstName string
+     * @param lastName string
+     * @param socialSecurityId string
      * @throws InputException String
      */
     public Customer (String firstName, String lastName, String socialSecurityId) throws InputException{
@@ -172,38 +168,37 @@ public class Customer extends Person {
     }
 
     /**
-     * GETTER Mutual
-     * @return Mutual
+     * GETTER mutualId
+     * @return Integer
      */
-    public Mutual getMutual() {
-        return this.mutual;
+    public Integer getMutualId() {
+        return this.mutualId;
     }
 
     /**
-     * SETTER mutual
-     * @param mutual Mutual
+     * SETTER mutualId
+     * @param mutualId Integer
      * @throws InputException String
      */
-    public void setMutual(Mutual mutual) throws InputException {
-        this.mutual = mutual;
-        this.mutual.mutualCustomersList.add(this);
+    public void setMutualId(Integer mutualId) throws InputException {
+        this.mutualId = mutualId;
     }
 
     /**
-     * GETTER Doctor
-     * @return Doctor
+     * GETTER doctorId
+     * @return Integer
      */
-    public Doctor getDoctor() {
-        return this.doctor;
+    public Integer getDoctorId() {
+        return this.doctorId;
     }
 
     /**
-     * SETTER doctor
-     * @param doctor Doctor
+     * SETTER doctorId
+     * @param doctorId Integer
      * @throws InputException String
      */
-    public void setDoctor(Doctor doctor) throws InputException {
-        this.doctor = doctor;
+    public void setDoctorId(Integer doctorId) throws InputException {
+        this.doctorId = doctorId;
     }
 
     /**
@@ -237,11 +232,7 @@ public class Customer extends Person {
     public String toStringForDetails(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return "Client \nPrénom: " + this.getFirstName() +
-                "\nNom: " + this.getLastName() +
-                "\nDate de naissance: " + this.getDateOfBirth().format(formatter) +
-                "\nTel:" + this.getContact().getPhone() +
-                "\nMutuelle: " + this.getMutual().getName() + " " + this.getMutual().getContact().getPostalCode() +
-                "\nDocteur: " + this.getDoctor().getLastName() + " " + this.getDoctor().getContact().getPostalCode() + "\n";
+                "\nNom: " + this.getLastName()+ "\n";
     }
 
     /**
@@ -257,13 +248,19 @@ public class Customer extends Person {
         int i = 0;
         try {
             for (Customer customer : customersList) {
+                ContactDAO contactDAO = new ContactDAO();
+                Contact contact = contactDAO.getById(customer.getContactId());
+                MutualDAO mutualDAO = new MutualDAO();
+                Mutual mutual = mutualDAO.getById(customer.getMutualId());
+                DoctorDAO doctorDAO = new DoctorDAO();
+                Doctor doctor = doctorDAO.getById(customer.getDoctorId());
                 matrices[i][0] = customer.getCustomerId().toString();
                 matrices[i][1] = customer.getFirstName();
                 matrices[i][2] = customer.getLastName();
                 matrices[i][3] = customer.getDateOfBirth().format(formatter);
-                matrices[i][4] = customer.getContact().getPhone();
-                matrices[i][5] = customer.getMutual().getName() + " " + customer.getMutual().getContact().getPostalCode();
-                matrices[i][6] = customer.getDoctor().getLastName() + " " + customer.getDoctor().getContact().getPostalCode();
+                matrices[i][4] = contact.getPhone();
+                matrices[i][5] = mutual.getName();
+                matrices[i][6] = doctor.getLastName();
                 i++;
             }
         }catch(NullPointerException npe){};

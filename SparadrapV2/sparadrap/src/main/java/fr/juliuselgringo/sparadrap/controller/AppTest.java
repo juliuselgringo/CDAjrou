@@ -41,11 +41,11 @@ public class AppTest {
             //________________________MUTUELLES______________________________________
             Contact harmo75 = new Contact("10 Rue de la Sante", "75000",
                     "Paris", "01 23 45 67 89", "contact@harmonie.fr");
-            Mutual harmonie75 = new Mutual("Harmonie Mutuelle", harmo75, 0.75);
+            Mutual harmonie75 = new Mutual("Harmonie Mutuelle", 1, 0.75);
 
             Contact mgen69 = new Contact("25 Av de la Mutualite", "69000",
                     "Lyon", "04 56 78 90 12", "contact@mgen.fr");
-            Mutual mgenLyon = new Mutual("Mgen", mgen69, 0.80);
+            Mutual mgenLyon = new Mutual("Mgen", 2, 0.80);
             /*
             Mutual.mutualsList.add(mgenLyon);
             Mutual.mutualsList.add(harmonie75);
@@ -53,19 +53,19 @@ public class AppTest {
             //__________________________DOCTEURS____________________________________
             Contact jeDup75 = new Contact("12 Rue de Paris", "75000", "Paris",
                     "01 23 45 67 89", "jean.dupont@medecin.fr");
-            Doctor jeDupParis = new Doctor("Jean", "Dupont", jeDup75, "12345678901");
+            Doctor jeDupParis = new Doctor("Jean", "Dupont", 3, "12345678901");
 
             Contact maMar69 = new Contact("45 Av des Champs", "69000", "Lyon",
                     "04 56 78 90 12", "marie.martin@medecin.fr");
-            Doctor maMarLyon = new Doctor("Marie", "Martin", maMar69, "23456789012");
+            Doctor maMarLyon = new Doctor("Marie", "Martin", 4, "23456789012");
 
             Contact jeDuc71 = new Contact("12 Rue de Pffft", "71000", "Pfffft",
                     "06 23 45 67 89", "jeannot.ducont@medecin.fr");
-            Doctor JeDuc = new Doctor("Jeannot", "Ducont", jeDuc71, "12345678901");
+            Doctor JeDuc = new Doctor("Jeannot", "Ducont", 5, "12345678901");
 
             Contact maMar68 = new Contact("45 Av des Choux", "68000", "Colmar",
                     "02 56 78 90 12", "mario.martais@medecin.fr");
-            new Doctor("Mario", "Martais", maMar68, "13456789012");
+            new Doctor("Mario", "Martais", 6, "13456789012");
             /*
             Doctor.doctorsList.add(jeDupParis);
             Doctor.doctorsList.add(maMarLyon);
@@ -74,23 +74,23 @@ public class AppTest {
             //________________________CLIENTS__________________________________________
             Contact alLef75 = new Contact("12 Rue de Paris", "75000", "Paris",
                     "01 23 45 67 89", "alice.lefevre@mail.fr");
-            Customer alLefParis = new Customer("Alice", "Lefevre", alLef75, "275126432109848",
-                    "15-07-1985", harmonie75, jeDupParis);
+            Customer alLefParis = new Customer("Alice", "Lefevre", 7, "275126432109848",
+                    "15-07-1985", 1, 1);
 
             Contact maPet69 = new Contact("34 Av des Camps", "69000", "Lyon",
                     "04 56 78 90 12", "marc.petit@mail.fr");
-            Customer maPetLyon = new Customer("Marc", "Petit", maPet69, "185076432109818",
-                    "20-12-1975", mgenLyon, maMarLyon);
+            Customer maPetLyon = new Customer("Marc", "Petit", 8, "185076432109818",
+                    "20-12-1975", 2, 2);
 
             Contact jaBour54 = new Contact("12 Rue de Paris", "54000", "Nancy",
                     "03 23 45 67 89", "jacques.bourdin@mail.fr");
-            Customer jaBourNancy = new Customer("Jacques", "Bourdin", jaBour54, "175126432109848",
-                    "15-01-1982",harmonie75, jeDupParis);
+            Customer jaBourNancy = new Customer("Jacques", "Bourdin", 9, "175126432109848",
+                    "15-01-1982", 1, 1);
 
             Contact maPet60 = new Contact("34 Av des Champs", "60000", "Chaipas",
                     "04 56 78 90 12", "marc.petit@mail.fr");
-            Customer maPet = new Customer("Marianne", "Petoncourt", maPet60, "285076432109818",
-                    "20-12-1975", mgenLyon, maMarLyon);
+            Customer maPet = new Customer("Marianne", "Petoncourt", 10, "285076432109818",
+                    "20-12-1975", 2, 2);
             /*
             Customer.customersList.add(jaBourNancy);
             Customer.customersList.add(alLefParis);
@@ -132,7 +132,7 @@ public class AppTest {
 
             Purchase purchase2 = new Purchase(true);
             Prescription prescription2 = new Prescription("29-08-2025", 2, 2);
-            purchase2.setPrescrition(prescription2);
+            purchase2.setPrescritionId(prescription2.getPrescriptionId());
             purchase2.setPurchaseDrugsQuantity(dafalgan, 1);
             purchase2.setPurchaseDrugsQuantity(amoxicilline, 1);
             purchase2.setPurchaseDrugsQuantity(smecta, 1);
@@ -140,7 +140,7 @@ public class AppTest {
 
             Purchase purchase3 = new Purchase(true);
             Prescription prescription3 = new Prescription("12-08-2025", 1, 1);
-            purchase3.setPrescrition(prescription3);
+            purchase3.setPrescritionId(prescription3.getPrescriptionId());
             purchase3.setPurchaseDrugsQuantity(dafalgan, 1);
             purchase3.setPurchaseDrugsQuantity(amoxicilline, 1);
             purchase3.setPurchaseDrugsQuantity(smecta, 1);
@@ -148,7 +148,7 @@ public class AppTest {
 
             Purchase purchase4 = new Purchase("07-07-2025", true);
             Prescription prescription4 = new Prescription("22-06-2025", 1, 1);
-            purchase4.setPrescrition(prescription4);
+            purchase4.setPrescritionId(prescription4.getPrescriptionId());
             purchase4.setPurchaseDrugsQuantity(dafalgan, 1);
             purchase4.setPurchaseDrugsQuantity(amoxicilline, 1);
             purchase4.setPurchaseDrugsQuantity(smecta, 1);

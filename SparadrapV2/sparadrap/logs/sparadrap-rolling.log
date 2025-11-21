@@ -1,92 +1,26 @@
-2025-11-20 08:00:39.679 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.MutualDAO - Error deleting mutual: Cannot delete or update a parent row: a foreign key constraint fails (`sparadrap`.`customer`, CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`mutual_id`) REFERENCES `mutual` (`mutual_id`))
-2025-11-20 08:00:39.696 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.ContactDAO - Error Delete contact: java.sql.SQLIntegrityConstraintViolationException: Cannot delete or update a parent row: a foreign key constraint fails (`sparadrap`.`mutual`, CONSTRAINT `mutual_ibfk_1` FOREIGN KEY (`contact_id`) REFERENCES `contact` (`contact_id`))
-2025-11-20 08:17:06.450 [main] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting all customers: fr.juliuselgringo.sparadrap.ExceptionTracking.InputException: Saisie date de naissance invalide
-2025-11-20 08:27:52.461 [main] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting all customers: fr.juliuselgringo.sparadrap.ExceptionTracking.InputException: Saisie date de naissance invalide
-2025-11-20 13:36:12.105 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.DrugDAO - Error get all drugs: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'drug_name' at line 1
-2025-11-20 13:36:12.123 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.DrugDAO - Error get all drugs: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'drug_name' at line 1
-2025-11-20 14:16:05.143 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:17:06.583 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:17:06.594 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:17:12.225 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:17:12.236 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:17:12.245 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:17:23.335 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 14:17:23.354 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:51:12.334 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:51:34.637 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:51:34.648 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:51:38.855 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:51:38.864 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:51:38.875 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:51:38.894 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 6
-2025-11-20 14:55:24.221 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:55:30.474 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:55:30.484 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:55:33.703 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:55:33.714 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:55:33.722 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:55:33.742 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 6
-2025-11-20 14:58:06.531 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:58:13.575 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:58:13.585 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:58:15.350 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:58:15.361 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:58:15.372 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 14:58:15.389 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 6
-2025-11-20 15:01:34.730 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 15:01:41.878 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 15:01:41.890 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 15:01:41.909 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 6
-2025-11-20 15:01:42.916 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 15:01:42.928 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 15:01:42.939 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 6
-2025-11-20 15:04:12.227 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 15:04:14.794 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 15:04:14.804 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 15:04:14.825 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 6
-2025-11-20 15:15:54.735 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 1
-2025-11-20 15:21:03.787 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 1
-2025-11-20 15:30:17.061 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 1
-2025-11-20 15:31:49.554 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLException: No value specified for parameter 1
-2025-11-20 15:43:50.967 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.DrugDAO - Error update drug: java.sql.SQLSyntaxErrorException: Unknown column 'id' in 'where clause'
-2025-11-20 16:14:20.295 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:14:20.322 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:14:27.969 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:14:27.989 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:20:52.199 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:20:52.224 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:21:05.788 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:21:05.812 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:27:14.038 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:27:14.065 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:27:16.854 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:27:16.877 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:27:26.436 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:27:26.457 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:27:28.945 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:27:28.969 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:27:36.237 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:27:36.258 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:28:21.283 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:28:21.303 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:28:22.662 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:28:22.684 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:31:44.299 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:31:44.325 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:33:00.394 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:33:00.412 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:33:05.906 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:33:05.924 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:34:01.659 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:34:01.677 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.CustomerDAO - Error getting customer: java.sql.SQLSyntaxErrorException: Column 'first_name' not found.
-2025-11-20 16:37:46.363 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:37:49.915 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:41:52.303 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1
-2025-11-20 16:44:08.965 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:50:20.992 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:52:45.652 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:55:53.520 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:56:25.389 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:56:27.275 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:59:20.402 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
-2025-11-20 16:59:55.339 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLSyntaxErrorException: Unknown column 'doctor_id' in 'field list'
+2025-11-21 08:33:08.872 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PurchaseDAO - Error insert purchasejava.sql.SQLSyntaxErrorException: Unknown column 'doctor_id' in 'field list'
+2025-11-21 08:40:13.223 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 08:40:17.558 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 08:40:49.684 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 08:41:26.713 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 08:42:03.590 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 08:42:22.779 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 08:42:30.002 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 08:53:21.668 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:27:18.439 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:27:38.437 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:36:16.582 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:41:35.540 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:43:15.324 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:45:16.009 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:45:48.106 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:46:38.481 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:47:11.208 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 09:47:14.977 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 10:11:13.485 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: No value specified for parameter 1
+2025-11-21 10:23:42.636 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 10:23:46.472 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 11:58:36.704 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 11:58:48.433 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 12:01:27.575 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed
+2025-11-21 12:01:32.520 [AWT-EventQueue-0] ERROR fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO - Error get prescriptions by doctor Id: java.sql.SQLException: Operation not allowed after ResultSet closed

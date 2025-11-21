@@ -37,7 +37,7 @@ public class DoctorDAO extends DAO<Doctor> {
             pstmt.setString(1, entity.getFirstName());
             pstmt.setString(2, entity.getLastName());
             pstmt.setString(3, entity.getAgreementId());
-            pstmt.setInt(4, entity.getContact().getContactId());
+            pstmt.setInt(4, entity.getContactId());
 
             pstmt.executeUpdate();
 
@@ -65,7 +65,7 @@ public class DoctorDAO extends DAO<Doctor> {
             pstmt.setString(1, entity.getFirstName());
             pstmt.setString(2, entity.getLastName());
             pstmt.setString(3, entity.getAgreementId());
-            pstmt.setInt(4, entity.getContact().getContactId());
+            pstmt.setInt(4, entity.getContactId());
 
             pstmt.setInt(5, entity.getDoctorId());
 
@@ -121,10 +121,7 @@ public class DoctorDAO extends DAO<Doctor> {
                 String agreementId = res.getString("agreement_id");
                 Integer contactId = res.getInt("contact_id");
 
-                ContactDAO contactDAO = new ContactDAO();
-                Contact contact = contactDAO.getById(contactId);
-
-                Doctor doctor = new Doctor(doctorId, firstName, lastName, contact, agreementId);
+                Doctor doctor = new Doctor(doctorId, firstName, lastName, contactId, agreementId);
                 doctorsList.add(doctor);
             }
 
@@ -158,12 +155,7 @@ public class DoctorDAO extends DAO<Doctor> {
                 doctor.setFirstName(res.getString("doctor_firstName"));
                 doctor.setLastName(res.getString("doctor_lastName"));
                 doctor.setAgreementId(res.getString("agreement_id"));
-
-                Integer contactId = (res.getInt("contact_id"));
-                ContactDAO contactDAO = new ContactDAO();
-                Contact contact = contactDAO.getById(contactId);
-
-                doctor.setContact(contact);
+                doctor.setContactId(res.getInt("contact_id"));
             }
 
         } catch (SQLException | InputException e) {

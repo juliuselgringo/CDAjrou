@@ -1,5 +1,6 @@
 package fr.juliuselgringo.sparadrap.view;
 
+import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.utility.Gui;
 import javax.swing.*;
 
@@ -64,6 +65,9 @@ public class ProgramSwing {
 
 
         JButton exitButton = Gui.buttonMaker(generalPanel, "Quitter", 400);
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 }

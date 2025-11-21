@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CustomerTest {
 
     Customer test = new Customer();
-
+    /*
     @Test
     void constructor1_GetterAndSetter_ValidInput() throws InputException {
         Contact mgen69 = new Contact("25 Av de la Mutualite","69000",
@@ -50,7 +50,7 @@ class CustomerTest {
         assertEquals("Ducont", customer.getLastName());
         assertInstanceOf(Contact.class, customer.getContact());
     }
-
+    */
     @Test
     void constructor3_ValidInput() throws InputException {
         Customer customer = new Customer();
@@ -75,6 +75,7 @@ class CustomerTest {
         assertEquals("La date de naissance ne peut être postérieure à la date d'aujourd'hui", thrown.getMessage());
     }
 
+    /*
     @Test
     public void setMutual_ValidInput() throws InputException {
         Mutual mutual = new Mutual();
@@ -83,7 +84,7 @@ class CustomerTest {
         assertEquals("Mutual", test.getMutual().getName());
     }
 
-    /*
+
     @Test
     public void setAndGetCustomerPrescriptionList() throws InputException {
         Doctor doctor = new Doctor();

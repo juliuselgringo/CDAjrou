@@ -2,6 +2,7 @@ package fr.juliuselgringo.sparadrap.view;
 
 import fr.juliuselgringo.sparadrap.DAO.DrugCategoryDAO;
 import fr.juliuselgringo.sparadrap.DAO.DrugDAO;
+import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Drug;
 import fr.juliuselgringo.sparadrap.model.DrugCategory;
@@ -32,7 +33,6 @@ public class DrugSwing {
 
         DrugDAO drugDAO = new DrugDAO();
         List<Drug> drugsList = drugDAO.getAll();
-        drugDAO.closeConnection();
 
         Gui.labelMaker(panel,"Sélectionner un médicament dans le tableau: ",10,10);
         JTable table = setTable(panel);
@@ -77,7 +77,10 @@ public class DrugSwing {
         });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
-        exitButton2.addActionListener(eve -> System.exit(0));
+        exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
 
     }
 
@@ -94,7 +97,10 @@ public class DrugSwing {
         back2Button.addActionListener(ev -> frame.dispose());
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
-        exitButton2.addActionListener(eve -> System.exit(0));
+        exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -110,7 +116,6 @@ public class DrugSwing {
 
         DrugDAO drugDAO = new DrugDAO();
         List<Drug> drugsList = drugDAO.getAll();
-        drugDAO.closeConnection();
 
         Gui.labelMaker(panel,"Nom: ",10,10);
         JTextField nameField = Gui.textFieldMaker(panel,10,40);
@@ -119,7 +124,6 @@ public class DrugSwing {
         Gui.labelMaker(panel,"Catégorie: ",400,10);
         DrugCategoryDAO drugCategoryDAO = new DrugCategoryDAO();
         List<DrugCategory> drugCategoryList = drugCategoryDAO.getAll();
-        drugCategoryDAO.closeConnection();
         JComboBox categoryNameField = Gui.comboBoxMaker(panel,400,40,200);
         for(DrugCategory drugCategory : drugCategoryList){
             categoryNameField.addItem(drugCategory);
@@ -160,6 +164,7 @@ public class DrugSwing {
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
             System.exit(0);
         });
 
@@ -176,10 +181,8 @@ public class DrugSwing {
                 DrugDAO drugDAO1 = new DrugDAO();
                 if(type.equals("create")){
                     drugDAO1.create(drug);
-                    drugDAO1.closeConnection();
                 }else{
                     drugDAO1.update(drug);
-                    drugDAO1.closeConnection();
                 }
 
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
@@ -202,7 +205,6 @@ public class DrugSwing {
     public static void deleteDrug(Drug drug, JFrame frame){
         DrugDAO drugDAO = new DrugDAO();
         List<Drug> drugsList = drugDAO.getAll();
-        drugDAO.closeConnection();
         int resp = JOptionPane.showConfirmDialog(null,"Etes vous sur de vouloir supprimer ce médicament?",
                 "Confirmation",JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) {

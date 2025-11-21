@@ -3,6 +3,7 @@ package fr.juliuselgringo.sparadrap.view;
 import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
 import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
 import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
+import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Contact;
 import fr.juliuselgringo.sparadrap.model.Doctor;
@@ -34,7 +35,6 @@ public class DoctorSwing {
 
         DoctorDAO doctorDAO = new DoctorDAO();
         List<Doctor> doctorsList = doctorDAO.getAll();
-        doctorDAO.closeConnection();
 
         Gui.labelMaker(panel, "Sélectionner un médecin dans le tableau:",10,10);
 
@@ -115,7 +115,10 @@ public class DoctorSwing {
         });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
 
     }
 
@@ -128,7 +131,6 @@ public class DoctorSwing {
     public static JComboBox getDoctorBox(JPanel panel,int y) {
         DoctorDAO doctorDAO = new DoctorDAO();
         List<Doctor> doctorsList = doctorDAO.getAll();
-        doctorDAO.closeConnection();
 
         JComboBox doctorBox = Gui.comboBoxMaker(panel,10,y,400);
         for(Doctor doctor : doctorsList){
@@ -150,7 +152,10 @@ public class DoctorSwing {
         back2Button.addActionListener(ev -> frame.dispose());
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
-        exitButton2.addActionListener(eve -> System.exit(0));
+        exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -166,9 +171,8 @@ public class DoctorSwing {
 
         DoctorDAO doctorDAO = new DoctorDAO();
         List<Doctor> doctorsList = doctorDAO.getAll();
-        doctorDAO.closeConnection();
-
-        Contact contact = doctor.getContact();
+        ContactDAO contactDAO = new ContactDAO();
+        Contact contact = contactDAO.getById(doctor.getContactId());
 
         Gui.labelMaker(panel, "Prénom: ", 10, 10);
         JTextField firstNameField = Gui.textFieldMaker(panel, 10, 40);
@@ -214,6 +218,7 @@ public class DoctorSwing {
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
+            Singleton.closeInstanceDB();
             System.exit(0);
         });
 
@@ -233,11 +238,9 @@ public class DoctorSwing {
                 if(type.equals("create")){
                     contactDao.create(contact);
                     doctorDao.create(doctor);
-                    doctorDao.closeConnection();
                 }else{
                     contactDao.update(contact);
                     doctorDao.update(doctor);
-                    doctorDao.closeConnection();
                 }
                 JOptionPane.showMessageDialog(null, "Vos modification ont bien été enregitré",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -257,9 +260,7 @@ public class DoctorSwing {
      * @throws InputException String
      */
     public static void createDoctor(JFrame frame) throws InputException {
-        Contact contact = new Contact();
         Doctor doctor= new Doctor();
-        doctor.setContact(contact);
         formDoctor(doctor, "create",frame);
     }
 
@@ -278,8 +279,7 @@ public class DoctorSwing {
             DoctorDAO doctorDao = new DoctorDAO();
             doctorDao.delete(doctor);
             ContactDAO contactDao = new ContactDAO();
-            contactDao.delete(doctor.getContact());
-            doctorDao.closeConnection();
+            contactDao.delete(contactDao.getById(doctor.getContactId()));
             JOptionPane.showMessageDialog(null, "Le médecin a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
         }
@@ -302,7 +302,10 @@ public class DoctorSwing {
         backButton.addActionListener(ev -> frame2.dispose());
 
         JButton exitButton = Gui.buttonMaker(panel2, "Quitter", 430);
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
     /**
@@ -339,7 +342,10 @@ public class DoctorSwing {
         backButton.addActionListener(ev -> frame.dispose());
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 430);
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
 }

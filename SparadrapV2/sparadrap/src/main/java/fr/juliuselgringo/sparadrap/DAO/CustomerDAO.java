@@ -44,9 +44,9 @@ public class CustomerDAO extends DAO<Customer>{
             pstmt.setString(2, entity.getLastName());
             pstmt.setString(3, entity.getSocialSecurityId());
             pstmt.setDate(4, java.sql.Date.valueOf(entity.getDateOfBirth()));
-            pstmt.setInt(5, entity.getMutual().getMutualId());
-            pstmt.setInt(6, entity.getDoctor().getDoctorId());
-            pstmt.setInt(7, entity.getContact().getContactId());
+            pstmt.setInt(5, entity.getMutualId());
+            pstmt.setInt(6, entity.getDoctorId());
+            pstmt.setInt(7, entity.getContactId());
 
             pstmt.executeUpdate();
 
@@ -77,9 +77,9 @@ public class CustomerDAO extends DAO<Customer>{
             pstmt.setString(2, entity.getLastName());
             pstmt.setString(3, entity.getSocialSecurityId());
             pstmt.setDate(4, java.sql.Date.valueOf(entity.getDateOfBirth()));
-            pstmt.setInt(5, entity.getMutual().getMutualId());
-            pstmt.setInt(6, entity.getDoctor().getDoctorId());
-            pstmt.setInt(7, entity.getContact().getContactId());
+            pstmt.setInt(5, entity.getMutualId());
+            pstmt.setInt(6, entity.getDoctorId());
+            pstmt.setInt(7, entity.getContactId());
 
             pstmt.executeUpdate();
 
@@ -135,16 +135,9 @@ public class CustomerDAO extends DAO<Customer>{
                 Integer doctorId = rs.getInt("doctor_id");
                 Integer contactId = rs.getInt("contact_id");
 
-                ContactDAO contactDAO = new ContactDAO();
-                Contact contact = contactDAO.getById(contactId);
-                MutualDAO mutualDAO = new MutualDAO();
-                Mutual mutual = mutualDAO.getById(mutualId);
-                DoctorDAO doctorDAO = new DoctorDAO();
-                Doctor doctor = doctorDAO.getById(doctorId);
-
                 String formattedBirthDate = birthDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
-                Customer customer = new Customer(customerId, firstName, lastName, contact, socialSecurityId, formattedBirthDate, mutual, doctor);
+                Customer customer = new Customer(customerId, firstName, lastName, contactId, socialSecurityId, formattedBirthDate, mutualId, doctorId);
                 customersList.add(customer);
 
             }
@@ -184,14 +177,7 @@ public class CustomerDAO extends DAO<Customer>{
                 Integer doctorId = rs.getInt("doctor_id");
                 Integer contactId = rs.getInt("contact_id");
 
-                ContactDAO contactDAO = new ContactDAO();
-                Contact contact = contactDAO.getById(contactId);
-                MutualDAO mutualDAO = new MutualDAO();
-                Mutual mutual = mutualDAO.getById(mutualId);
-                DoctorDAO doctorDAO = new DoctorDAO();
-                Doctor doctor = doctorDAO.getById(doctorId);
-
-                customer = new Customer(customerId, firstName, lastName, contact, socialSecurityId, birthDate, mutual, doctor);
+                customer = new Customer(customerId, firstName, lastName, contactId, socialSecurityId, birthDate, mutualId, doctorId);
 
             }
 

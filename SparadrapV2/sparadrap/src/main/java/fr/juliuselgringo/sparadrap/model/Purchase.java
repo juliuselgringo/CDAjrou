@@ -1,13 +1,13 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
+import fr.juliuselgringo.sparadrap.DAO.PurchaseDAO;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * classe achat
@@ -22,12 +22,7 @@ public class Purchase implements Serializable {
     private Boolean withPrescription;
     private Double totalPrice;
     private String[][] purchaseDetails;
-    private Prescription prescription;
-
-    /**
-     * historique des achats
-     */
-    public static ArrayList<Purchase> purchasesHistory = new ArrayList<Purchase>();
+    private Integer prescriptionId;
 
     /**
      * liste medicament, quantite d'une commande
@@ -46,7 +41,6 @@ public class Purchase implements Serializable {
     public Purchase(Boolean withPrescription) {
         this.purchaseDate = LocalDate.now();
         this.withPrescription = withPrescription;
-        purchasesHistory.add(this);
         this.purchaseNumber = incrementPurchaseNumber;
         incrementPurchaseNumber++;
     }
@@ -59,7 +53,6 @@ public class Purchase implements Serializable {
     public Purchase(String purchaseDate, Boolean withPrescription) {
         setPurchaseDate(purchaseDate);
         this.withPrescription = withPrescription;
-        purchasesHistory.add(this);
         this.purchaseNumber = incrementPurchaseNumber;
         incrementPurchaseNumber++;
     }
@@ -114,19 +107,19 @@ public class Purchase implements Serializable {
     }
 
     /**
-     * GETTER prescription
-     * @return Prescription
+     * GETTER prescriptionId
+     * @return Integer
      */
-    public Prescription getPrescription() {
-        return prescription;
+    public Integer getPrescriptionId() {
+        return prescriptionId;
     }
 
     /**
-     * setter de prescription
-     * @param prescription Prescription
+     * setter de prescriptionId
+     * @param prescriptionId Integer
      */
-    public void setPrescrition(Prescription prescription){
-        this.prescription = prescription;
+    public void setPrescritionId(Integer prescriptionId){
+        this.prescriptionId = prescriptionId;
     }
 
     /**
@@ -165,8 +158,10 @@ public class Purchase implements Serializable {
      */
     public void setPurchaseDrugsQuantity(Drug drug, int quantity) {
         if(this.withPrescription){
-            this.prescription.setDrugsQuantityPrescriptionList(drug,quantity);
-            this.purchaseDrugsQuantity = this.prescription.getDrugsQuantityPrescriptionList();
+            PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+            Prescription prescription = prescriptionDAO.getById(this.prescriptionId);
+            prescription.setDrugsQuantityPrescriptionList(drug,quantity);
+            this.purchaseDrugsQuantity = prescription.getDrugsQuantityPrescriptionList();
         }else {
             this.purchaseDrugsQuantity.put(drug, quantity);
         }
@@ -191,7 +186,9 @@ public class Purchase implements Serializable {
             purchaseDetails[i][0] = this.getPurchaseDate().format(formatter);
             purchaseDetails[i][1] = this.getPurchaseNumber().toString();
             if(this.withPrescription) {
-                purchaseDetails[i][2] = this.getPrescription().getCustomer().getLastName();
+                PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+                Prescription prescription = prescriptionDAO.getById(this.prescriptionId);
+                purchaseDetails[i][2] = prescription.getCustomer().getLastName();
             }else {
                 purchaseDetails[i][2] = "Anonyme (achat sans prescription)";
             }
@@ -226,23 +223,15 @@ public class Purchase implements Serializable {
      * @return ArrayList
      */
     public static ArrayList searchPurchaseByPeriod(LocalDate startDate, LocalDate endDate) {
-        ArrayList purchaseByPeriod = new ArrayList();
-        for(Purchase purchase : purchasesHistory){
-            LocalDate date = purchase.getPurchaseDate();
-            if(date.isAfter(startDate) && date.isBefore(endDate)){
-                purchaseByPeriod.add(purchase);
-            } else if (date.isEqual(startDate) || date.isEqual(endDate)) {
-                purchaseByPeriod.add(purchase);
-            }
-        }
-        return purchaseByPeriod;
+        // créer la requete purchaseDAO
+        return null;
     }
 
     /**
      * SUPPRIMER UNE COMMANDE L HISTORIQUE
      */
     public void deletePurchaseFromHistory() {
-        purchasesHistory.remove(this);
+        // créer le delete purchaseDAO
     }
 
     /**
@@ -250,6 +239,10 @@ public class Purchase implements Serializable {
      * @return String[][]
      */
     public static String[][] createPurchasesMatrice(){
+
+        PurchaseDAO purchaseDAO = new PurchaseDAO();
+        List<Purchase> purchasesHistory = purchaseDAO.getAll();
+
         String[][] purchaseMatrice = new String[purchasesHistory.size()][5];
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         int i = 0;
@@ -260,7 +253,7 @@ public class Purchase implements Serializable {
                 if(!purchase.getWithPrescription()){
                     purchaseMatrice[i][2] = "sans ordonnance";
                 }else {
-                    purchaseMatrice[i][2] = purchase.getPrescription().getCustomer().getLastName();
+                    purchaseMatrice[i][2] = purchase.getPrescriptionId().toString();
                 }
                 i++;
             }
