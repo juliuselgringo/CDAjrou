@@ -149,9 +149,7 @@ public class MutualSwing {
         JFrame frame = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frame);
 
-        MutualDAO mutualDAO = new MutualDAO();
-        List<Mutual> mutualsList = mutualDAO.getAll();
-
+        MutualDAO mutualDao = new MutualDAO();
         ContactDAO contactDAO = new ContactDAO();
         Contact contact = contactDAO.getById(mutual.getContactId());
 
@@ -189,6 +187,10 @@ public class MutualSwing {
 
         JButton back2Button = Gui.buttonMaker(panel,"Annuler",480);
         back2Button.addActionListener(ev -> {
+            if(type.equals("create")){
+                contactDAO.delete(contact);
+                mutualDao.delete(mutual);
+            }
             frame1.dispose();
             frame.dispose();
             mutualMenu();
@@ -196,6 +198,10 @@ public class MutualSwing {
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
+            if(type.equals("create")){
+                contactDAO.delete(contact);
+                mutualDao.delete(mutual);
+            }
             Singleton.closeInstanceDB();
             System.exit(0);
         });
@@ -210,14 +216,11 @@ public class MutualSwing {
                 contact.setEmail(emailField.getText());
                 mutual.setRate(Double.parseDouble(rateField.getText()));
                 // enregistrement dans la DB
-                MutualDAO mutualDao = new MutualDAO();
-                if(type.equals("create")){
-                    contactDAO.create(contact);
-                    mutualDao.create(mutual);
-                }else{
-                    contactDAO.update(contact);
-                    mutualDao.update(mutual);
-                }
+
+
+                contactDAO.update(contact);
+                mutualDao.update(mutual);
+
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
@@ -260,9 +263,15 @@ public class MutualSwing {
      * @throws InputException String
      */
     public static void createMutual(JFrame frame) throws InputException {
-        Contact contact = new Contact();
-        Mutual newMutual = new Mutual();
+        Mutual newMutual = new Mutual("Na", 1, 0.1);
+        MutualDAO mutualDAO = new MutualDAO();
+
+        Contact contact = new Contact("0  rue na", "00000", "Na", "00 00 00 00 00", "na@na.na");
+        ContactDAO contactDAO = new ContactDAO();
+        contact = contactDAO.create(contact);
+
         newMutual.setContactId(contact.getContactId());
+        newMutual = mutualDAO.create(newMutual);
         mutualForm(newMutual,"create",frame);
     }
 

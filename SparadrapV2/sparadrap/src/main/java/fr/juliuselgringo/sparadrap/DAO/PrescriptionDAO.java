@@ -4,15 +4,10 @@ import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.model.Prescription;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
+import java.sql.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +19,17 @@ public class PrescriptionDAO extends DAO<Prescription> {
 
     private static Logger logger = LogManager.getLogger(PrescriptionDAO.class);
 
+    /**
+     * constructeur par défaut
+     */
+    public PrescriptionDAO() {}
 
+
+    /**
+     * ajouter une nouvelle prescription
+     * @param entity Prescription
+     * @return Prescription
+     */
     @Override
     public Prescription create(Prescription entity) {
 
@@ -50,6 +55,11 @@ public class PrescriptionDAO extends DAO<Prescription> {
         return entity;
     }
 
+    /**
+     * met à jour une prescription
+     * @param entity Prescription
+     * @return Prescription
+     */
     @Override
     public Prescription update(Prescription entity) {
 
@@ -72,6 +82,10 @@ public class PrescriptionDAO extends DAO<Prescription> {
         return entity;
     }
 
+    /**
+     * supprime une prescription
+     * @param entity Prescription
+     */
     @Override
     public void delete(Prescription entity) {
 
@@ -88,6 +102,10 @@ public class PrescriptionDAO extends DAO<Prescription> {
         }
     }
 
+    /**
+     * retourne une liste de toutes les prescription
+     * @return List
+     */
     @Override
     public List<Prescription> getAll() {
 
@@ -115,6 +133,11 @@ public class PrescriptionDAO extends DAO<Prescription> {
         return prescriptionsList;
     }
 
+    /**
+     * retourne une prescription à partir de son id
+     * @param id int
+     * @return Prescription
+     */
     @Override
     public Prescription getById(int id) {
 
@@ -176,8 +199,10 @@ public class PrescriptionDAO extends DAO<Prescription> {
                 prescriptionsList.add(prescription);
             }
 
-        } catch (SQLException | InputException e) {
-            logger.error("Error get prescriptions by doctor Id: " + e);
+        } catch (SQLException e) {
+            logger.error("Error SQL get prescriptions by doctor Id: " + e);
+        }catch(InputException e){
+            logger.error("Error Input get prescriptions by doctor Id: " + e);
         }
 
         return prescriptionsList;

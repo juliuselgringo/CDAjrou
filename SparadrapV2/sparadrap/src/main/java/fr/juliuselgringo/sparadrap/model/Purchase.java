@@ -1,5 +1,7 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.ContenirCRUD;
+import fr.juliuselgringo.sparadrap.DAO.DrugDAO;
 import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
 import fr.juliuselgringo.sparadrap.DAO.PurchaseDAO;
 
@@ -20,14 +22,9 @@ public class Purchase implements Serializable {
     private LocalDate purchaseDate;
     private Integer purchaseNumber;
     private Boolean withPrescription;
-    private Double totalPrice;
-    private String[][] purchaseDetails;
+    private Double totalPrice = 0.0;
     private Integer prescriptionId;
 
-    /**
-     * liste medicament, quantite d'une commande
-     */
-    private static Map<Drug, Integer> purchaseDrugsQuantity = new HashMap<>();
 
     /**
      * increment pour les numéros d'achat
@@ -54,6 +51,21 @@ public class Purchase implements Serializable {
         setPurchaseDate(purchaseDate);
         this.withPrescription = withPrescription;
         this.purchaseNumber = incrementPurchaseNumber;
+        incrementPurchaseNumber++;
+    }
+
+    /**
+     * CONSTRUCTOR
+     * @param purchaseId Integer
+     * @param purchaseDate String
+     * @param withPrescription Boolean
+     */
+    public Purchase(Integer purchaseId, String purchaseDate, Boolean withPrescription, Integer prescriptionId) {
+        setPurchaseDate(purchaseDate);
+        this.purchaseId = purchaseId;
+        this.withPrescription = withPrescription;
+        this.purchaseNumber = incrementPurchaseNumber;
+        this.prescriptionId =  prescriptionId;
         incrementPurchaseNumber++;
     }
 
@@ -122,13 +134,7 @@ public class Purchase implements Serializable {
         this.prescriptionId = prescriptionId;
     }
 
-    /**
-     * GETTER purchaseDrugsQuantity
-     * @return Map
-     */
-    public Map<Drug, Integer>  getPurchaseDrugsQuantity() {
-        return this.purchaseDrugsQuantity;
-    }
+
 
     /**
      * GETTER totalPrice
@@ -139,69 +145,16 @@ public class Purchase implements Serializable {
     }
 
     /**
-     * SETTER totalPrice
+     * retourne le prix totale d'une commande
+     * @return Double
      */
-    public void setTotalPrice() {
-        this.totalPrice = 0.00;
-        Map<Drug, Integer> purchaseMap = this.getPurchaseDrugsQuantity();
-        for(Map.Entry<Drug, Integer> entity : purchaseMap.entrySet()) {
-            Drug drug = entity.getKey();
-            int quantity = entity.getValue();
-            this.totalPrice += drug.getPrice() * quantity;
-        }
-    }
-
-    /**
-     * SETTER purchaseDrugsQuantity
-     * @param drug Drug
-     * @param quantity int
-     */
-    public void setPurchaseDrugsQuantity(Drug drug, int quantity) {
-        if(this.withPrescription){
-            PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-            Prescription prescription = prescriptionDAO.getById(this.prescriptionId);
-            prescription.setDrugsQuantityPrescriptionList(drug,quantity);
-            this.purchaseDrugsQuantity = prescription.getDrugsQuantityPrescriptionList();
-        }else {
-            this.purchaseDrugsQuantity.put(drug, quantity);
-        }
-    }
-
-    /**
-     * GETTER purchaseDetails
-     * @return String[][]
-     */
-    public String[][] getPurchaseDetails() {
-        return this.purchaseDetails;
-    }
-
-    /**
-     * SETTER purchaseDetails
-     */
-    public void setPurchaseDetails(){
-        String[][] purchaseDetails = new String[this.purchaseDrugsQuantity.size()][5];
-        int i = 0;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        for (Drug drug : this.purchaseDrugsQuantity.keySet()) {
-            purchaseDetails[i][0] = this.getPurchaseDate().format(formatter);
-            purchaseDetails[i][1] = this.getPurchaseNumber().toString();
-            if(this.withPrescription) {
-                PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-                Prescription prescription = prescriptionDAO.getById(this.prescriptionId);
-                purchaseDetails[i][2] = prescription.getCustomer().getLastName();
-            }else {
-                purchaseDetails[i][2] = "Anonyme (achat sans prescription)";
-            }
-            purchaseDetails[i][3] = drug.getName();
-            i++;
-        }
-        i = 0;
-        for (Integer quantity : this.purchaseDrugsQuantity.values()) {
-            purchaseDetails[i][4] = quantity.toString();
-            i++;
+    public void setTotalPrice(){
+        List<Contenir> contenirs = this.getContent();
+        for (Contenir contenir : contenirs) {
+            DrugDAO drugDAO = new DrugDAO();
+            this.totalPrice += contenir.getQuantity() * drugDAO.getById(contenir.getDrugId()).getPrice();
         }
 
-        this.purchaseDetails = purchaseDetails;
     }
 
     /**
@@ -220,18 +173,12 @@ public class Purchase implements Serializable {
      * CREER UNE LISTE DE COMMANDE PAR PERIODE
      * @param startDate LocalDate
      * @param endDate LocalDate
-     * @return ArrayList
+     * @return List
      */
-    public static ArrayList searchPurchaseByPeriod(LocalDate startDate, LocalDate endDate) {
-        // créer la requete purchaseDAO
-        return null;
-    }
+    public static List<Purchase> searchPurchaseByPeriod(LocalDate startDate, LocalDate endDate) {
+        PurchaseDAO purchaseDAO = new PurchaseDAO();
+        return purchaseDAO.getByDate(startDate, endDate);
 
-    /**
-     * SUPPRIMER UNE COMMANDE L HISTORIQUE
-     */
-    public void deletePurchaseFromHistory() {
-        // créer le delete purchaseDAO
     }
 
     /**
@@ -253,13 +200,46 @@ public class Purchase implements Serializable {
                 if(!purchase.getWithPrescription()){
                     purchaseMatrice[i][2] = "sans ordonnance";
                 }else {
-                    purchaseMatrice[i][2] = purchase.getPrescriptionId().toString();
+                    PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+                    purchaseMatrice[i][2] = prescriptionDAO.getById(purchase.getPrescriptionId()).getCustomer().getLastName();
                 }
                 i++;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+        return purchaseMatrice;
+    }
+
+    /**
+     * retourne une liste des médicaments/quantités contenu dans une commande
+     * @return List
+     */
+    public List<Contenir> getContent(){
+        ContenirCRUD contenirCRUD = new ContenirCRUD();
+
+        return contenirCRUD.selectAll(this.getPurchaseId());
+    }
+
+    public String[][] createMatrice(){
+        List<Contenir> contenirs = this.getContent();
+        String[][] purchaseMatrice = new String[contenirs.size()][5];
+        int i = 0;
+        for (Contenir contenir : contenirs) {
+            purchaseMatrice[i][0] = this.getPurchaseDate().toString();
+            purchaseMatrice[i][1] = this.getPurchaseNumber().toString();
+            if(!this.getWithPrescription()){
+                purchaseMatrice[i][2] = "NA";
+            }else {
+                PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+                purchaseMatrice[i][2] = prescriptionDAO.getById(this.getPrescriptionId()).getCustomer().getLastName();
+            }
+            DrugDAO drugDAO = new DrugDAO();
+            purchaseMatrice[i][3] = drugDAO.getById(contenir.getDrugId()).getName();
+            purchaseMatrice[i][4] = contenir.getQuantity().toString();
+            i++;
+        }
+
         return purchaseMatrice;
     }
 

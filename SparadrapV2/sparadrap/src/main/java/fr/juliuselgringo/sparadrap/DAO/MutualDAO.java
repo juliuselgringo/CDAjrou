@@ -21,7 +21,7 @@ public class MutualDAO extends DAO<Mutual> {
     /**
      * constructeur par défaut
      */
-    public MutualDAO() {};
+    public MutualDAO() {}
 
     /**
      * ajouter une nouvelle mutuelle

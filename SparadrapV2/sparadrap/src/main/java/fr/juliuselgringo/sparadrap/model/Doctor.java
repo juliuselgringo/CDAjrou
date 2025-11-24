@@ -40,6 +40,19 @@ public class Doctor extends Person {
 
     /**
      * CONSTRUCTOR
+     * @param doctorId Integer
+     * @param firstName String
+     * @param lastName String
+     * @param agreementId String
+     * @throws InputException String
+     */
+    public Doctor(String firstName, String lastName, String agreementId) throws InputException {
+        super(firstName, lastName);
+        setAgreementId(agreementId);
+    }
+
+    /**
+     * CONSTRUCTOR
      * @param firstName String
      * @param lastName String
      * @param contactId Integer

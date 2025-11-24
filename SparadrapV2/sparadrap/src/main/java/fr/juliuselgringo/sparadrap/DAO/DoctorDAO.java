@@ -30,9 +30,10 @@ public class DoctorDAO extends DAO<Doctor> {
     public Doctor create(Doctor entity) {
 
         String insertIntoDoctor = "INSERT INTO doctor (doctor_firstName, doctor_lastName, agreement_id, contact_id) VALUES (?, ?, ?, ?)";
+        Integer doctorId;
 
         try{
-            PreparedStatement pstmt = con.prepareStatement(insertIntoDoctor);
+            PreparedStatement pstmt = con.prepareStatement(insertIntoDoctor, PreparedStatement.RETURN_GENERATED_KEYS);
 
             pstmt.setString(1, entity.getFirstName());
             pstmt.setString(2, entity.getLastName());
@@ -40,7 +41,11 @@ public class DoctorDAO extends DAO<Doctor> {
             pstmt.setInt(4, entity.getContactId());
 
             pstmt.executeUpdate();
-
+            ResultSet res =  pstmt.getGeneratedKeys();
+            if(res.next()){
+                doctorId = res.getInt(1);
+                entity.setDoctorId(doctorId);
+            }
 
         }catch(SQLException e){
             logger.error("Error while inserting into database: " + e);

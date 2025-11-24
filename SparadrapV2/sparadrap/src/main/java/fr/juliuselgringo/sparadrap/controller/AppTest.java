@@ -123,37 +123,7 @@ public class AppTest {
 */
 
             //_______________________________ACHATS_________________________________________
-            Purchase purchase1 = new Purchase(false);
-            purchase1.setPurchaseDrugsQuantity(dafalgan, 10);
-            purchase1.setPurchaseDrugsQuantity(amoxicilline, 1);
-            purchase1.setPurchaseDrugsQuantity(smecta, 1);
-            purchase1.setPurchaseDetails();
 
-
-            Purchase purchase2 = new Purchase(true);
-            Prescription prescription2 = new Prescription("29-08-2025", 2, 2);
-            purchase2.setPrescritionId(prescription2.getPrescriptionId());
-            purchase2.setPurchaseDrugsQuantity(dafalgan, 1);
-            purchase2.setPurchaseDrugsQuantity(amoxicilline, 1);
-            purchase2.setPurchaseDrugsQuantity(smecta, 1);
-            purchase2.setPurchaseDetails();
-
-            Purchase purchase3 = new Purchase(true);
-            Prescription prescription3 = new Prescription("12-08-2025", 1, 1);
-            purchase3.setPrescritionId(prescription3.getPrescriptionId());
-            purchase3.setPurchaseDrugsQuantity(dafalgan, 1);
-            purchase3.setPurchaseDrugsQuantity(amoxicilline, 1);
-            purchase3.setPurchaseDrugsQuantity(smecta, 1);
-            purchase3.setPurchaseDetails();
-
-            Purchase purchase4 = new Purchase("07-07-2025", true);
-            Prescription prescription4 = new Prescription("22-06-2025", 1, 1);
-            purchase4.setPrescritionId(prescription4.getPrescriptionId());
-            purchase4.setPurchaseDrugsQuantity(dafalgan, 1);
-            purchase4.setPurchaseDrugsQuantity(amoxicilline, 1);
-            purchase4.setPurchaseDrugsQuantity(smecta, 1);
-            purchase4.setPurchaseDrugsQuantity(zyrtec, 1);
-            purchase4.setPurchaseDetails();
             /*
             Purchase.purchasesHistory.add(purchase1);
             Purchase.purchasesHistory.add(purchase2);

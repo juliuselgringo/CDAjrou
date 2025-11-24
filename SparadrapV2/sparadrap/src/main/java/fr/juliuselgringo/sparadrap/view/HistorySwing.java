@@ -4,6 +4,7 @@ import fr.juliuselgringo.sparadrap.DAO.DrugDAO;
 import fr.juliuselgringo.sparadrap.DAO.PurchaseDAO;
 import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
+import fr.juliuselgringo.sparadrap.model.Contenir;
 import fr.juliuselgringo.sparadrap.model.Drug;
 import fr.juliuselgringo.sparadrap.model.Purchase;
 import fr.juliuselgringo.sparadrap.utility.Gui;
@@ -62,12 +63,20 @@ public class HistorySwing {
         searchButton.addActionListener(e -> {
             try{
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                LocalDate startDate =  LocalDate.parse(startDateField.getText(), formatter);
-                LocalDate endDate =  LocalDate.parse(endDateField.getText(), formatter);
+
+                String startDatein = startDateField.getText();
+                String endDatein = endDateField.getText();
+                if(startDatein.isEmpty() || endDatein.isEmpty()){
+                    startDatein = LocalDate.now().format(formatter);
+                    endDatein = LocalDate.now().format(formatter);
+                }
+
+                LocalDate startDate =  LocalDate.parse(startDatein, formatter);
+                LocalDate endDate =  LocalDate.parse(endDatein, formatter);
                 if(endDate.isBefore(startDate)){
                     throw new InputException("La période n'est pas valide");
-
                 }
+
                 consultPurchasesByPeriod(startDate, endDate);
             }catch(InputException ie){
                 JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
@@ -77,8 +86,16 @@ public class HistorySwing {
         displayQuantityButton.addActionListener(e -> {
             try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                LocalDate startDate = LocalDate.parse(startDateField.getText(), formatter);
-                LocalDate endDate = LocalDate.parse(endDateField.getText(), formatter);
+
+                String startDatein = startDateField.getText();
+                String endDatein = endDateField.getText();
+                if(startDatein.isEmpty() || endDatein.isEmpty()){
+                    startDatein = LocalDate.now().format(formatter);
+                    endDatein = LocalDate.now().format(formatter);
+                }
+
+                LocalDate startDate = LocalDate.parse(startDatein, formatter);
+                LocalDate endDate = LocalDate.parse(endDatein, formatter);
                 if (endDate.isBefore(startDate)) {
                     throw new InputException("La période n'est pas valide");
 
@@ -122,7 +139,7 @@ public class HistorySwing {
         JFrame frame2 = Gui.setPopUpFrame(1600,800);
         JPanel panel2 = Gui.setPanel(frame2);
 
-        ArrayList<Purchase> purchaseListToDisplay = Purchase.searchPurchaseByPeriod(startDate, endDate);
+        List<Purchase> purchaseListToDisplay = Purchase.searchPurchaseByPeriod(startDate, endDate);
         Gui.labelMaker(panel2,"Sélectionner une commande:",10,10);
         JComboBox purchaseBox = Gui.comboBoxMaker(panel2,10,40,1500);
         for(Purchase purchase : purchaseListToDisplay){
@@ -131,7 +148,7 @@ public class HistorySwing {
 
         purchaseBox.addActionListener(e -> {
             Purchase purchase = (Purchase)purchaseBox.getSelectedItem();
-            String[][] purchaseHistoryMatrice = purchase.getPurchaseDetails();
+            String[][] purchaseHistoryMatrice = purchase.createMatrice();
 
             Gui.tableMaker(panel2, purchaseHistoryMatrice,
                     PurchaseSwing.purchaseHistoryTableHeaders,10,40,1200,200);
@@ -180,15 +197,17 @@ public class HistorySwing {
         List<Drug> drugsList = drugDAO.getAll();
 
         String[] header = {"Médicament", "Quantité"};
-        ArrayList<Purchase> purchaseListToDisplay = Purchase.searchPurchaseByPeriod(startDate, endDate);
+        PurchaseDAO  purchaseDAO = new PurchaseDAO();
+        List<Purchase> purchaseListToDisplay = Purchase.searchPurchaseByPeriod(startDate, endDate);
         String[][] purchaseHistoryMatrice = new String[100][2];
         Gui.tableMaker(panel,purchaseHistoryMatrice,header,10,10,1200,200);
 
         int i = 0;
         for (Purchase purchase : purchaseListToDisplay) {
-            for(Map.Entry<Drug, Integer> entry: purchase.getPurchaseDrugsQuantity().entrySet()){
-                purchaseHistoryMatrice[i][0] = entry.getKey().getName();
-                purchaseHistoryMatrice[i][1] = entry.getValue().toString();
+            for(Contenir contenir : purchase.getContent()){
+
+                purchaseHistoryMatrice[i][0] = drugDAO.getById(contenir.getDrugId()).getName();
+                purchaseHistoryMatrice[i][1] = contenir.getQuantity().toString();
                 i++;
             }
         }

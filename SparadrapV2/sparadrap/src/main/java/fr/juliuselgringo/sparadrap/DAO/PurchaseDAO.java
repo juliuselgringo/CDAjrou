@@ -3,9 +3,14 @@ package fr.juliuselgringo.sparadrap.DAO;
 import fr.juliuselgringo.sparadrap.DAO.connection.Singleton;
 import fr.juliuselgringo.sparadrap.model.*;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class PurchaseDAO extends DAO<Purchase> {
 
     private static final Logger logger = LogManager.getLogger(PurchaseDAO.class);
+
 
     @Override
     public Purchase create(Purchase entity) {
@@ -74,17 +80,80 @@ public class PurchaseDAO extends DAO<Purchase> {
 
     @Override
     public void delete(Purchase entity) {
+        String deletePurchase = "DELETE FROM purchase WHERE purchase_id = ?";
 
+        try{
+            PreparedStatement pstmt = con.prepareStatement(deletePurchase);
+
+            pstmt.setInt(1, entity.getPurchaseId());
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.error("Error delete purchase: " + e);
+        }
     }
+
 
     @Override
     public List<Purchase> getAll() {
-        return List.of();
+
+        List<Purchase> purchasesList = new ArrayList<>();
+        String selectAllPurchase = "SELECT * FROM purchase";
+
+        try {
+            PreparedStatement pstmt = con.prepareStatement(selectAllPurchase);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Integer purchaseId = rs.getInt("purchase_id");
+                LocalDate purchaseDate = rs.getDate("purchase_date").toLocalDate();
+                Boolean withPrescription = rs.getBoolean("with_prescription");
+                Integer prescriptionId = rs.getInt("prescription_id");
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                Purchase purchase = new Purchase(purchaseId, purchaseDate.format(formatter).toString(), withPrescription, prescriptionId);
+                purchasesList.add(purchase);
+            }
+        }catch(SQLException e){
+            logger.error("Error getting all purchases: " + e);
+        }
+
+        return purchasesList;
     }
 
     @Override
     public Purchase getById(int id) {
         return null;
+    }
+
+    public List<Purchase> getByDate(LocalDate start, LocalDate end) {
+
+        List<Purchase> purchasesList = new ArrayList<>();
+        String selectAllPurchase = "SELECT * FROM purchase WHERE purchase_date BETWEEN ? AND ?";
+
+        try {
+            PreparedStatement pstmt = con.prepareStatement(selectAllPurchase);
+
+            pstmt.setDate(1, java.sql.Date.valueOf(start));
+            pstmt.setDate(2, java.sql.Date.valueOf(end));
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Integer purchaseId = rs.getInt("purchase_id");
+                LocalDate purchaseDate = rs.getDate("purchase_date").toLocalDate();
+                Boolean withPrescription = rs.getBoolean("with_prescription");
+                Integer prescriptionId = rs.getInt("prescription_id");
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                Purchase purchase = new Purchase(purchaseId, purchaseDate.format(formatter).toString(), withPrescription, prescriptionId);
+                purchasesList.add(purchase);
+            }
+        }catch(SQLException e){
+            logger.error("Error getting all purchases: " + e);
+        }
+
+        return purchasesList;
     }
 
     @Override

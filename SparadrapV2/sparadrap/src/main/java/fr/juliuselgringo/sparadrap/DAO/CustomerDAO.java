@@ -36,9 +36,10 @@ public class CustomerDAO extends DAO<Customer>{
 
         String insertCustomer = "INSERT INTO customer (customer_firstName, customer_lastName, social_security_id," +
                                 "customer_birthDate, mutual_id, doctor_id, contact_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        Integer customerId = entity.getCustomerId();
 
         try{
-            PreparedStatement pstmt = con.prepareStatement(insertCustomer);
+            PreparedStatement pstmt = con.prepareStatement(insertCustomer,PreparedStatement.RETURN_GENERATED_KEYS);
 
             pstmt.setString(1, entity.getFirstName());
             pstmt.setString(2, entity.getLastName());
@@ -49,9 +50,15 @@ public class CustomerDAO extends DAO<Customer>{
             pstmt.setInt(7, entity.getContactId());
 
             pstmt.executeUpdate();
-
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                customerId =  rs.getInt(1);
+                entity.setCustomerId(customerId);
+            }
 
         } catch (SQLException e) {
+            logger.error("Error SQL insert into customer: " + e);
+        } catch (InputException e) {
             logger.error("Error insert into customer: " + e);
         }
 
@@ -80,6 +87,7 @@ public class CustomerDAO extends DAO<Customer>{
             pstmt.setInt(5, entity.getMutualId());
             pstmt.setInt(6, entity.getDoctorId());
             pstmt.setInt(7, entity.getContactId());
+            pstmt.setInt(8, entity.getCustomerId());
 
             pstmt.executeUpdate();
 

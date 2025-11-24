@@ -138,21 +138,7 @@ public class Prescription {
      * @throws InputException String
      */
     public void setDoctorId(Integer doctorId) throws InputException {
-        DoctorDAO doctorDAO = new DoctorDAO();
-        List<Doctor> doctorsList = doctorDAO.getAll();
-        doctorDAO.closeConnection();
-
-        for (Doctor doctor : doctorsList){
-            try {
-                if (doctor.getDoctorId().equals(doctorId)) {
-                    this.doctorId = doctorId;
-                    return;
-                }
-            }catch(NullPointerException npe){}
-        }
-        if(this.doctorId == null){
-            throw new InputException("Ce medecin n'est pas enregistré.");
-        }
+        this.doctorId = doctorId;
     }
 
     /**
@@ -169,21 +155,7 @@ public class Prescription {
      * @throws InputException String
      */
     public void setCustomerId(Integer customerId) throws InputException {
-        CustomerDAO customerDAO = new CustomerDAO();
-        List<Customer> customersList = customerDAO.getAll();
-        customerDAO.closeConnection();
-
-        for (Customer customer : customersList){
-            try {
-                if (customer.getCustomerId().equals(customerId)) {
-                    this.customerId = customerId;
-                    return;
-                }
-            }catch(NullPointerException npe){}
-        }
-        if(this.customerId == null){
-            throw new InputException("Ce client n'est pas enregistré.");
-        }
+        this.customerId = customerId;
     }
 
     /**

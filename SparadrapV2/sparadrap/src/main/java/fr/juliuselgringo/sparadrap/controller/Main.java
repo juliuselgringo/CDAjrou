@@ -3,6 +3,7 @@ package fr.juliuselgringo.sparadrap.controller;
 import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
 import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
 
+import fr.juliuselgringo.sparadrap.DAO.PrescriptionDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 import fr.juliuselgringo.sparadrap.view.ProgramSwing;
 
@@ -26,7 +27,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, InputException {
 
-        //Main.testDAO();
+        // Main.testDAO();
 
         ProgramSwing.generalMenu();
 
@@ -39,10 +40,19 @@ public class Main {
         System.out.println(contactDAO.getAll());
         contactDAO.closeConnection();
         */
-
+        /*
         MutualDAO mutualDAO = new MutualDAO();
         System.out.println(mutualDAO.getAll());
         mutualDAO.closeConnection();
+*/
+
+/*
+        PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+        System.out.println(prescriptionDAO.getAll());
+
+ */
+
+
     }
 
 }

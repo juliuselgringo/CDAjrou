@@ -22,7 +22,7 @@ public class PurchaseSwing {
      * titre des colonnes de table historique des commandes
      */
     public static final String[] purchaseHistoryTableHeaders = new String []{"Date","Numéro de commande",
-            "Nom du clients", "Nom du médicament", "Quantite"};
+            "Client", "Médicament", "Quantite"};
 
     /**
      * constucteur par défaut
@@ -44,6 +44,8 @@ public class PurchaseSwing {
             purchaseFrame.dispose();
         }else {
             Purchase newPurchase = new Purchase(false);
+            PurchaseDAO purchaseDAO = new PurchaseDAO();
+            newPurchase = purchaseDAO.create(newPurchase);
             createPurchase(newPurchase);
             purchaseFrame.dispose();
         }
@@ -84,11 +86,16 @@ public class PurchaseSwing {
 
             doctorBox.addActionListener(ev ->{
                 Purchase newPrescriptionPurchase = new Purchase(true);
+
                 Doctor doctor = (Doctor) doctorBox.getSelectedItem();
                 String prescriptionDate = dateField.getText();
                 try {
                     Prescription newPrescription = new Prescription(prescriptionDate, doctor.getDoctorId(), customer.getCustomerId());
+                    PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+                    newPrescription = prescriptionDAO.create(newPrescription);
                     newPrescriptionPurchase.setPrescritionId(newPrescription.getPrescriptionId());
+                    PurchaseDAO purchaseDAO = new PurchaseDAO();
+                    newPrescriptionPurchase = purchaseDAO.create(newPrescriptionPurchase);
                     createPurchase(newPrescriptionPurchase);
                     newPrescription.purchaseNumber = newPrescriptionPurchase.getPurchaseNumber();
                     prescriptionFrame.dispose();
@@ -124,6 +131,7 @@ public class PurchaseSwing {
         JButton saveButton = Gui.buttonMaker(purchasePanel,"Valider la commande",190);
 
         addButton.addActionListener(e -> {
+
             Drug drugToAdd;
             drugToAdd = (Drug)drugBox.getSelectedItem();
             int quantity = 0;
@@ -134,7 +142,9 @@ public class PurchaseSwing {
                         throw new InputException("La quantité est invalide.");
                     }
                     // suivi des médicaments et quantités de la commande
-                    newPurchase.setPurchaseDrugsQuantity(drugToAdd, quantity);
+                    ContenirCRUD contenirCRUD = new ContenirCRUD();
+                    Contenir contenir = new Contenir(newPurchase.getPurchaseId(), drugToAdd.getDrugId(), quantity);
+                    contenirCRUD.create(contenir);
 
                     try {
                         // MAJ stock et affichage de la commande en cours, MAJ prix total
@@ -155,7 +165,6 @@ public class PurchaseSwing {
         });
 
         saveButton.addActionListener(e -> {
-            newPurchase.setPurchaseDetails();
             if(newPurchase.getWithPrescription()){
 
                 CustomerDAO customerDAO = new CustomerDAO();
@@ -165,10 +174,6 @@ public class PurchaseSwing {
 
                 // enregistrement de la commande+prescription sur le client
                 prescriptionDAO.create(prescription);
-                PurchaseDAO purchaseDAO = new PurchaseDAO();
-                Purchase purchaseRecorded = purchaseDAO.create(newPurchase);
-                ContenirCRUD contenirCRUD = new ContenirCRUD();
-                contenirCRUD.create(purchaseRecorded.getPurchaseId(), newPurchase.getPurchaseDrugsQuantity());
 
                 try {
                     // création et enregistrement du pdf de le prescription
@@ -178,9 +183,8 @@ public class PurchaseSwing {
                 }
             }else{
                 PurchaseDAO purchaseDAO = new PurchaseDAO();
-                Purchase purchaseRecorded = purchaseDAO.create(newPurchase);
-                ContenirCRUD contenirCRUD = new ContenirCRUD();
-                contenirCRUD.create(purchaseRecorded.getPurchaseId(), newPurchase.getPurchaseDrugsQuantity());
+                purchaseDAO.create(newPurchase);
+
             }
             JOptionPane.showMessageDialog(null, "La commande a été enregistré avec succès");
             purchaseFrame.dispose();
@@ -205,17 +209,10 @@ public class PurchaseSwing {
      * @param newPurchase Purchase
      */
     public static void cancelPurchase(Purchase newPurchase){
-        Map<Drug, Integer> map = newPurchase.getPurchaseDrugsQuantity();
-        for(Map.Entry<Drug, Integer> entry : map.entrySet()){
-            Drug drug = entry.getKey();
-            int value = entry.getValue();
-            try {
-                Drug.stockUpdate(drug, value);
-            } catch (InputException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-        newPurchase.deletePurchaseFromHistory();
+        PurchaseDAO purchaseDAO = new PurchaseDAO();
+        ContenirCRUD contenirCRUD = new ContenirCRUD();
+        purchaseDAO.delete(newPurchase);
+        contenirCRUD.delete(newPurchase.getPurchaseId());
     }
 
     /**
@@ -224,9 +221,9 @@ public class PurchaseSwing {
      * @param newPurchase Purchase
      */
     public static void createDisplayPurchaseDrugs(JPanel panel, Purchase newPurchase) {
-        newPurchase.setPurchaseDetails();
+
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        String[][] display = newPurchase.getPurchaseDetails();
+        String[][] display = newPurchase.createMatrice();
         Gui.tableMaker(panel,display,purchaseHistoryTableHeaders,500,100,800,300);
 
         // MAJ et affichage du prix de la commande en cours
@@ -255,7 +252,7 @@ public class PurchaseSwing {
         JFrame frame2 = Gui.setPopUpFrame(1400,800);
         JPanel panel2 = Gui.setPanel(frame2);
 
-        String[][] purchaseHistoryMatrice = purchase.getPurchaseDetails();
+        String[][] purchaseHistoryMatrice = purchase.createMatrice();
 
         Gui.tableMaker(panel2, purchaseHistoryMatrice,
                 purchaseHistoryTableHeaders,10,40,1200,200);

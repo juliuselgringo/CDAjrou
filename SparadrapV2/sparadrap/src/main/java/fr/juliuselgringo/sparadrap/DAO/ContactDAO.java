@@ -20,7 +20,7 @@ public class ContactDAO extends DAO<Contact> {
     /**
      * constructeur par défaut
      */
-    public ContactDAO() {};
+    public ContactDAO() {}
 
 
     /**
@@ -31,7 +31,7 @@ public class ContactDAO extends DAO<Contact> {
     @Override
     public Contact create(Contact entity) {
         // id créé par mysql (auto_increment)
-        Integer newContactId = 0;
+        Integer newContactId;
 
         // requête
         String insertIntoContact = "INSERT INTO contact (address, postal_code, town, phone, email) VALUES (?, ?, ?, ?, ?)";
@@ -55,7 +55,6 @@ public class ContactDAO extends DAO<Contact> {
                 // on récupère la valeur de la colonne d'index 1 qui est contact_id
                 newContactId = res.getInt(1);
                 entity.setContactId(newContactId);
-                System.out.println("Insert successfull contact_id: " + newContactId);
             }
         }catch(SQLException e){
             logger.error("Error inserting contact: " + e);
@@ -113,7 +112,6 @@ public class ContactDAO extends DAO<Contact> {
             pstmt.setInt(1, contactId);
 
             pstmt.executeUpdate();
-            System.out.println("Delete success for contactId: " + contactId);
 
         }catch(SQLException e){
             logger.error("Error Delete contact: " + e);

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * classe qui gère l'affichage des fonctions client
@@ -43,7 +44,7 @@ public class CustomerSwing {
         JButton deleteButton = Gui.buttonMaker(panel, "Supprimer un client",190);
         JButton createButton = Gui.buttonMaker(panel,"Creer un client",220);
 
-        String[] header = new String[]{"Prénom","Nom","Date Naissance","Téléphone","Mutuelle","Medecin"};
+        String[] header = new String[]{"Id","Prénom","Nom","Date Naissance","Téléphone","Mutuelle","Medecin"};
         JTable table = Gui.tableMaker(panel,Customer.createCustomersMatrice(),header,800, 40,800,800);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -60,7 +61,7 @@ public class CustomerSwing {
             int row =table.getSelectedRow();
             if(row >= 0){
                 Customer customer = customersList.get(row);
-                formCustomer(customer,"modify", frameMenu);
+                formCustomer(customer, "modify", frameMenu);
             }
 
         });
@@ -162,10 +163,9 @@ public class CustomerSwing {
      * FORMULAIRE POUR MODIFIER OU CREER UN CLIENTS
      * String type "modify" ou "create"
      * @param customer Customer
-     * @param type String
      * @param frameMenu JFrame
      */
-    public static void formCustomer(Customer customer, String type, JFrame frameMenu) {
+    public static void formCustomer(Customer customer,String type, JFrame frameMenu) {
         JFrame frameForm = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frameForm);
 
@@ -174,6 +174,7 @@ public class CustomerSwing {
         List<Mutual> mutualsList = mutualDAO.getAll();
         List<Doctor> doctorsList = doctorDAO.getAll();
 
+        CustomerDAO customerDAO = new CustomerDAO();
         ContactDAO contactDAO = new ContactDAO();
         Contact contact = contactDAO.getById(customer.getContactId());
 
@@ -234,6 +235,10 @@ public class CustomerSwing {
 
         JButton back2Button = Gui.buttonMaker(panel,"Annuler",480);
         back2Button.addActionListener(ev -> {
+            if(type.equals("create")){
+                contactDAO.delete(contact);
+                customerDAO.delete(customer);
+            }
             frameForm.dispose();
             frameMenu.dispose();
             customerMenu();
@@ -241,6 +246,10 @@ public class CustomerSwing {
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
+            if(type.equals("create")){
+                contactDAO.delete(contact);
+                customerDAO.delete(customer);
+            }
             Singleton.closeInstanceDB();
             System.exit(0);
         });
@@ -251,26 +260,25 @@ public class CustomerSwing {
                 customer.setLastName(lastNameField.getText());
                 customer.setDateOfBirth(birthField.getText());
                 customer.setSocialSecurityId(secuField.getText());
-                customer.setMutualId(((Mutual) mutualBox.getSelectedItem()).getMutualId());
-                customer.setDoctorId(((Doctor) docBox.getSelectedItem()).getDoctorId());
+                customer.setMutualId(((Mutual) Objects.requireNonNull(mutualBox.getSelectedItem())).getMutualId());
+                customer.setDoctorId(((Doctor) Objects.requireNonNull(docBox.getSelectedItem())).getDoctorId());
                 contact.setTown(townField.getText());
                 contact.setPhone(phoneField.getText());
                 contact.setEmail(emailField.getText());
                 contact.setAddress(addressField.getText());
                 contact.setPostalCode(postalField.getText());
 
-                CustomerDAO customerDAO = new CustomerDAO();
-                if(type.equals("create")){
-                    customerDAO.create(customer);
-                }else{
-                    customerDAO.update(customer);
-                }
+
+                contactDAO.update(contact);
+                customerDAO.update(customer);
+
 
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
 
                 frameForm.dispose();
                 frameMenu.dispose();
+                customerMenu();
             }catch(InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
             }catch(Exception e) {
@@ -286,7 +294,15 @@ public class CustomerSwing {
      * @throws InputException String
      */
     public static void createCustomer(JFrame frame) throws InputException {
-        Customer customer = new Customer();
+        Customer customer = new Customer("Na", "Na", 0,"123456789012345","01-01-2001",1,1);
+        CustomerDAO customerDAO = new CustomerDAO();
+
+        Contact contact = new Contact("0  rue na", "00000", "Na", "00 00 00 00 00", "na@na.na");
+        ContactDAO contactDAO = new ContactDAO();
+        contact = contactDAO.create(contact);
+
+        customer.setContactId(contact.getContactId());
+        customer = customerDAO.create(customer);
         formCustomer(customer, "create",frame);
     }
 

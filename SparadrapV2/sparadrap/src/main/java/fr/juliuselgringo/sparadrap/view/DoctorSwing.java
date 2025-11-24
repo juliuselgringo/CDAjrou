@@ -162,7 +162,6 @@ public class DoctorSwing {
      * FORMULAIRE POUR MODIFIER OU CREER UN MEDECIN
      * String type "create" ou "momdify"
      * @param doctor Doctor
-     * @param type String
      * @param frameMenu JFrame
      */
     public static void formDoctor(Doctor doctor, String type, JFrame frameMenu) {
@@ -170,9 +169,9 @@ public class DoctorSwing {
         JPanel panel = Gui.setPanel(frameForm);
 
         DoctorDAO doctorDAO = new DoctorDAO();
-        List<Doctor> doctorsList = doctorDAO.getAll();
         ContactDAO contactDAO = new ContactDAO();
         Contact contact = contactDAO.getById(doctor.getContactId());
+
 
         Gui.labelMaker(panel, "Prénom: ", 10, 10);
         JTextField firstNameField = Gui.textFieldMaker(panel, 10, 40);
@@ -211,6 +210,10 @@ public class DoctorSwing {
 
         JButton back2Button = Gui.buttonMaker(panel, "Annuler", 480);
         back2Button.addActionListener(ev -> {
+            if(type.equals("create")){
+                contactDAO.delete(contact);
+                doctorDAO.delete(doctor);
+            }
             frameMenu.dispose();
             frameForm.dispose();
             doctorMenu();
@@ -218,6 +221,10 @@ public class DoctorSwing {
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
+            if(type.equals("create")){
+                contactDAO.delete(contact);
+                doctorDAO.delete(doctor);
+            }
             Singleton.closeInstanceDB();
             System.exit(0);
         });
@@ -233,15 +240,10 @@ public class DoctorSwing {
                 contact.setAddress(addressField.getText());
                 contact.setPostalCode(postalField.getText());
 
-                DoctorDAO doctorDao = new DoctorDAO();
-                ContactDAO contactDao = new ContactDAO();
-                if(type.equals("create")){
-                    contactDao.create(contact);
-                    doctorDao.create(doctor);
-                }else{
-                    contactDao.update(contact);
-                    doctorDao.update(doctor);
-                }
+
+                contactDAO.update(contact);
+                doctorDAO.update(doctor);
+
                 JOptionPane.showMessageDialog(null, "Vos modification ont bien été enregitré",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
                 frameForm.dispose();
@@ -260,8 +262,16 @@ public class DoctorSwing {
      * @throws InputException String
      */
     public static void createDoctor(JFrame frame) throws InputException {
-        Doctor doctor= new Doctor();
-        formDoctor(doctor, "create",frame);
+        Doctor doctor= new Doctor("Na", "Na","12345678901");
+        DoctorDAO doctorDao = new DoctorDAO();
+
+        Contact contact = new Contact("0  rue na", "00000", "Na", "00 00 00 00 00", "na@na.na");
+        ContactDAO contactDao = new ContactDAO();
+        contact = contactDao.create(contact);
+
+        doctor.setContactId(contact.getContactId());
+        doctor = doctorDao.create(doctor);
+        formDoctor(doctor, "create", frame);
     }
 
     /**
