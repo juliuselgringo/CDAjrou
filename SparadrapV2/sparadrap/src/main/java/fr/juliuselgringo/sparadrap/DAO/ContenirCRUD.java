@@ -13,11 +13,24 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * gestion des requetes sql crud de la table contenir
+ */
 public class ContenirCRUD {
 
     protected Connection con = Singleton.getInstanceDB();
     private static final Logger logger = LogManager.getLogger(ContenirCRUD.class);
 
+    /**
+     * constructeur par défaut
+     */
+    public ContenirCRUD(){}
+
+    /**
+     * ajouter une nouvelle entrée dans la table contenir
+     * @param entity Contenir
+     * @return Contenir
+     */
     public Contenir create(Contenir entity) {
 
         String insertContenir = "INSERT INTO contenir (drug_id, purchase_id, buying_quantity) VALUES (?,?,?)";
@@ -37,6 +50,10 @@ public class ContenirCRUD {
         return entity;
     }
 
+    /**
+     * supprimer les entrée correspondant à une commande
+     * @param purchaseId Integer
+     */
     public void delete(Integer purchaseId) {
 
         String deleteContenir = "DELETE FROM contenir WHERE purchase_id = ?";
@@ -54,6 +71,11 @@ public class ContenirCRUD {
 
     }
 
+    /**
+     * retourne tout ce que contient une commande donnée
+     * @param purchaseId Integer
+     * @return List
+     */
     public List<Contenir> selectAll(Integer purchaseId) {
 
         String deleteContenir = "SELECT * FROM contenir WHERE purchase_id = ?";

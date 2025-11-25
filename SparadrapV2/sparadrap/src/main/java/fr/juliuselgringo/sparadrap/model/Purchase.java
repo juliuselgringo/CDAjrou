@@ -17,8 +17,6 @@ import java.util.*;
 public class Purchase implements Serializable {
 
     private Integer purchaseId;
-
-
     private LocalDate purchaseDate;
     private Integer purchaseNumber;
     private Boolean withPrescription;
@@ -59,6 +57,7 @@ public class Purchase implements Serializable {
      * @param purchaseId Integer
      * @param purchaseDate String
      * @param withPrescription Boolean
+     * @param prescriptionId Integer
      */
     public Purchase(Integer purchaseId, String purchaseDate, Boolean withPrescription, Integer prescriptionId) {
         setPurchaseDate(purchaseDate);
@@ -146,7 +145,6 @@ public class Purchase implements Serializable {
 
     /**
      * retourne le prix totale d'une commande
-     * @return Double
      */
     public void setTotalPrice(){
         List<Contenir> contenirs = this.getContent();
@@ -221,6 +219,10 @@ public class Purchase implements Serializable {
         return contenirCRUD.selectAll(this.getPurchaseId());
     }
 
+    /**
+     * crée une matrice de la commande
+     * @return String[][]
+     */
     public String[][] createMatrice(){
         List<Contenir> contenirs = this.getContent();
         String[][] purchaseMatrice = new String[contenirs.size()][5];

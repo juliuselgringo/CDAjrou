@@ -24,6 +24,11 @@ public class DrugDAO extends DAO<Drug>{
     private static final Logger logger = LogManager.getLogger(DrugDAO.class);
 
     /**
+     * constructeur par défaut
+     */
+    public DrugDAO(){}
+
+    /**
      * ajouter un nouveau médicament à la table drug
      * @param entity Drug
      * @return Drug
@@ -32,7 +37,7 @@ public class DrugDAO extends DAO<Drug>{
     public Drug create(Drug entity) {
 
         String insertDrug = "INSERT INTO drug (drug_name, price, production_date, quantity, under_prescription, " +
-                            "category_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                            "category_id) VALUES (?, ?, ?, ?, ?, ?)";
 
         try{
             PreparedStatement pstmt = con.prepareStatement(insertDrug);

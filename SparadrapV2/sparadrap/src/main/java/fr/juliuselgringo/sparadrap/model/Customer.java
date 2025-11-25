@@ -85,6 +85,7 @@ public class Customer extends Person {
      */
     public Customer (String firstName, String lastName, String socialSecurityId) throws InputException{
         super(firstName, lastName);
+        this.socialSecurityId = socialSecurityId;
         
     }
 
@@ -105,8 +106,8 @@ public class Customer extends Person {
 
     /**
      * setter customerId Integer
-     * @param customerId
-     * @throws InputException
+     * @param customerId Interger
+     * @throws InputException String
      */
     public void setCustomerId(Integer customerId) throws InputException {
         this.customerId = customerId;
@@ -221,7 +222,7 @@ public class Customer extends Person {
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return "Prénom: " + this.getFirstName() + ", Nom: " + this.getLastName();
+        return  this.getFirstName() + " " + this.getLastName();
     }
 
 
@@ -231,8 +232,18 @@ public class Customer extends Person {
      */
     public String toStringForDetails(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return "Client \nPrénom: " + this.getFirstName() +
-                "\nNom: " + this.getLastName()+ "\n";
+        CustomerDAO customerDAO = new CustomerDAO();
+        ContactDAO contactDAO = new ContactDAO();
+        Contact contact = contactDAO.getById(this.getContactId());
+        return "Client \n Prénom: " + this.getFirstName() +
+                "\n Nom: " + this.getLastName() +
+                "\n Date de naissance: " + this.getDateOfBirth().format(formatter) +
+                "\n Adresse: " + contact.getAddress() +
+                "\n Code Postal: " + contact.getPostalCode() +
+                "\n Ville: " + contact.getTown() +
+                "\n Telephone: " + contact.getPhone() +
+                "\n Email: " + contact.getEmail();
+
     }
 
     /**

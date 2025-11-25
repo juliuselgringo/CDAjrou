@@ -27,9 +27,14 @@ public class CustomerDAO extends DAO<Customer>{
     private static final Logger logger = LogManager.getLogger(CustomerDAO.class);
 
     /**
+     * constructeur par défaut
+     */
+    public CustomerDAO(){}
+
+    /**
      * ajouter un nouveau client dans la table customer
-     * @param entity
-     * @return
+     * @param entity Customer
+     * @return Customer
      */
     @Override
     public Customer create(Customer entity) {
@@ -202,5 +207,43 @@ public class CustomerDAO extends DAO<Customer>{
     @Override
     public void closeConnection() {
         Singleton.closeInstanceDB();
+    }
+
+    /**
+     * retourne une liste de client à partir de l'id d'une mutuelle
+     * @param mutualId Integer
+     * @return List
+     */
+    public List<Customer> getCustomerByMutualId(Integer mutualId) {
+
+        String selectCustomerByMutualId = "SELECT * FROM customer WHERE mutual_id = ?";
+        List<Customer> customersList = new ArrayList<>();
+
+        try{
+            PreparedStatement pstmt = con.prepareStatement(selectCustomerByMutualId);
+            pstmt.setInt(1, mutualId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Integer customerId = rs.getInt("customer_id");
+                String firstName = rs.getString("customer_firstName");
+                String lastName = rs.getString("customer_lastName");
+                String socialSecurityId = rs.getString("social_security_id");
+                LocalDate birthDate = rs.getDate("customer_birthDate").toLocalDate();
+                Integer contactId = rs.getInt("contact_id");
+                Integer doctorId = rs.getInt("doctor_id");
+
+                String formattedBirthDate = birthDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                Customer customer = new Customer(customerId, firstName, lastName, contactId, socialSecurityId,
+                        formattedBirthDate, mutualId, doctorId);
+                customersList.add(customer);
+            }
+        } catch (SQLException e) {
+            logger.error("Error SQL getting customer list by mutual id: " + e);
+        } catch (InputException e) {
+            logger.error("Error getting customer list by mutual id: " + e);
+        }
+
+        return customersList;
     }
 }

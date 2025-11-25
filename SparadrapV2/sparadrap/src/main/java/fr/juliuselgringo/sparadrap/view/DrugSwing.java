@@ -204,11 +204,10 @@ public class DrugSwing {
      */
     public static void deleteDrug(Drug drug, JFrame frame){
         DrugDAO drugDAO = new DrugDAO();
-        List<Drug> drugsList = drugDAO.getAll();
         int resp = JOptionPane.showConfirmDialog(null,"Etes vous sur de vouloir supprimer ce médicament?",
                 "Confirmation",JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) {
-            drugsList.remove(drug);
+            drugDAO.delete(drug);
             JOptionPane.showMessageDialog(null, "Le médicament a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();

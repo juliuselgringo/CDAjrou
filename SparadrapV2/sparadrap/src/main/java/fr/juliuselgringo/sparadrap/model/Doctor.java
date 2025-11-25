@@ -40,7 +40,6 @@ public class Doctor extends Person {
 
     /**
      * CONSTRUCTOR
-     * @param doctorId Integer
      * @param firstName String
      * @param lastName String
      * @param agreementId String
@@ -117,8 +116,7 @@ public class Doctor extends Person {
      */
     @Override
     public String toString() {
-        return "\nPrénom: " + this.getFirstName() +
-                "\n Nom: " + this.getLastName();
+        return this.getFirstName() + " " + this.getLastName();
     }
 
     /**
@@ -126,11 +124,17 @@ public class Doctor extends Person {
      * @return String
      */
     public String toStringForDetails(){
+        ContactDAO contactDAO = new ContactDAO();
+        Contact contact = contactDAO.getById(this.getContactId());
         return "\nDocteur" +
-                "\nPrénom: " + this.getFirstName() +
-                "\nNom: " + this.getLastName() +
-                "\n"  + this.getContactId() +
-                "\nN° d'agréement: " + this.getAgreementId();
+                "\n Prénom: " + this.getFirstName() +
+                "\n Nom: " + this.getLastName() +
+                "\n Adresse: "  + contact.getAddress() +
+                "\n CodePostal: " + contact.getPostalCode() +
+                "\n Ville: " + contact.getTown() +
+                "\n Telephone: " +  contact.getPhone() +
+                "\n Email: " + contact.getEmail() +
+                "\n N° d'agréement: " + this.getAgreementId();
     }
 
     /**

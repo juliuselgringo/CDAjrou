@@ -59,50 +59,55 @@ public class PurchaseSwing {
         JFrame prescriptionFrame = Gui.setFrame();
         JPanel prescriptionPanel = Gui.setPanel(prescriptionFrame);
 
+        Gui.titleLabelMaker(prescriptionPanel,"MENU ACHAT AVEC PRESCRIPTION", 10,10,500,30);
+
         Gui.labelMaker(prescriptionPanel,"Saisissez la date de la prescription sous le format JJ-MM-AAAA:",
-                10,10);
-        JTextField dateField = Gui.textFieldMaker(prescriptionPanel,10,40);
+                10,70);
+        JTextField dateField = Gui.textFieldMaker(prescriptionPanel,10,100);
 
-        Gui.labelMaker(prescriptionPanel,"Sélectionner le client:",10,70);
-        JComboBox customerBox = CustomerSwing.getCustomerBox(prescriptionPanel,100);
+        Gui.labelMaker(prescriptionPanel,"Sélectionner le client:",10,130);
+        JComboBox customerBox = CustomerSwing.getCustomerBox(prescriptionPanel,160);
 
-        Gui.labelMaker(prescriptionPanel,"Sélectionner le médecin prescripteur:",10,130);
-        JComboBox doctorBox = DoctorSwing.getDoctorBox(prescriptionPanel,160);
+        Gui.labelMaker(prescriptionPanel,"Sélectionner le médecin prescripteur:",10,190);
+        JComboBox doctorBox = DoctorSwing.getDoctorBox(prescriptionPanel,220);
 
-        JButton backButton = Gui.buttonMaker(prescriptionPanel,"Retour",190);
+        JButton validateButton = Gui.buttonMaker(prescriptionPanel, "Valider", 250);
+        validateButton.addActionListener(e -> {
+            Customer customer = (Customer) customerBox.getSelectedItem();
+
+            Purchase newPrescriptionPurchase = new Purchase(true);
+
+            Doctor doctor = (Doctor) doctorBox.getSelectedItem();
+            String prescriptionDate = dateField.getText();
+            try {
+                //creation de la prescription en DB
+                Prescription newPrescription = new Prescription(prescriptionDate, doctor.getDoctorId(), customer.getCustomerId());
+                PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+                newPrescription = prescriptionDAO.create(newPrescription);
+                //maj commande avec id prescription
+                newPrescriptionPurchase.setPrescritionId(newPrescription.getPrescriptionId());
+                // creation de la commande en DB
+                PurchaseDAO purchaseDAO = new PurchaseDAO();
+                newPrescriptionPurchase = purchaseDAO.create(newPrescriptionPurchase);
+                //vers la saisie
+                createPurchase(newPrescriptionPurchase);
+                newPrescription.purchaseNumber = newPrescriptionPurchase.getPurchaseNumber();
+                prescriptionFrame.dispose();
+            }catch (InputException ie){
+                JOptionPane.showMessageDialog(null, "Erreur de saisie: Impossible d'ajouter la prescription");
+            }
+        });
+
+        JButton backButton = Gui.buttonMaker(prescriptionPanel,"Retour",490);
         backButton.addActionListener(e -> {
             prescriptionFrame.dispose();
             ProgramSwing.generalMenu();
         });
 
-        JButton exitButton = Gui.buttonMaker(prescriptionPanel, "Quitter", 220);
+        JButton exitButton = Gui.buttonMaker(prescriptionPanel, "Quitter", 520);
         exitButton.addActionListener(e -> {
             Singleton.closeInstanceDB();
             System.exit(0);
-        });
-
-        customerBox.addActionListener(e -> {
-            Customer customer = (Customer) customerBox.getSelectedItem();
-
-            doctorBox.addActionListener(ev ->{
-                Purchase newPrescriptionPurchase = new Purchase(true);
-
-                Doctor doctor = (Doctor) doctorBox.getSelectedItem();
-                String prescriptionDate = dateField.getText();
-                try {
-                    Prescription newPrescription = new Prescription(prescriptionDate, doctor.getDoctorId(), customer.getCustomerId());
-                    PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-                    newPrescription = prescriptionDAO.create(newPrescription);
-                    newPrescriptionPurchase.setPrescritionId(newPrescription.getPrescriptionId());
-                    PurchaseDAO purchaseDAO = new PurchaseDAO();
-                    newPrescriptionPurchase = purchaseDAO.create(newPrescriptionPurchase);
-                    createPurchase(newPrescriptionPurchase);
-                    newPrescription.purchaseNumber = newPrescriptionPurchase.getPurchaseNumber();
-                    prescriptionFrame.dispose();
-                }catch (InputException ie){
-                    JOptionPane.showMessageDialog(null, "Erreur de saisie: Impossible d'ajouter la prescription");
-                }
-            });
         });
 
     }
@@ -118,17 +123,19 @@ public class PurchaseSwing {
         DrugDAO drugDAO = new DrugDAO();
         List<Drug> drugsList = drugDAO.getAll();
 
-        Gui.labelMaker(purchasePanel, "Sélectionner le médicament à ajouter: ",10,10);
-        JComboBox drugBox =  Gui.comboBoxMaker(purchasePanel,10,40,1000);
+        Gui.titleLabelMaker(purchasePanel,"SAISIE DE LA COMMANDE", 10,10,500,30);
+
+        Gui.labelMaker(purchasePanel, "Sélectionner le médicament à ajouter: ",10,100);
+        JComboBox drugBox =  Gui.comboBoxMaker(purchasePanel,10,130,1000);
         for (Drug drug : drugsList){
             drugBox.addItem(drug);
         }
-        Gui.labelMaker(purchasePanel, "Saisissez la quantité à ajouter à l'achat:",10,70);
-        JTextField quantityField = Gui.textFieldMaker(purchasePanel,10,100);
+        Gui.labelMaker(purchasePanel, "Saisissez la quantité à ajouter à l'achat:",10,160);
+        JTextField quantityField = Gui.textFieldMaker(purchasePanel,10,190);
 
-        JButton addButton = Gui.buttonMaker(purchasePanel,"Ajouter",130);
+        JButton addButton = Gui.buttonMaker(purchasePanel,"Ajouter",220);
 
-        JButton saveButton = Gui.buttonMaker(purchasePanel,"Valider la commande",190);
+        JButton saveButton = Gui.buttonMaker(purchasePanel,"Valider la commande",250);
 
         addButton.addActionListener(e -> {
 
@@ -148,8 +155,8 @@ public class PurchaseSwing {
 
                     try {
                         // MAJ stock et affichage de la commande en cours, MAJ prix total
-                        Drug.stockUpdate(drugToAdd, -quantity);
-                        createDisplayPurchaseDrugs(purchasePanel, newPurchase);
+                        drugToAdd.stockUpdate(-quantity);
+                        createDisplayPurchaseDrugs(purchasePanel, newPurchase, 500, 200);
                     } catch (InputException ie) {
                         JOptionPane.showMessageDialog(null, "Erreur de saisie ou quantité indisponible: " + ie.getMessage(),
                                 "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -171,19 +178,24 @@ public class PurchaseSwing {
                 PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
                 Prescription prescription = prescriptionDAO.getById(newPurchase.getPurchaseId());
                 Customer customer = customerDAO.getById(prescription.getCustomerId());
+                try {
+                    prescription.setCustomerId(customer.getCustomerId());
+                } catch (InputException ex) {
+                    throw new RuntimeException(ex);
+                }
 
-                // enregistrement de la commande+prescription sur le client
-                prescriptionDAO.create(prescription);
+                // enregistrement de la prescription sur le client
+                prescriptionDAO.update(prescription);
 
                 try {
                     // création et enregistrement du pdf de le prescription
-                    prescription.savePrescriptionAsPdf();
+                    prescription.savePrescriptionAsPdf(newPurchase.getPurchaseId());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }else{
                 PurchaseDAO purchaseDAO = new PurchaseDAO();
-                purchaseDAO.create(newPurchase);
+                purchaseDAO.update(newPurchase);
 
             }
             JOptionPane.showMessageDialog(null, "La commande a été enregistré avec succès");
@@ -191,28 +203,57 @@ public class PurchaseSwing {
             ProgramSwing.generalMenu();
         });
 
-        JButton cancelButton = Gui.buttonMaker(purchasePanel,"Annuler",220);
+        JButton cancelButton = Gui.buttonMaker(purchasePanel,"Annuler",490);
         cancelButton.addActionListener(e ->  {
+
+            cancelPurchase(newPurchase);
+
             purchaseFrame.dispose();
             ProgramSwing.generalMenu();
         });
 
-        JButton exitButton = Gui.buttonMaker(purchasePanel, "Quitter", 250);
+        JButton exitButton = Gui.buttonMaker(purchasePanel, "Quitter", 520);
         exitButton.addActionListener(e -> {
+
+            cancelPurchase(newPurchase);
+
             Singleton.closeInstanceDB();
             System.exit(0);
         });
     }
 
     /**
-     * MET A JOUR LE STOCK ET L HISTORIQUE APRES ANNULATION
+     * supprime la commande en cours, son contenu, sa prescription et met à jour le stock
      * @param newPurchase Purchase
      */
     public static void cancelPurchase(Purchase newPurchase){
-        PurchaseDAO purchaseDAO = new PurchaseDAO();
         ContenirCRUD contenirCRUD = new ContenirCRUD();
-        purchaseDAO.delete(newPurchase);
+        List<Contenir> purchaseContain = contenirCRUD.selectAll(newPurchase.getPurchaseId());
+        // mise à jour des stock
+        for(Contenir contenir : purchaseContain){
+            DrugDAO drugDAO = new DrugDAO();
+            Drug drugToUpdate = drugDAO.getById(contenir.getDrugId());
+            try {
+                drugToUpdate.stockUpdate(contenir.getQuantity());
+            } catch (InputException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        // suppression du contenu de la commande
         contenirCRUD.delete(newPurchase.getPurchaseId());
+
+        PurchaseDAO purchaseDAO = new PurchaseDAO();
+
+        // suppression de la commande et de la prescription
+        if(newPurchase.getWithPrescription()){
+            PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+            Prescription prescriptionToDelete = prescriptionDAO.getById(newPurchase.getPrescriptionId());
+            purchaseDAO.delete(newPurchase);
+            prescriptionDAO.delete(prescriptionToDelete);
+        }else{
+            purchaseDAO.delete(newPurchase);
+        }
+
     }
 
     /**
@@ -220,15 +261,15 @@ public class PurchaseSwing {
      * @param panel JPanel
      * @param newPurchase Purchase
      */
-    public static void createDisplayPurchaseDrugs(JPanel panel, Purchase newPurchase) {
+    public static void createDisplayPurchaseDrugs(JPanel panel, Purchase newPurchase, int x, int y) {
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String[][] display = newPurchase.createMatrice();
-        Gui.tableMaker(panel,display,purchaseHistoryTableHeaders,500,100,800,300);
+        Gui.tableMaker(panel,display,purchaseHistoryTableHeaders,x,y,800,300);
 
         // MAJ et affichage du prix de la commande en cours
         newPurchase.setTotalPrice();
-        JTextField priceField = Gui.textFieldMaker(panel,500,450);
+        JTextField priceField = Gui.textFieldMaker(panel,500,550);
         priceField.setText("Prix Total : " + decimalFormat.format(newPurchase.getTotalPrice()) + " €");
         priceField.setEditable(false);
 
@@ -237,7 +278,7 @@ public class PurchaseSwing {
             PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
             Prescription prescription = prescriptionDAO.getById(newPurchase.getPurchaseId());
             Double pricePostMutualRate = newPurchase.getTotalPrice() * (1 - getMutualRateByPrescription(prescription));
-            JTextField priceFieldPostMutualRate = Gui.textFieldMaker(panel, 500, 480);
+            JTextField priceFieldPostMutualRate = Gui.textFieldMaker(panel, 500, 580);
             priceFieldPostMutualRate.setText("Prix Total après déduction mutuelle : " +
                     decimalFormat.format(pricePostMutualRate) + " €");
             priceFieldPostMutualRate.setEditable(false);
@@ -283,6 +324,9 @@ public class PurchaseSwing {
                 MutualDAO mutualDAO = new MutualDAO();
                 mutual = mutualDAO.getById(customer.getMutualId());
             }
+        }
+        if(mutual == null){
+            return 0.0;
         }
         return mutual.getRate();
     }

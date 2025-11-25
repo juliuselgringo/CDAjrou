@@ -21,43 +21,45 @@ public class ProgramSwing {
         JFrame generalFrame = Gui.setFrame();
         JPanel generalPanel = Gui.setPanel(generalFrame);
 
-        JButton purchaseMenu = Gui.buttonMaker(generalPanel, "Achat", 10);
+        Gui.titleLabelMaker(generalPanel,"MENU PINCIPAL", 10,10,300,30);
+
+        JButton purchaseMenu = Gui.buttonMaker(generalPanel, "Achat", 100);
         purchaseMenu.addActionListener(e -> {
             PurchaseSwing.purchase();
             generalFrame.dispose();
         });
 
-        JButton purchaseHistory = Gui.buttonMaker(generalPanel, "Historique des Achats", 40);
+        JButton purchaseHistory = Gui.buttonMaker(generalPanel, "Historique des Achats", 130);
         purchaseHistory.addActionListener(e -> {
             HistorySwing.history();
             generalFrame.dispose();
         });
 
-        JButton doctor = Gui.buttonMaker(generalPanel, "Médecins", 70);
+        JButton doctor = Gui.buttonMaker(generalPanel, "Médecins", 160);
         doctor.addActionListener(e -> {
             DoctorSwing.doctorMenu();
             generalFrame.dispose();;
         });
 
-        JButton customer = Gui.buttonMaker(generalPanel, "Clients",100);
+        JButton customer = Gui.buttonMaker(generalPanel, "Clients",190);
         customer.addActionListener(e -> {
             CustomerSwing.customerMenu();
             generalFrame.dispose();
         });
 
-        JButton drug = Gui.buttonMaker(generalPanel, "Médicaments",130);
+        JButton drug = Gui.buttonMaker(generalPanel, "Médicaments",220);
         drug.addActionListener(e -> {
             DrugSwing.drugMenu();
             generalFrame.dispose();
         });
 
-        JButton prescription = Gui.buttonMaker(generalPanel, "Prescriptions",160);
+        JButton prescription = Gui.buttonMaker(generalPanel, "Prescriptions",250);
         prescription.addActionListener(e -> {
             PrescriptionSwing.prescriptionMenu();
             generalFrame.dispose();
         });
 
-        JButton mutual = Gui.buttonMaker(generalPanel, "Mutuelles",190);
+        JButton mutual = Gui.buttonMaker(generalPanel, "Mutuelles",280);
         mutual.addActionListener(e -> {
             MutualSwing.mutualMenu();
             generalFrame.dispose();

@@ -203,4 +203,26 @@ public class Gui {
         return comboBox;
     }
 
+    /**
+     * Label pour insérer un titre dans les pages
+     * @param panel JPanel
+     * @param title String
+     * @param x int
+     * @param y int
+     * @param width int
+     * @param height int
+     * @return JPanel
+     */
+    public static JLabel titleLabelMaker(JPanel panel, String title, int x, int y, int width, int height) {
+        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
+        titleLabel.setBounds(x, y, width, height);
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        // pour un fond visible:
+        // titleLabel.setOpaque(true);
+        // titleLabel.setBackground(new Color(119,103,176));
+        panel.add(titleLabel);
+        return titleLabel;
+    }
+
 }

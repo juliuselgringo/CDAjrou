@@ -27,31 +27,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, InputException {
 
-        // Main.testDAO();
-
         ProgramSwing.generalMenu();
-
-    }
-
-    private static void testDAO() throws IOException, InputException {
-
-        /*
-        ContactDAO contactDAO = new ContactDAO();
-        System.out.println(contactDAO.getAll());
-        contactDAO.closeConnection();
-        */
-        /*
-        MutualDAO mutualDAO = new MutualDAO();
-        System.out.println(mutualDAO.getAll());
-        mutualDAO.closeConnection();
-*/
-
-/*
-        PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-        System.out.println(prescriptionDAO.getAll());
-
- */
-
 
     }
 

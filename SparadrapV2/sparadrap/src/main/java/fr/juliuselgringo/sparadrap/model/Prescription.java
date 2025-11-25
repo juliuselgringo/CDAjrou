@@ -1,7 +1,9 @@
 package fr.juliuselgringo.sparadrap.model;
 
+import fr.juliuselgringo.sparadrap.DAO.ContenirCRUD;
 import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
 import fr.juliuselgringo.sparadrap.DAO.DoctorDAO;
+import fr.juliuselgringo.sparadrap.DAO.DrugDAO;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 
@@ -33,7 +35,7 @@ public class Prescription {
     private LocalDate prescriptionDate;
     private Integer doctorId;
     private Integer customerId;
-    private Map<Drug, Integer> drugsQuantityPrescriptionsList = new HashMap<>();
+    private List<Contenir> drugsQuantityPrescriptionsList = new ArrayList<>();
 
     /**
      * numéro d'achat
@@ -160,19 +162,18 @@ public class Prescription {
 
     /**
      * GETTER getDrugsQuantityPrescriptionList
-     * @return Map
+     * @return List
      */
-    public Map<Drug, Integer> getDrugsQuantityPrescriptionList() {
+    public List<Contenir> getDrugsQuantityPrescriptionList() {
         return this.drugsQuantityPrescriptionsList;
     }
 
     /**
      * SETTER drugsDrugsQuantityPrescritionList
-     * @param drug Drug
-     * @param quantity int
+     * @param drugsQuantityPrescriptionList List
      */
-    public void setDrugsQuantityPrescriptionList(Drug drug, int quantity) {
-        this.drugsQuantityPrescriptionsList.put(drug,quantity);
+    public void setDrugsQuantityPrescriptionList(List<Contenir> drugsQuantityPrescriptionList) {
+        this.drugsQuantityPrescriptionsList = drugsQuantityPrescriptionList;
     }
 
     /**
@@ -212,14 +213,16 @@ public class Prescription {
 
     /**
      * TO STRING POUR L ENREGISTREMENT DES PRESCRIPTION EN PDF
+     * @param purchaseId Integer
      * @return String
      */
-    public String toStringForPdf(){
+    public String toStringForPdf(Integer purchaseId){
         DoctorDAO doctorDAO = new DoctorDAO();
         Doctor doctor = doctorDAO.getById(this.doctorId);
         CustomerDAO customerDAO = new CustomerDAO();
         Customer customer = customerDAO.getById(this.customerId);
-        customerDAO.closeConnection();
+        ContenirCRUD contenirDAO = new ContenirCRUD();
+        this.setDrugsQuantityPrescriptionList(contenirDAO.selectAll(purchaseId));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return " // " + this.getPrescriptionDate().format(formatter) +
@@ -234,20 +237,21 @@ public class Prescription {
      */
     public String getDrugsQuantityToString() {
         String stringToReturn = "";
-        for (Map.Entry<Drug,Integer> entry : this.getDrugsQuantityPrescriptionList().entrySet()){
-            stringToReturn += entry.getKey().toStringForPdf() + " : " + entry.getValue().toString() + " qté(s)";
+        DrugDAO drugDAO = new DrugDAO();
+        for (Contenir contenir : this.getDrugsQuantityPrescriptionList()){
+            stringToReturn += drugDAO.getById(contenir.getDrugId()) + " " +  contenir.getQuantity() + "\n";
         }
         return stringToReturn;
     }
 
     /**
      * SAUVEGARDER UNE PRESCRIPTION EN PDF
+     * @param purchaseId Integer
      * @throws IOException String
      */
-    public void savePrescriptionAsPdf() throws IOException {
+    public void savePrescriptionAsPdf(Integer purchaseId) throws IOException {
         CustomerDAO customerDAO = new CustomerDAO();
-        Customer customer = customerDAO.getById(this.customerId);
-        customerDAO.closeConnection();
+        Customer customer = customerDAO.getById(this.getCustomerId());
 
         String pathHistoric = "historic/"
                 + customer.getLastName() + this.prescriptionDate + ".pdf";
@@ -262,15 +266,18 @@ public class Prescription {
 
                 contentStream.beginText();
                 contentStream.setFont(font, 12);
-
-                List<String> lines = sliceTextForPdf(this.toStringForPdf(),100);
                 contentStream.newLineAtOffset(50, 700);
 
-                for (String line : lines){
-                    contentStream.showText(line);
-                    contentStream.newLineAtOffset(0, -20);
+                List<String> lines = sliceTextForPdf(this.toStringForPdf(purchaseId),100);
+
+                try {
+                    for (String line : lines) {
+                        contentStream.showText(line);
+                        contentStream.newLineAtOffset(0, -20);
+                    }
+                } finally {
+                    contentStream.endText();
                 }
-                contentStream.endText();
 
             }
 
@@ -291,12 +298,27 @@ public class Prescription {
      */
     public static List<String> sliceTextForPdf(String text, int lineMax){
         List<String> stringToReturn = new ArrayList<>();
-        int index = 0;
-        while(index < text.length()){
-            int endLine = Math.min(text.length(), index + lineMax);
-            stringToReturn.add(text.substring(index, endLine));
-            index = endLine;
 
+        if(text == null || text.isEmpty()){
+            return stringToReturn;
+        }
+
+        // Normaliser les retours à la ligne
+        text = text.replace("\r","");
+        // Séparer par paragraphe
+        String[] paragraphs = text.split("\n");
+        for(String paragraph : paragraphs){
+            String trimmed = paragraph.trim();
+            if(trimmed.isEmpty()){
+                stringToReturn.add("");
+                continue;
+            }
+            int index = 0;
+            while(index < trimmed.length()){
+                int endline = Math.min(trimmed.length(), index + lineMax);
+                stringToReturn.add(trimmed.substring(index, endline));
+                index = endline;
+            }
         }
         return stringToReturn;
     }
@@ -323,6 +345,10 @@ public class Prescription {
         }
     }
 
+    /**
+     * retourne le client correspondant à la prescription
+     * @return Customer
+     */
     public Customer getCustomer(){
         CustomerDAO customerDAO = new CustomerDAO();
         Customer customer = customerDAO.getById(this.getCustomerId());
@@ -330,6 +356,10 @@ public class Prescription {
         return customer;
     }
 
+    /**
+     * retourne le docteur correspondant à la prescription
+     * @return Doctor
+     */
     public Doctor getDoctor(){
         DoctorDAO doctorDAO = new DoctorDAO();
         Doctor doctor = doctorDAO.getById(this.getDoctorId());

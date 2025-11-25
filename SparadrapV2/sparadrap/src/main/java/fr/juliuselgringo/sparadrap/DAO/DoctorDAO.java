@@ -22,6 +22,11 @@ public class DoctorDAO extends DAO<Doctor> {
     private static final Logger logger = LogManager.getLogger(DoctorDAO.class);
 
     /**
+     * constructeur par défaut
+     */
+    public DoctorDAO(){}
+
+    /**
      * ajouter un médecin à la table doctor
      * @param entity Doctor
      * @return Doctor

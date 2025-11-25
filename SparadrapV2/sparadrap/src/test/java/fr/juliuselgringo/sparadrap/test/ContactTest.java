@@ -26,6 +26,17 @@ class ContactTest {
         assertEquals("azer@azer.aze", contact.getEmail());
     }
 
+    @Test
+    void constructor2_GetterAndSetter_ValidInput() throws InputException {
+        Contact contact = new Contact(1,"3, rue de la joie","54000","Nancy","00 00 00 00 00", "azer@azer.aze");
+        assertEquals(1, contact.getContactId());
+        assertEquals("3, rue de la joie", contact.getAddress());
+        assertEquals("54000",contact.getPostalCode());
+        assertEquals("Nancy", contact.getTown());
+        assertEquals("00 00 00 00 00", contact.getPhone());
+        assertEquals("azer@azer.aze", contact.getEmail());
+    }
+
     @ParameterizedTest(name="{0} le setter leve correctement l'exception")
     @ValueSource(strings={"","    ", "1234"})
     void setterAddress_InvalidInput(String address) throws InputException {

@@ -15,11 +15,23 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * classe qui gère les requetes sql crud de la table purchase
+ */
 public class PurchaseDAO extends DAO<Purchase> {
 
     private static final Logger logger = LogManager.getLogger(PurchaseDAO.class);
 
+    /**
+     * constructeur par défaut
+     */
+    public PurchaseDAO(){}
 
+    /**
+     * ajoute une nouvelle commande
+     * @param entity Purchase
+     * @return Purchase
+     */
     @Override
     public Purchase create(Purchase entity) {
 
@@ -73,11 +85,20 @@ public class PurchaseDAO extends DAO<Purchase> {
         return entity;
     }
 
+    /**
+     * met à jour une commande
+     * @param entity Purchase
+     * @return Purchase
+     */
     @Override
     public Purchase update(Purchase entity) {
         return null;
     }
 
+    /**
+     * supprime une commande
+     * @param entity Purchase
+     */
     @Override
     public void delete(Purchase entity) {
         String deletePurchase = "DELETE FROM purchase WHERE purchase_id = ?";
@@ -94,7 +115,10 @@ public class PurchaseDAO extends DAO<Purchase> {
         }
     }
 
-
+    /**
+     * retourne une liste de toutes les commandes
+     * @return List
+     */
     @Override
     public List<Purchase> getAll() {
 
@@ -122,11 +146,22 @@ public class PurchaseDAO extends DAO<Purchase> {
         return purchasesList;
     }
 
+    /**
+     * retourne une commande à partir de son id
+     * @param id Purchase
+     * @return Purchase
+     */
     @Override
     public Purchase getById(int id) {
         return null;
     }
 
+    /**
+     * retourne une liste de commande dans une période donnée
+     * @param start LocalDate
+     * @param end LocalDate
+     * @return List
+     */
     public List<Purchase> getByDate(LocalDate start, LocalDate end) {
 
         List<Purchase> purchasesList = new ArrayList<>();
@@ -156,6 +191,9 @@ public class PurchaseDAO extends DAO<Purchase> {
         return purchasesList;
     }
 
+    /**
+     * ferme la connexion à la BD
+     */
     @Override
     public void closeConnection() {
         Singleton.closeInstanceDB();

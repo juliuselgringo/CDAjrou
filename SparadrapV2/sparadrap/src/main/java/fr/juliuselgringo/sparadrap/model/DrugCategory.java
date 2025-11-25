@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * class permettant de gérer les différentes catégories de médicament
+ */
 public class DrugCategory {
 
     private Integer categoryId;
@@ -17,6 +20,11 @@ public class DrugCategory {
      */
     public DrugCategory() {}
 
+    /**
+     * constructeur
+     * @param categoryId Integer
+     * @param categoryName String
+     */
     public DrugCategory(Integer categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
@@ -56,7 +64,7 @@ public class DrugCategory {
 
     /**
      * to string de la catégorie de médicament
-     * @return
+     * @return String
      */
     @Override
     public String toString() {

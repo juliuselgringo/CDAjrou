@@ -12,7 +12,7 @@ public class Person {
     private Integer contactId;
 
     /**
-     * CONSTURCTOR
+     * caonstructeur
      * @param firstName String
      * @param lastName String
      * @param contactId Integer
@@ -25,9 +25,9 @@ public class Person {
     }
 
     /**
-     * 
-     * @param firstName
-     * @param lastName
+     * constructeur
+     * @param firstName String
+     * @param lastName String
      * @throws InputException String
      */
     public Person(String firstName, String lastName) throws InputException{
@@ -115,8 +115,9 @@ public class Person {
      */
     @Override
     public String toString() {
-        return "Personne{" + "Prénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
-                ", Coordonnées: " + this.getContactId() + '}';
+        return "Personne \n Prénom: " + this.getFirstName() +
+                "\n Nom: " + this.getLastName() +
+                "\n Coordonnées: " + this.getContactId() + '}';
     }
 
 

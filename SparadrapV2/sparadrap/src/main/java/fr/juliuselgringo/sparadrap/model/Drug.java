@@ -23,9 +23,7 @@ public class Drug {
     private LocalDate productionDate;
     private int quantity;
     private Boolean underPrescription;
-    
-    // totalOut permet d'avoir dans historySwing la somme des sorties d'une période pour la gestion de stock
-    // (displayPurchasesQuantityByPeriod(LocalDate startDate, LocalDate endDate))
+
     private Integer totalOut = 0;
 
     private final String regexName = "[A-Z][a-z]+([\\s][A-Z][a-z]+)?([\\s][0-9]+)?";
@@ -217,7 +215,6 @@ public class Drug {
     /**
      * SETTER categoryId
      * @param categoryId Integer
-     * @throws InputException String
      */
     public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
@@ -252,11 +249,11 @@ public class Drug {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return "\n\nNom: " + this.getName() +
-                "\nCatégorie: " + this.getCategoryId() +
-                "\nPrix: " + this.getPrice() +
-                "\nDate de production: " + this.getProductionDate().format(formatter) +
-                "\nQuantité en stock: " + this.getQuantity() +
-                "\nUnderPrescription: " + this.isUnderPrescription();
+                "\n Catégorie: " + this.getCategoryId() +
+                "\n Prix: " + this.getPrice() +
+                "\n Date de production: " + this.getProductionDate().format(formatter) +
+                "\n Quantité en stock: " + this.getQuantity() +
+                "\n UnderPrescription: " + this.isUnderPrescription();
     }
 
     /**
@@ -270,13 +267,12 @@ public class Drug {
 
     /**
      * MISE A JOUR DU STOCK
-     * @param drugToUpdate Drug
      * @param quantity int
      * @throws InputException String
      */
-    public static void stockUpdate(Drug drugToUpdate, int quantity) throws InputException {
+    public void stockUpdate(int quantity) throws InputException {
         DrugDAO drugDAO = new DrugDAO();
-        Drug drug = drugDAO.getById(drugToUpdate.getDrugId());
+        Drug drug = drugDAO.getById(this.getDrugId());
         drug.setQuantity(drug.getQuantity() + quantity);
         drugDAO.update(drug);
     }

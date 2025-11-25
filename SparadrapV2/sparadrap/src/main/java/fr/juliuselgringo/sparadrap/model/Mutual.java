@@ -1,6 +1,7 @@
 package fr.juliuselgringo.sparadrap.model;
 
 import fr.juliuselgringo.sparadrap.DAO.ContactDAO;
+import fr.juliuselgringo.sparadrap.DAO.CustomerDAO;
 import fr.juliuselgringo.sparadrap.DAO.MutualDAO;
 import fr.juliuselgringo.sparadrap.ExceptionTracking.InputException;
 
@@ -140,10 +141,26 @@ public class Mutual {
      */
     @Override
     public String toString() {
-        return "\nNom: " + this.getName() +
-                "\n" +
-                this.getContactId() +
-                "\nTaux: " + this.getRate() + "\n";
+        ContactDAO contactDAO = new ContactDAO();
+        Contact contact = contactDAO.getById(this.mutualId);
+        return this.getName() + " " + contact.getPostalCode();
+    }
+
+    /**
+     * afficher les détails d'une mutuelle
+     * @return String
+     */
+    public String toStringForDetails(){
+        ContactDAO contactDAO = new ContactDAO();
+        Contact contact = contactDAO.getById(this.mutualId);
+        return "Mutuelle" +
+                "\n Nom: " +  this.getName() +
+                "\n Taux: " + this.getRate() +
+                "\n Adresse: " + contact.getAddress() +
+                "\n Postal: " + contact.getPostalCode() +
+                "\n Ville: " + contact.getTown() +
+                "\n Telephone: " + contact.getPhone() +
+                "\n Email: " + contact.getEmail();
     }
 
     /**
@@ -180,9 +197,11 @@ public class Mutual {
      * @return String[][]
      */
     public String[][] getMutualCustomersListMatrice(){
-        String[][] matrice = new String[this.mutualCustomersList.size()][5];
+        CustomerDAO customerDAO = new CustomerDAO();
+        List<Customer> customersList = customerDAO.getCustomerByMutualId(this.mutualId);
+        String[][] matrice = new String[customersList.size()][5];
         int i = 0;
-        for(Customer customer : this.mutualCustomersList){
+        for(Customer customer : customersList){
             ContactDAO contactDAO = new ContactDAO();
             Contact contact = contactDAO.getById(customer.getContactId());
             matrice[i][0] = customer.getLastName();

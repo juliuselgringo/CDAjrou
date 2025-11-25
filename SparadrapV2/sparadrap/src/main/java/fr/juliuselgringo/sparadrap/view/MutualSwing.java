@@ -108,13 +108,13 @@ public class MutualSwing {
     }
 
     /**
-     * AFFICHE LE DETAIL D UNE MUTUELLE
+     * AFFICHE LES DETAILS D UNE MUTUELLE
      * @param mutual Mutual
      */
     public static void displayMutual(Mutual mutual){
         JFrame frame = Gui.setPopUpFrame(1200,500);
         JPanel panel = Gui.setPanel(frame);
-        Gui.textAreaMaker(panel, mutual.toString(),10,10,1200,300 );
+        Gui.textAreaMaker(panel, mutual.toStringForDetails(),10,10,1200,300 );
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
         back2Button.addActionListener(ev -> frame.dispose());
@@ -288,25 +288,6 @@ public class MutualSwing {
         JTable table = Gui.tableMaker(panel, mutual.getMutualCustomersListMatrice(), header,10,10,700,300);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JButton deleteButton = Gui.buttonMaker(panel,"Supprimer un client de la liste",340);
-        deleteButton.addActionListener(ev -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow >= 0) {
-                Customer customer = mutual.mutualCustomersList.get(selectedRow);
-                int resp = JOptionPane.showConfirmDialog(null,"Etes vous sur de vouloir supprimer le client de cette mutuelle?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                if (resp == JOptionPane.YES_OPTION) {
-                    mutual.mutualCustomersList.remove(customer);
-                    JOptionPane.showMessageDialog(null,"Le client a été retiré de la liste","Information", JOptionPane.INFORMATION_MESSAGE);
-                    frame.dispose();
-                    try {
-                        displayMutualCustomersList(mutual);
-                    } catch (InputException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-            }
-        });
         JButton back2Button = Gui.buttonMaker(panel,"Retour",400);
         back2Button.addActionListener(ev -> frame.dispose());
 

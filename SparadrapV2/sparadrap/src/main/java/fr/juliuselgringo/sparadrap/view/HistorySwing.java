@@ -34,31 +34,24 @@ public class HistorySwing {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
-        Gui.labelMaker(panel, "Sélectionner une commande à afficher:",10,10);
-        JComboBox historyBox = Gui.comboBoxMaker(panel,10,40,1500);
+        Gui.titleLabelMaker(panel,"HISTORIQUE DES ACHATS", 10,10,400,30);
+
+        Gui.labelMaker(panel, "Sélectionner une commande dans le tableau pour afficher les détails:",10,100);
 
         PurchaseDAO purchaseDAO = new PurchaseDAO();
         List<Purchase> purchasesHistory = purchaseDAO.getAll();
-        for (Purchase purchase : purchasesHistory){
-            historyBox.addItem(purchase);
-        }
 
-        Gui.labelMaker(panel, "Consulter les commandes d'une période:):",10,70);
-        Gui.labelMaker(panel, "Saisissez une date de début (jj-mm-aaaa):",10,100);
-        JTextField startDateField = Gui.textFieldMaker(panel,10,130);
-        Gui.labelMaker(panel, "Saisissez une date de fin (jj-mm-aaaa):",10,160);
-        JTextField endDateField = Gui.textFieldMaker(panel,10,190);
-        JButton searchButton = Gui.buttonMaker(panel,"Rechercher par période",220);
-        JButton displayQuantityButton = Gui.buttonMaker(panel,"Quantité sortie par période",250);
+        Gui.labelMaker(panel, "Consulter les commandes d'une période:",10,160);
+        Gui.labelMaker(panel, "Saisissez une date de début (jj-mm-aaaa):",10,190);
+        JTextField startDateField = Gui.textFieldMaker(panel,10,220);
+        Gui.labelMaker(panel, "Saisissez une date de fin (jj-mm-aaaa):",10,250);
+        JTextField endDateField = Gui.textFieldMaker(panel,10,280);
+        JButton searchButton = Gui.buttonMaker(panel,"Rechercher par période",310);
+        JButton displayQuantityButton = Gui.buttonMaker(panel,"Quantité sortie par période",3400);
 
         String[] headers = new String[] {"Date", "N° de commande", "Nom du client"};
-        JTable table = Gui.tableMaker(panel, Purchase.createPurchasesMatrice(),headers,500,100,800,300);
+        JTable table = Gui.tableMaker(panel, Purchase.createPurchasesMatrice(),headers,500,200,800,300);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        historyBox.addActionListener(e -> {
-            Purchase purchase = (Purchase)historyBox.getSelectedItem();
-            PurchaseSwing.displayAPurchase(purchase);
-        });
 
         searchButton.addActionListener(e -> {
             try{
@@ -169,14 +162,17 @@ public class HistorySwing {
      * @param purchase Purchase
      */
     public static void purchaseDetails(Purchase purchase) {
-        JFrame frame2 = Gui.setPopUpFrame(1400,800);
-        JPanel panel2 = Gui.setPanel(frame2);
-        PurchaseSwing.createDisplayPurchaseDrugs(panel2,purchase);
+        JFrame frameDetail = Gui.setPopUpFrame(1000,800);
+        JPanel panelDetail = Gui.setPanel(frameDetail);
 
-        JButton backButton = Gui.buttonMaker(panel2,"Retour",280);
-        backButton.addActionListener(ev -> frame2.dispose());
+        Gui.titleLabelMaker(panelDetail,"DETAILS DE LA COMMANDE", 10,10,400,30);
 
-        JButton exitButton = Gui.buttonMaker(panel2, "Quitter", 310);
+        PurchaseSwing.createDisplayPurchaseDrugs(panelDetail,purchase,10, 200);
+
+        JButton backButton = Gui.buttonMaker(panelDetail,"Retour",550);
+        backButton.addActionListener(ev -> frameDetail.dispose());
+
+        JButton exitButton = Gui.buttonMaker(panelDetail, "Quitter", 580);
         exitButton.addActionListener(e1 -> {
             Singleton.closeInstanceDB();
             System.exit(0);

@@ -6,7 +6,7 @@
   <name>sparadrap</name>
   <version>1.0-SNAPSHOT</version>
   <description>gestion de pharmacie</description>
-  <url>http://www.example.com</url>
+  <url>https://www.example.com</url>
   <developers>
     <developer>
       <name>Julien Rousselot</name>
@@ -104,7 +104,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.11.0</version>
+      <version>5.14.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -124,7 +124,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>5.11.0</version>
+      <version>5.14.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -159,7 +159,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.11.0</version>
+        <version>5.14.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -167,8 +167,8 @@
   </dependencyManagement>
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>21</maven.compiler.target>
     <maven.compiler.source>21</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

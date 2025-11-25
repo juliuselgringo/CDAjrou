@@ -163,6 +163,7 @@ public class CustomerSwing {
      * FORMULAIRE POUR MODIFIER OU CREER UN CLIENTS
      * String type "modify" ou "create"
      * @param customer Customer
+     * @param type String
      * @param frameMenu JFrame
      */
     public static void formCustomer(Customer customer,String type, JFrame frameMenu) {

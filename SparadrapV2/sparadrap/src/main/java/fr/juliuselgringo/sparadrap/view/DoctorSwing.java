@@ -162,6 +162,7 @@ public class DoctorSwing {
      * FORMULAIRE POUR MODIFIER OU CREER UN MEDECIN
      * String type "create" ou "momdify"
      * @param doctor Doctor
+     * @param type String
      * @param frameMenu JFrame
      */
     public static void formDoctor(Doctor doctor, String type, JFrame frameMenu) {
