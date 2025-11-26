@@ -25,3 +25,17 @@ VALUES("Alice", "Lefevre", "275126432109848", "1985-07-15", 1, 1, 7),
 ("Marc", "Petit", "185076432109818", "1975-12-20", 2, 2, 8),
 ("Jacques", "Bourdin", "175126432109848", "1982-01-15", 1, 3, 9),
 ("Marianne", "Petoncourt", "285076432109818", "1975-12-20", 2, 2, 10);
+
+INSERT INTO drug (drug_name, price, production_date, quantity, under_prescription, category_id)
+VALUES ("Dafalgan", 9.99, "2024-12-03", 50, false, 1),
+("Amoxicilline", 12.50, "2025-01-15", 30, true, 2),
+("Ventoline", 15.75, "2025-01-20", 20, true, 13),
+("Levothyrox", 8.90, "2025-02-05", 90, false, 9),
+("Dolirhume", 6.49, "2025-06-30", 40, false, 1),
+("Seroplex", 22.30, "2025-08-10", 28, true, 15),
+("Smecta", 4.20, "2025-02-01", 60, false, 10),
+("Lisinopril", 7.80, "2025-07-18", 30, true, 6),
+("Doliprane", 5.99, "2025-02-10", 50, false, 1),
+("Zyrtec", 10.25, "2025-06-25", 15, false, 13);
+
+SELECT * FROM prescription WHERE doctor_id = 4;

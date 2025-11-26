@@ -23,13 +23,5 @@ class PurchaseTest {
         assertEquals(true, test.getWithPrescription());
     }
 
-    @Test
-    void constructor2_ValidInput() throws InputException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        Purchase test = new Purchase("01-08-2025",true);
-        assertInstanceOf(Purchase.class, test);
-        assertEquals(true, test.getWithPrescription());
-        assertEquals("01-08-2025",test.getPurchaseDate().format(formatter));
-    }
 
 }

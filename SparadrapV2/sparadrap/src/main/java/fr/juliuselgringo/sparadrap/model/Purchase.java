@@ -34,19 +34,8 @@ public class Purchase implements Serializable {
      * @param withPrescription Boolean
      */
     public Purchase(Boolean withPrescription) {
-        this.purchaseDate = LocalDate.now();
-        this.withPrescription = withPrescription;
-        this.purchaseNumber = incrementPurchaseNumber;
-        incrementPurchaseNumber++;
-    }
 
-    /**
-     * CONSTRUCTOR
-     * @param purchaseDate String
-     * @param withPrescription Boolean
-     */
-    public Purchase(String purchaseDate, Boolean withPrescription) {
-        setPurchaseDate(purchaseDate);
+        setPurchaseDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         this.withPrescription = withPrescription;
         this.purchaseNumber = incrementPurchaseNumber;
         incrementPurchaseNumber++;
@@ -226,9 +215,10 @@ public class Purchase implements Serializable {
     public String[][] createMatrice(){
         List<Contenir> contenirs = this.getContent();
         String[][] purchaseMatrice = new String[contenirs.size()][5];
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         int i = 0;
         for (Contenir contenir : contenirs) {
-            purchaseMatrice[i][0] = this.getPurchaseDate().toString();
+            purchaseMatrice[i][0] = this.getPurchaseDate().format(formatter).toString();
             purchaseMatrice[i][1] = this.getPurchaseNumber().toString();
             if(!this.getWithPrescription()){
                 purchaseMatrice[i][2] = "NA";

@@ -82,6 +82,7 @@ public class PurchaseSwing {
             try {
                 //creation de la prescription en DB
                 Prescription newPrescription = new Prescription(prescriptionDate, doctor.getDoctorId(), customer.getCustomerId());
+
                 PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
                 newPrescription = prescriptionDAO.create(newPrescription);
                 //maj commande avec id prescription
@@ -90,7 +91,9 @@ public class PurchaseSwing {
                 PurchaseDAO purchaseDAO = new PurchaseDAO();
                 newPrescriptionPurchase = purchaseDAO.create(newPrescriptionPurchase);
                 //vers la saisie
+
                 createPurchase(newPrescriptionPurchase);
+                //n° cde dans prescription
                 newPrescription.purchaseNumber = newPrescriptionPurchase.getPurchaseNumber();
                 prescriptionFrame.dispose();
             }catch (InputException ie){
@@ -176,13 +179,7 @@ public class PurchaseSwing {
 
                 CustomerDAO customerDAO = new CustomerDAO();
                 PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-                Prescription prescription = prescriptionDAO.getById(newPurchase.getPurchaseId());
-                Customer customer = customerDAO.getById(prescription.getCustomerId());
-                try {
-                    prescription.setCustomerId(customer.getCustomerId());
-                } catch (InputException ex) {
-                    throw new RuntimeException(ex);
-                }
+                Prescription prescription = prescriptionDAO.getById(newPurchase.getPrescriptionId());
 
                 // enregistrement de la prescription sur le client
                 prescriptionDAO.update(prescription);
@@ -276,7 +273,7 @@ public class PurchaseSwing {
         // Rest à payer en cas de commande avec prescription
         if(newPurchase.getWithPrescription()) {
             PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-            Prescription prescription = prescriptionDAO.getById(newPurchase.getPurchaseId());
+            Prescription prescription = prescriptionDAO.getById(newPurchase.getPrescriptionId());
             Double pricePostMutualRate = newPurchase.getTotalPrice() * (1 - getMutualRateByPrescription(prescription));
             JTextField priceFieldPostMutualRate = Gui.textFieldMaker(panel, 500, 580);
             priceFieldPostMutualRate.setText("Prix Total après déduction mutuelle : " +
@@ -325,9 +322,8 @@ public class PurchaseSwing {
                 mutual = mutualDAO.getById(customer.getMutualId());
             }
         }
-        if(mutual == null){
-            return 0.0;
-        }
+
+
         return mutual.getRate();
     }
 
