@@ -165,12 +165,12 @@ public class Doctor extends Person {
 
     /**
      * CREER UNE MATRICE DES PATIENTS
+     * @param doctorId Integer
      * @return String[][]
      */
-    public static String[][] createCustomersMatrice(){
-       List<Customer> doctorCustomersList = null;
-
-       // ajouter customerDAO -> liste des clients where doctor = this.doctor
+    public String[][] createCustomersMatrice(Integer doctorId){
+        CustomerDAO customerDAO = new CustomerDAO();
+        List<Customer> doctorCustomersList = customerDAO.getCustomerByDoctorId(doctorId);
 
         String[][] matrices = new String[doctorCustomersList.size()][5];
         int i = 0;
@@ -189,13 +189,14 @@ public class Doctor extends Person {
 
     /**
      * CREER UNE MATRICE DES PRESCRIPTIONS
+     * @param doctor Doctor
      * @return String[][]
      */
-    public String[][] createPrescriptionsMatrice(){
+    public String[][] createPrescriptionsMatrice(Doctor doctor){
         PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-        List<Prescription> prescriptionsList = prescriptionDAO.getPrescriptionListByDoctorId(this.getDoctorId());
+        List<Prescription> prescriptionsList = prescriptionDAO.getPrescriptionListByDoctorId(doctor.getDoctorId());
 
-        String[][] matrices = new String[prescriptionsList.size()][5];
+        String[][] matrices = new String[prescriptionsList.size()][4];
         int i = 0;
         for (Prescription prescription : prescriptionsList) {
 
@@ -205,10 +206,7 @@ public class Doctor extends Person {
             matrices[i][0] = prescription.getPrescriptionId().toString();
             matrices[i][1] = prescription.getPrescriptionDate().format(formatter);
             matrices[i][2] = customer.getLastName();
-            matrices[i][3] = this.getLastName();
-            try {
-                matrices[i][4] = prescription.purchaseNumber.toString();
-            }catch(NullPointerException npe){};
+            matrices[i][3] = doctor.getLastName();
             i++;
         }
         return matrices;

@@ -246,4 +246,39 @@ public class CustomerDAO extends DAO<Customer>{
 
         return customersList;
     }
+
+
+    public List<Customer> getCustomerByDoctorId(Integer doctorId) {
+
+        String selectCustomerByDoctorId = "SELECT * FROM customer WHERE doctor_id = ?";
+        List<Customer> customersList = new ArrayList<>();
+
+        try{
+            PreparedStatement pstmt = con.prepareStatement(selectCustomerByDoctorId);
+            pstmt.setInt(1, doctorId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Integer customerId = rs.getInt("customer_id");
+                String firstName = rs.getString("customer_firstName");
+                String lastName = rs.getString("customer_lastName");
+                String socialSecurityId = rs.getString("social_security_id");
+                LocalDate birthDate = rs.getDate("customer_birthDate").toLocalDate();
+                Integer contactId = rs.getInt("contact_id");
+                Integer mutualId = rs.getInt("mutual_id");
+
+                String formattedBirthDate = birthDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                Customer customer = new Customer(customerId, firstName, lastName, contactId, socialSecurityId,
+                        formattedBirthDate, mutualId, doctorId);
+                customersList.add(customer);
+            }
+        } catch (SQLException e) {
+            logger.error("Error SQL getting customer list by mutual id: " + e);
+        } catch (InputException e) {
+            logger.error("Error getting customer list by mutual id: " + e);
+        }
+
+        return customersList;
+    }
+
 }

@@ -34,7 +34,9 @@ public class DrugSwing {
         DrugDAO drugDAO = new DrugDAO();
         List<Drug> drugsList = drugDAO.getAll();
 
-        Gui.labelMaker(panel,"Sélectionner un médicament dans le tableau: ",10,10);
+        Gui.titleLabelMaker(panel,"MENU MEDICAMENT", 10,10,500,30);
+
+        Gui.labelMaker(panel,"Sélectionner un médicament dans le tableau: ",10,100);
         JTable table = setTable(panel);
 
         JButton detailButton = Gui.buttonMaker(panel,"Détails du médicament", 130);
@@ -46,7 +48,8 @@ public class DrugSwing {
             int row = table.getSelectedRow();
             if(row >= 0) {
                 Drug drug = drugsList.get(row);
-                displayDrug(drug);
+                displayDrug(drug, frameMenu);
+                frameMenu.setVisible(false);
             }
         });
 
@@ -55,6 +58,7 @@ public class DrugSwing {
             if(row >= 0) {
                 Drug drug = drugsList.get(row);
                 formDrug(drug, "modify", frameMenu);
+                frameMenu.setVisible(false);
             }
         });
 
@@ -68,6 +72,7 @@ public class DrugSwing {
 
         createButton.addActionListener(e -> {
            createDrug(frameMenu);
+            frameMenu.setVisible(false);
         });
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
@@ -87,14 +92,18 @@ public class DrugSwing {
     /**
      * AFFICHER LES DETAILS D UN MEDICAMENT
      * @param drug Drug
+     * @param frameMenu JFrame
      */
-    public static void displayDrug(Drug drug){
+    public static void displayDrug(Drug drug, JFrame frameMenu){
         JFrame frame = Gui.setPopUpFrame(1200,500);
         JPanel panel = Gui.setPanel(frame);
         Gui.textAreaMaker(panel, drug.toString(),10,10,1200,300 );
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
-        back2Button.addActionListener(ev -> frame.dispose());
+        back2Button.addActionListener(ev -> {
+            frameMenu.setVisible(true);
+            frame.dispose();
+        });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
         exitButton2.addActionListener(eve -> {
@@ -113,9 +122,6 @@ public class DrugSwing {
     public static void formDrug(Drug drug, String type,JFrame frameMenu){
         JFrame frameForm = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frameForm);
-
-        DrugDAO drugDAO = new DrugDAO();
-        List<Drug> drugsList = drugDAO.getAll();
 
         Gui.labelMaker(panel,"Nom: ",10,10);
         JTextField nameField = Gui.textFieldMaker(panel,10,40);
@@ -178,11 +184,11 @@ public class DrugSwing {
                 drug.setQuantity(Integer.parseInt(quantityField.getText()));
                 drug.setUnderPrescription(Boolean.parseBoolean(isUnderPrescriptionField.getText()));
 
-                DrugDAO drugDAO1 = new DrugDAO();
+                DrugDAO drugDAO = new DrugDAO();
                 if(type.equals("create")){
-                    drugDAO1.create(drug);
+                    drugDAO.create(drug);
                 }else{
-                    drugDAO1.update(drug);
+                    drugDAO.update(drug);
                 }
 
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",

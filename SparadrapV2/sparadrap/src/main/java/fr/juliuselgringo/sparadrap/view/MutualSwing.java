@@ -33,7 +33,9 @@ public class MutualSwing {
         MutualDAO mutualDAO = new MutualDAO();
         List<Mutual> mutualsList = mutualDAO.getAll();
 
-        Gui.labelMaker(panel,"Sélectionner une mutuelle dans le tableau: ",10,10);
+        Gui.titleLabelMaker(panel,"MENU MUTUELLE", 10,10,500,30);
+
+        Gui.labelMaker(panel,"Sélectionner une mutuelle dans le tableau: ",10,100);
 
         JTable table = setTable(panel);
 
@@ -47,6 +49,7 @@ public class MutualSwing {
             int row = table.getSelectedRow();
             if(row >= 0) {
                 Mutual mutual = mutualsList.get(row);
+                frame.dispose();
                 displayMutual(mutual);
             }
         });
@@ -55,7 +58,8 @@ public class MutualSwing {
             int row = table.getSelectedRow();
             if(row >= 0) {
                 Mutual mutual = mutualsList.get(row);
-                mutualForm(mutual, "modify", frame);
+                frame.dispose();
+                mutualForm(mutual, "modify");
             }
         });
 
@@ -75,7 +79,8 @@ public class MutualSwing {
 
         createButton.addActionListener(e -> {
             try {
-                createMutual(frame);
+                frame.dispose();
+                createMutual();
             } catch (InputException ex) {
                 throw new RuntimeException(ex);
             }
@@ -86,7 +91,9 @@ public class MutualSwing {
             if(row >= 0) {
                 Mutual mutual = mutualsList.get(row);
                 try {
+                    frame.dispose();
                     displayMutualCustomersList(mutual);
+
                 } catch (InputException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -117,7 +124,10 @@ public class MutualSwing {
         Gui.textAreaMaker(panel, mutual.toStringForDetails(),10,10,1200,300 );
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
-        back2Button.addActionListener(ev -> frame.dispose());
+        back2Button.addActionListener(ev -> {
+            frame.dispose();
+            mutualMenu();
+        });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
         exitButton2.addActionListener(eve -> {
@@ -143,9 +153,8 @@ public class MutualSwing {
      * FORMULAIRE POUR LA CREATION OU LA MODIFICATION D UNE MUTUELLE
      * @param mutual Mutual
      * @param type String
-     * @param frame1 JFrame
      */
-    public static void mutualForm(Mutual mutual, String type, JFrame frame1){
+    public static void mutualForm(Mutual mutual, String type){
         JFrame frame = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frame);
 
@@ -191,7 +200,6 @@ public class MutualSwing {
                 contactDAO.delete(contact);
                 mutualDao.delete(mutual);
             }
-            frame1.dispose();
             frame.dispose();
             mutualMenu();
         });
@@ -224,7 +232,6 @@ public class MutualSwing {
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
-                frame1.dispose();
                 mutualMenu();
             } catch (InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -259,10 +266,9 @@ public class MutualSwing {
 
     /**
      * CREER UNE MUTUELLE
-     * @param frame JFrame
      * @throws InputException String
      */
-    public static void createMutual(JFrame frame) throws InputException {
+    public static void createMutual() throws InputException {
         Mutual newMutual = new Mutual("Na", 1, 0.1);
         MutualDAO mutualDAO = new MutualDAO();
 
@@ -272,7 +278,7 @@ public class MutualSwing {
 
         newMutual.setContactId(contact.getContactId());
         newMutual = mutualDAO.create(newMutual);
-        mutualForm(newMutual,"create",frame);
+        mutualForm(newMutual,"create");
     }
 
     /**
@@ -289,7 +295,10 @@ public class MutualSwing {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",400);
-        back2Button.addActionListener(ev -> frame.dispose());
+        back2Button.addActionListener(ev -> {
+            frame.dispose();
+            mutualMenu();
+        });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 430);
         exitButton2.addActionListener(eve -> {

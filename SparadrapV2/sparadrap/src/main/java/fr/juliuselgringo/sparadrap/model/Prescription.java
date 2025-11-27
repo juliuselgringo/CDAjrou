@@ -40,7 +40,6 @@ public class Prescription {
     /**
      * numéro d'achat
      */
-    public Integer purchaseNumber;
 
     private String pathPdf;
 
@@ -169,7 +168,7 @@ public class Prescription {
     }
 
     /**
-     * SETTER drugsDrugsQuantityPrescritionList
+     * SETTER drugsDrugsQuantityPrescritionList utilisé à l'enregistrement du PDF
      * @param drugsQuantityPrescriptionList List
      */
     public void setDrugsQuantityPrescriptionList(List<Contenir> drugsQuantityPrescriptionList) {
@@ -239,7 +238,7 @@ public class Prescription {
         String stringToReturn = "";
         DrugDAO drugDAO = new DrugDAO();
         for (Contenir contenir : this.getDrugsQuantityPrescriptionList()){
-            stringToReturn += drugDAO.getById(contenir.getDrugId()) + " " +  contenir.getQuantity() + "\n";
+            stringToReturn += drugDAO.getById(contenir.getDrugId()) + "\n Quantite: " +  contenir.getQuantity() + "\n";
         }
         return stringToReturn;
     }
@@ -328,7 +327,8 @@ public class Prescription {
      */
     public void openPdfPrescription(){
         try {
-            File pdfFile = new File(this.pathPdf);
+            File pdfFile = new File("historic/"
+                    + this.getCustomer().getLastName() + this.getPrescriptionDate() + ".pdf");
             if (pdfFile.exists()) {
                 if (Desktop.isDesktopSupported()) {
                     Desktop.getDesktop().open(pdfFile);

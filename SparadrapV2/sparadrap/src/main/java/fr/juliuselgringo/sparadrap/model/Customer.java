@@ -207,10 +207,10 @@ public class Customer extends Person {
      * @return List
      */
     public List<Prescription> getCustomerPrescriptionsList() {
-        List<Prescription> prescriptionsList = new ArrayList<>();
+
 
         PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-       // ajouter méthode de recherche des prescriptions à partir de customerLastName
+        List<Prescription> prescriptionsList = prescriptionDAO.getPrescriptionListByCustomerId(this.getCustomerId());
 
         return prescriptionsList;
     }
@@ -285,19 +285,17 @@ public class Customer extends Person {
     public String[][] createCustomerPrescriptionsMatrice(){
 
         PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-        List<Prescription> prescriptionsList = prescriptionDAO.getAll();
-
-        String[][] matrice = new String[prescriptionsList.size()][3];
+        List<Prescription> prescriptionsList = this.getCustomerPrescriptionsList();
+        String[][] matrice = new String[prescriptionsList.size()][4];
         int i = 0;
         for(Prescription prescription : prescriptionsList){
-            CustomerDAO customerDAO = new CustomerDAO();
-            Customer customer = customerDAO.getById(prescription.getCustomerId());
             DoctorDAO doctorDAO = new DoctorDAO();
             Doctor doctor = doctorDAO.getById(prescription.getDoctorId());
 
-            matrice[i][0] = prescription.getPrescriptionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            matrice[i][1] = customer.getLastName();
-            matrice[i][2] = doctor.getLastName();
+            matrice[i][0] = prescription.getPrescriptionId().toString();
+            matrice[i][1] = prescription.getPrescriptionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            matrice[i][2] = this.getLastName();
+            matrice[i][3] = doctor.getLastName();
             i++;
         }
         return matrice;

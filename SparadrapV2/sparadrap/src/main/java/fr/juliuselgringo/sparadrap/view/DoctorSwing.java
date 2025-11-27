@@ -36,7 +36,9 @@ public class DoctorSwing {
         DoctorDAO doctorDAO = new DoctorDAO();
         List<Doctor> doctorsList = doctorDAO.getAll();
 
-        Gui.labelMaker(panel, "Sélectionner un médecin dans le tableau:",10,10);
+        Gui.titleLabelMaker(panel,"MENU MEDECIN", 10,10,500,30);
+
+        Gui.labelMaker(panel, "Sélectionner un médecin dans le tableau:",10,100);
 
         JButton detailButton = Gui.buttonMaker(panel,"Détails du médecin", 130);
         JButton modifyButton = Gui.buttonMaker(panel, "Modifier un médecin",160);
@@ -53,7 +55,8 @@ public class DoctorSwing {
             int row = table.getSelectedRow();
             if(row >= 0){
                 Doctor doctor = doctorsList.get(row);
-                displayDoctor(doctor);
+                displayDoctor(doctor, frameMenu);
+                frameMenu.setVisible(false);
             }
 
         });
@@ -63,6 +66,7 @@ public class DoctorSwing {
             if(row >= 0){
                 Doctor doctor = doctorsList.get(row);
                 formDoctor(doctor, "modify", frameMenu);
+                frameMenu.dispose();
             }
 
         });
@@ -85,6 +89,7 @@ public class DoctorSwing {
         createButton.addActionListener(e4 -> {
             try {
                 createDoctor(frameMenu);
+                frameMenu.dispose();
             } catch (InputException e) {
                 throw new RuntimeException(e);
             }
@@ -94,7 +99,8 @@ public class DoctorSwing {
             int row = table.getSelectedRow();
             if(row >= 0) {
                 Doctor doctor = doctorsList.get(row);
-                displayDoctorCustomersList(doctor);
+                displayDoctorCustomersList(doctor, frameMenu);
+                frameMenu.setVisible(false);
             }
         });
 
@@ -102,7 +108,8 @@ public class DoctorSwing {
             int row = table.getSelectedRow();
             if(row >= 0) {
                 Doctor doctor = doctorsList.get(row);
-                displayDoctorPrescriptionsList(doctor);
+                displayDoctorPrescriptionsList(doctor,frameMenu);
+                frameMenu.setVisible(false);
             }
         });
 
@@ -142,14 +149,18 @@ public class DoctorSwing {
     /**
      * affiche un médecin dans un pop up
      * @param doctor Doctor
+     * @param frameMenu JFrame
      */
-    public static void displayDoctor(Doctor doctor) {
+    public static void displayDoctor(Doctor doctor, JFrame frameMenu) {
         JFrame frame = Gui.setPopUpFrame(1200,500);
         JPanel panel = Gui.setPanel(frame);
         Gui.textAreaMaker(panel, doctor.toStringForDetails(),10,10,1200,300 );
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
-        back2Button.addActionListener(ev -> frame.dispose());
+        back2Button.addActionListener(ev -> {
+            frame.dispose();
+            frameMenu.setVisible(true);
+        });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
         exitButton2.addActionListener(eve -> {
@@ -300,17 +311,19 @@ public class DoctorSwing {
 
     /**
      * AFFICHER LA LISTE DES PATIENTS D UN MEDECIN
-     * @param doctor Doctor
      */
-    public static void displayDoctorCustomersList(Doctor doctor){
+    public static void displayDoctorCustomersList(Doctor doctor, JFrame frameMenu){
         JFrame frame2 = Gui.setPopUpFrame(800,500);
         frame2.setTitle("Liste des patients");
         JPanel panel2 = Gui.setPanel(frame2);
         String[] header = new String[]{"Prénom", "Nom", "N° Secu", "Téléphone", "Email"};
 
-        Gui.tableMaker(panel2, doctor.createCustomersMatrice(), header,10,10,700,300);
+        Gui.tableMaker(panel2, doctor.createCustomersMatrice(doctor.getDoctorId()), header,10,10,700,300);
         JButton backButton = Gui.buttonMaker(panel2,"Retour",400);
-        backButton.addActionListener(ev -> frame2.dispose());
+        backButton.addActionListener(ev -> {
+            frame2.dispose();
+            frameMenu.setVisible(true);
+        });
 
         JButton exitButton = Gui.buttonMaker(panel2, "Quitter", 430);
         exitButton.addActionListener(e -> {
@@ -323,34 +336,34 @@ public class DoctorSwing {
      * AFFICHER LE LISTE DES PRESCRIPTION D UN MEDECIN
      * @param doctor Doctor
      */
-    public static void displayDoctorPrescriptionsList(Doctor doctor){
+    public static void displayDoctorPrescriptionsList(Doctor doctor,JFrame frameMenu){
         JFrame frame = Gui.setPopUpFrame(800,500);
         JPanel panel = Gui.setPanel(frame);
         frame.setTitle("Liste des prescriptions");
-        String[] header = new String[]{"Id", "Date","Nom du patient", "Nom du médecin","Numéro de commande"};
+        String[] header = new String[]{"Id", "Date","Nom du patient", "Nom du médecin"};
 
-        JTable table = Gui.tableMaker(panel, doctor.createPrescriptionsMatrice(), header,10,10,700,300);
+        Gui.labelMaker(panel, "Sélctionner une prescription dans le tableau pour en afficher le détail",10,10);
+        JTable table = Gui.tableMaker(panel, doctor.createPrescriptionsMatrice(doctor), header,10,40,700,300);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getSelectionModel().addListSelectionListener(e -> {
             if(e.getValueIsAdjusting()) {
-
-                // ajouter prescriptionDAO -> liste des prescriptions where doctorLastName = this.doctor.getLastName()
                 int selectedRow = table.getSelectedRow();
                 PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
                 List<Prescription> prescriptionsList = prescriptionDAO.getPrescriptionListByDoctorId(doctor.getDoctorId());
 
                 if(selectedRow >= 0) {
                     Prescription prescription = prescriptionsList.get(selectedRow);
-                    PrescriptionSwing.displayPrescription(prescription);
+                    PrescriptionSwing.displayPrescription(prescription, frameMenu);
                     frame.dispose();
                 }
             }
         });
-        Gui.labelMaker(panel,"Cliquez dans le tableau pour avoir les détails de la prescription",
-                10,330);
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",400);
-        backButton.addActionListener(ev -> frame.dispose());
+        backButton.addActionListener(ev -> {
+            frame.dispose();
+            frameMenu.setVisible(true);
+        });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 430);
         exitButton.addActionListener(e -> {

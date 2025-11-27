@@ -208,4 +208,38 @@ public class PrescriptionDAO extends DAO<Prescription> {
         return prescriptionsList;
     }
 
+    /**
+     * retourne une liste de prescription correspondant à un id client
+     * @param id
+     * @return
+     */
+    public List<Prescription> getPrescriptionListByCustomerId(int id){
+        List<Prescription> prescriptionsList = new ArrayList<>();
+        String selectPrescription = "SELECT * FROM prescription WHERE Customer_id = ?";
+
+        try{
+            PreparedStatement pstmt = con.prepareStatement(selectPrescription);
+            pstmt.setInt(1, id);
+
+            ResultSet res =  pstmt.executeQuery();
+            while(res.next()) {
+                Integer prescriptionId = res.getInt("prescription_id");
+                String prescriptionDate = res.getDate("prescription_date").toLocalDate()
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                Integer doctorId = res.getInt("doctor_id");
+                Integer customerId = res.getInt("customer_id");
+
+                Prescription prescription = new Prescription(prescriptionId, prescriptionDate, doctorId, customerId);
+                prescriptionsList.add(prescription);
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error SQL get prescriptions by doctor Id: " + e);
+        }catch(InputException e){
+            logger.error("Error Input get prescriptions by doctor Id: " + e);
+        }
+
+        return prescriptionsList;
+    }
+
 }

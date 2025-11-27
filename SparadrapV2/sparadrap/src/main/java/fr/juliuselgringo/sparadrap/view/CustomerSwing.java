@@ -37,7 +37,9 @@ public class CustomerSwing {
         CustomerDAO  customerDAO = new CustomerDAO();
         List<Customer> customersList = customerDAO.getAll();
 
-        Gui.labelMaker(panel, "Sélectionner un client dans le tableau:",10,10);
+        Gui.titleLabelMaker(panel,"MENU CLIENT", 10,10,500,30);
+
+        Gui.labelMaker(panel, "Sélectionner un client dans le tableau:",10,100);
 
         JButton detailButton = Gui.buttonMaker(panel,"Détails du client", 130);
         JButton modifyButton = Gui.buttonMaker(panel, "Modifier un client",160);
@@ -52,7 +54,8 @@ public class CustomerSwing {
             int row = table.getSelectedRow();
             if(row >= 0){
                 Customer customer = customersList.get(row);
-                displayCustomer(customer);
+                displayCustomer(customer,frameMenu);
+                frameMenu.setVisible(false);
             }
 
         });
@@ -62,6 +65,7 @@ public class CustomerSwing {
             if(row >= 0){
                 Customer customer = customersList.get(row);
                 formCustomer(customer, "modify", frameMenu);
+                frameMenu.dispose();
             }
 
         });
@@ -84,6 +88,7 @@ public class CustomerSwing {
         createButton.addActionListener(ev -> {
             try {
                 createCustomer(frameMenu);
+                frameMenu.dispose();
             } catch (InputException e) {
                 throw new RuntimeException(e);
             }
@@ -106,8 +111,9 @@ public class CustomerSwing {
     /**
      * AFFICHER LES DETAILS D UN CLIENT
      * @param customer Customer
+     * @param frameMenu JFrame
      */
-    public static void displayCustomer(Customer customer) {
+    public static void displayCustomer(Customer customer,JFrame frameMenu) {
         JFrame customerFrame = Gui.setPopUpFrame(800,500);
         JPanel customerPanel = Gui.setPanel(customerFrame);
         Gui.textAreaMaker(customerPanel, customer.toStringForDetails(),10,10,700,300 );
@@ -120,10 +126,13 @@ public class CustomerSwing {
 
             MutualDAO mutualDAO = new MutualDAO();
             Mutual mutual = mutualDAO.getById(customer.getMutualId());
-            Gui.textAreaMaker(panel, mutual.toString(),10,10,700,300 );
+            Gui.textAreaMaker(panel, mutual.toStringForDetails(),10,10,700,300 );
 
             JButton back2Button = Gui.buttonMaker(panel,"Retour",400);
-            back2Button.addActionListener(ev -> frame.dispose());
+            back2Button.addActionListener(ev -> {
+                frameMenu.setVisible(true);
+                customerFrame.dispose();
+            });
 
             JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 430);
             exitButton2.addActionListener(eve -> {
@@ -133,7 +142,10 @@ public class CustomerSwing {
         });
 
         JButton back2Button = Gui.buttonMaker(customerPanel,"Retour",400);
-        back2Button.addActionListener(ev -> customerFrame.dispose());
+        back2Button.addActionListener(ev -> {
+            customerFrame.dispose();
+            frameMenu.setVisible(true);
+        });
 
         JButton exitButton2 = Gui.buttonMaker(customerPanel, "Quitter", 430);
         exitButton2.addActionListener(eve -> {
@@ -237,8 +249,9 @@ public class CustomerSwing {
         JButton back2Button = Gui.buttonMaker(panel,"Annuler",480);
         back2Button.addActionListener(ev -> {
             if(type.equals("create")){
-                contactDAO.delete(contact);
                 customerDAO.delete(customer);
+                contactDAO.delete(contact);
+
             }
             frameForm.dispose();
             frameMenu.dispose();
@@ -248,8 +261,9 @@ public class CustomerSwing {
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
             if(type.equals("create")){
-                contactDAO.delete(contact);
                 customerDAO.delete(customer);
+                contactDAO.delete(contact);
+
             }
             Singleton.closeInstanceDB();
             System.exit(0);
@@ -310,11 +324,11 @@ public class CustomerSwing {
     /**
      * SUPPRIMER UN CLIENT
      * @param customer Customer
-     * @param frame1 JFrame
+     * @param frameMenu JFrame
      * @throws InputException String
      * @throws IOException String
      */
-    public static void deleteCustomer(Customer customer, JFrame frame1) throws InputException, IOException {
+    public static void deleteCustomer(Customer customer, JFrame frameMenu) throws InputException, IOException {
         int resp = JOptionPane.showConfirmDialog(null,
                 "Etes vous sur de vouloir supprimer ce client" + customer.getLastName(),
                 "Confirmation", JOptionPane.YES_NO_OPTION);
@@ -326,8 +340,47 @@ public class CustomerSwing {
             JOptionPane.showMessageDialog(null, "Le client a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
         }
-        frame1.dispose();
+        frameMenu.dispose();
         customerMenu();
+    }
+
+    /**
+     * AFFICHE UNE RECHERCHE DE LISTE DES PRESCRIPTIONS PAR CLIENT
+     * @param customer Customer
+     * @param frameMenu JFrame
+     */
+    public static void displayCustomerPrescriptionsList(Customer customer, JFrame frameMenu) {
+        JFrame frame = Gui.setPopUpFrame(800, 700);
+        frame.setTitle("Détails de la prescription");
+        JPanel panel = Gui.setPanel(frame);
+
+        String[][] customerPrescriptionsMatrice = customer.createCustomerPrescriptionsMatrice();
+        String[] header = {"id", "Date", "Nom du patient", "Nom du médecin"};
+
+        Gui.labelMaker(panel, "Sélctionner une prescription dans le tableau pour en afficher le détail", 10, 10);
+        JTable table = Gui.tableMaker(panel, customerPrescriptionsMatrice, header, 10, 40, 500, 300);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        table.getSelectionModel().addListSelectionListener(e2 -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0) {
+                Prescription prescription = customer.getCustomerPrescriptionsList().get(selectedRow);
+                PrescriptionSwing.displayPrescription(prescription, frame);
+            }
+
+        });
+
+        JButton backButton = Gui.buttonMaker(panel, "Retour", 490);
+        backButton.addActionListener(e3 -> {
+            frameMenu.setVisible(true);
+            frame.dispose();
+        });
+
+        JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
+        exitButton.addActionListener(e4 -> {
+            Singleton.closeInstanceDB();
+            System.exit(0);
+        });
     }
 
 }

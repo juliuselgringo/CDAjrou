@@ -47,7 +47,6 @@ public class MutualDAO extends DAO<Mutual> {
             if(rs.next()){
                 newMutuelId = rs.getInt(1);
                 entity.setMutualId(newMutuelId);
-                System.out.println("Insert successfull mutuelId: " + newMutuelId);
             }
 
         }catch(SQLException e){
@@ -76,7 +75,6 @@ public class MutualDAO extends DAO<Mutual> {
             pstmt.setInt(4, entity.getMutualId());
 
             pstmt.executeUpdate();
-            System.out.println("Update successfull mutualId: " + entity.getMutualId());
 
         } catch (SQLException e) {
             logger.error("Error updating mutual: " + e.getMessage());
@@ -100,7 +98,6 @@ public class MutualDAO extends DAO<Mutual> {
             pstmt.setInt(1, entity.getMutualId());
 
             pstmt.executeUpdate();
-            System.out.println("Delete successfull mutualId: " + entity.getMutualId());
 
         } catch (SQLException e) {
             logger.error("Error deleting mutual: " + e.getMessage());
@@ -139,7 +136,6 @@ public class MutualDAO extends DAO<Mutual> {
 
 
         }catch(SQLException | InputException e){
-            System.out.println("Error selecting all mutual: " + e.getMessage());
             logger.error("Error selecting all mutual: " + e);
         }
 

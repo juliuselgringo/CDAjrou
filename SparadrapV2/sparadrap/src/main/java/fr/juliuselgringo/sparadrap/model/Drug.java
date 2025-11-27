@@ -257,15 +257,6 @@ public class Drug {
     }
 
     /**
-     * TO STRING SANS RETOUR CHARIOT POUR LE PDF
-     * @return String
-     */
-    public String toStringForPdf(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        return " // " + this.getName();
-    }
-
-    /**
      * MISE A JOUR DU STOCK
      * @param quantity int
      * @throws InputException String

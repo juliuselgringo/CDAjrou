@@ -93,8 +93,6 @@ public class PurchaseSwing {
                 //vers la saisie
 
                 createPurchase(newPrescriptionPurchase);
-                //n° cde dans prescription
-                newPrescription.purchaseNumber = newPrescriptionPurchase.getPurchaseNumber();
                 prescriptionFrame.dispose();
             }catch (InputException ie){
                 JOptionPane.showMessageDialog(null, "Erreur de saisie: Impossible d'ajouter la prescription");
@@ -141,60 +139,14 @@ public class PurchaseSwing {
         JButton saveButton = Gui.buttonMaker(purchasePanel,"Valider la commande",250);
 
         addButton.addActionListener(e -> {
-
-            Drug drugToAdd;
-            drugToAdd = (Drug)drugBox.getSelectedItem();
-            int quantity = 0;
-            try {
-                if (!drugToAdd.isUnderPrescription() || ((drugToAdd.isUnderPrescription() && newPurchase.getWithPrescription()))) {
-                    quantity = Integer.parseInt(quantityField.getText());
-                    if (quantity <= 0) {
-                        throw new InputException("La quantité est invalide.");
-                    }
-                    // suivi des médicaments et quantités de la commande
-                    ContenirCRUD contenirCRUD = new ContenirCRUD();
-                    Contenir contenir = new Contenir(newPurchase.getPurchaseId(), drugToAdd.getDrugId(), quantity);
-                    contenirCRUD.create(contenir);
-
-                    try {
-                        // MAJ stock et affichage de la commande en cours, MAJ prix total
-                        drugToAdd.stockUpdate(-quantity);
-                        createDisplayPurchaseDrugs(purchasePanel, newPurchase, 500, 200);
-                    } catch (InputException ie) {
-                        JOptionPane.showMessageDialog(null, "Erreur de saisie ou quantité indisponible: " + ie.getMessage(),
-                                "Erreur", JOptionPane.ERROR_MESSAGE);
-                    }
-                }else{
-                    JOptionPane.showMessageDialog(null,"Ce médicament est sous ordonnance!",
-                            "Erreur",JOptionPane.ERROR_MESSAGE);
-                }
-            }catch (InputException ie){
-                JOptionPane.showMessageDialog(null,ie.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
-            }
+            Drug drugToAdd = (Drug)drugBox.getSelectedItem();
+            Integer quantity = Integer.parseInt(quantityField.getText());
+            addDrugToPurchase(purchasePanel, drugToAdd, newPurchase, quantity);
 
         });
 
         saveButton.addActionListener(e -> {
-            if(newPurchase.getWithPrescription()){
-
-                CustomerDAO customerDAO = new CustomerDAO();
-                PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
-                Prescription prescription = prescriptionDAO.getById(newPurchase.getPrescriptionId());
-
-                // enregistrement de la prescription sur le client
-                prescriptionDAO.update(prescription);
-
-                try {
-                    // création et enregistrement du pdf de le prescription
-                    prescription.savePrescriptionAsPdf(newPurchase.getPurchaseId());
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }else{
-                PurchaseDAO purchaseDAO = new PurchaseDAO();
-                purchaseDAO.update(newPurchase);
-
-            }
+            savePurchase(newPurchase);
             JOptionPane.showMessageDialog(null, "La commande a été enregistré avec succès");
             purchaseFrame.dispose();
             ProgramSwing.generalMenu();
@@ -217,6 +169,69 @@ public class PurchaseSwing {
             Singleton.closeInstanceDB();
             System.exit(0);
         });
+    }
+
+    /**
+     * ajouter un médicament à une commande
+     * @param purchasePanel JPanel
+     * @param drugToAdd Drug
+     * @param newPurchase Purchase
+     * @param quantity Integer
+     */
+    public static void addDrugToPurchase(JPanel purchasePanel, Drug drugToAdd,Purchase newPurchase, Integer quantity) {
+        try {
+            if (!drugToAdd.isUnderPrescription() || ((drugToAdd.isUnderPrescription() && newPurchase.getWithPrescription()))) {
+                if (quantity <= 0) {
+                    throw new InputException("La quantité est invalide.");
+                }
+                // suivi des médicaments et quantités de la commande
+                ContenirCRUD contenirCRUD = new ContenirCRUD();
+                Contenir contenir = new Contenir(newPurchase.getPurchaseId(), drugToAdd.getDrugId(), quantity);
+                contenirCRUD.create(contenir);
+
+                try {
+                    // MAJ stock et affichage de la commande en cours, MAJ prix total
+                    drugToAdd.stockUpdate(-quantity);
+                    createDisplayPurchaseDrugs(purchasePanel, newPurchase, 500, 200);
+                } catch (InputException ie) {
+                    JOptionPane.showMessageDialog(null, "Erreur de saisie ou quantité indisponible: " + ie.getMessage(),
+                            "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null,"Ce médicament est sous ordonnance!",
+                        "Erreur",JOptionPane.ERROR_MESSAGE);
+            }
+        }catch (InputException ie){
+            JOptionPane.showMessageDialog(null,ie.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * sauvegarde une commande dans la base de données
+     * @param newPurchase Purchase
+     */
+    public static void savePurchase(Purchase newPurchase){
+        if(newPurchase.getWithPrescription()){
+
+            CustomerDAO customerDAO = new CustomerDAO();
+            PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+            Prescription prescription = prescriptionDAO.getById(newPurchase.getPrescriptionId());
+
+            // enregistrement de la prescription sur le client
+            prescriptionDAO.update(prescription);
+
+            try {
+                // création et enregistrement du pdf de le prescription
+                prescription.savePrescriptionAsPdf(newPurchase.getPurchaseId());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }else{
+            PurchaseDAO purchaseDAO = new PurchaseDAO();
+            purchaseDAO.update(newPurchase);
+
+        }
+
     }
 
     /**
@@ -257,6 +272,8 @@ public class PurchaseSwing {
      * CREER UNE FENETRE QUI AFFICHE LE CONTENU D UN ACHAT + MAJ PRIX TOTAL
      * @param panel JPanel
      * @param newPurchase Purchase
+     * @param x Integer
+     * @param y Integer
      */
     public static void createDisplayPurchaseDrugs(JPanel panel, Purchase newPurchase, int x, int y) {
 

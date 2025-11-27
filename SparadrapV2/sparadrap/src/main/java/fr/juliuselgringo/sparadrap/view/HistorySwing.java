@@ -31,8 +31,8 @@ public class HistorySwing {
      * PAGE HISTORIQUE DES ACHATS
      */
     public static void history() {
-        JFrame frame = Gui.setFrame();
-        JPanel panel = Gui.setPanel(frame);
+        JFrame frameMenu = Gui.setFrame();
+        JPanel panel = Gui.setPanel(frameMenu);
 
         Gui.titleLabelMaker(panel,"HISTORIQUE DES ACHATS", 10,10,400,30);
 
@@ -70,7 +70,8 @@ public class HistorySwing {
                     throw new InputException("La période n'est pas valide");
                 }
 
-                consultPurchasesByPeriod(startDate, endDate);
+                consultPurchasesByPeriod(startDate, endDate,frameMenu);
+                frameMenu.setVisible(false);
             }catch(InputException ie){
                 JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
             }
@@ -93,7 +94,8 @@ public class HistorySwing {
                     throw new InputException("La période n'est pas valide");
 
                 }
-                displayPurchasesQuantityByPeriod(startDate, endDate);
+                displayPurchasesQuantityByPeriod(startDate, endDate, frameMenu);
+                frameMenu.setVisible(false);
             }catch(InputException ie){
                 JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
             }
@@ -104,14 +106,15 @@ public class HistorySwing {
                 int selectedRow = table.getSelectedRow();
                 if(selectedRow >= 0){
                     Purchase purchase = purchasesHistory.get(selectedRow);
-                    purchaseDetails(purchase);
+                    purchaseDetails(purchase, frameMenu);
+                    frameMenu.setVisible(false);
                 }
             }
         });
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",380);
         backButton.addActionListener(ev -> {
-            frame.dispose();
+            frameMenu.dispose();
             ProgramSwing.generalMenu();
         });
 
@@ -128,13 +131,15 @@ public class HistorySwing {
      * @param startDate LocalDate
      * @param endDate LocalDate
      */
-    public static void consultPurchasesByPeriod(LocalDate startDate, LocalDate endDate) {
+    public static void consultPurchasesByPeriod(LocalDate startDate, LocalDate endDate, JFrame frameMenu) {
         JFrame frame2 = Gui.setPopUpFrame(1600,800);
         JPanel panel2 = Gui.setPanel(frame2);
 
         List<Purchase> purchaseListToDisplay = Purchase.searchPurchaseByPeriod(startDate, endDate);
-        Gui.labelMaker(panel2,"Sélectionner une commande:",10,10);
-        JComboBox purchaseBox = Gui.comboBoxMaker(panel2,10,40,1500);
+
+        Gui.titleLabelMaker(panel2,"COMMANDE DE LA PERIODE ", 10,10,400,30);
+        Gui.labelMaker(panel2,"Sélectionner une commande:",10,40);
+        JComboBox purchaseBox = Gui.comboBoxMaker(panel2,10,70,1500);
         for(Purchase purchase : purchaseListToDisplay){
             purchaseBox.addItem(purchase);
         }
@@ -144,13 +149,16 @@ public class HistorySwing {
             String[][] purchaseHistoryMatrice = purchase.createMatrice();
 
             Gui.tableMaker(panel2, purchaseHistoryMatrice,
-                    PurchaseSwing.purchaseHistoryTableHeaders,10,40,1200,200);
+                    PurchaseSwing.purchaseHistoryTableHeaders,10,100,1200,200);
         });
 
-        JButton backButton2 = Gui.buttonMaker(panel2,"Retour",240);
-        backButton2.addActionListener(ev -> frame2.dispose());
+        JButton backButton2 = Gui.buttonMaker(panel2,"Retour",440);
+        backButton2.addActionListener(ev -> {
+            frame2.dispose();
+            frameMenu.setVisible(true);
+        });
 
-        JButton exitButton = Gui.buttonMaker(panel2, "Quitter", 270);
+        JButton exitButton = Gui.buttonMaker(panel2, "Quitter", 470);
         exitButton.addActionListener(e -> {
             Singleton.closeInstanceDB();
             System.exit(0);
@@ -161,7 +169,7 @@ public class HistorySwing {
      * AFFICHE LES DETAILS D UNE COMMANDE
      * @param purchase Purchase
      */
-    public static void purchaseDetails(Purchase purchase) {
+    public static void purchaseDetails(Purchase purchase, JFrame frameMenu) {
         JFrame frameDetail = Gui.setPopUpFrame(1000,800);
         JPanel panelDetail = Gui.setPanel(frameDetail);
 
@@ -170,7 +178,10 @@ public class HistorySwing {
         PurchaseSwing.createDisplayPurchaseDrugs(panelDetail,purchase,10, 200);
 
         JButton backButton = Gui.buttonMaker(panelDetail,"Retour",550);
-        backButton.addActionListener(ev -> frameDetail.dispose());
+        backButton.addActionListener(ev -> {
+            frameDetail.dispose();
+            frameMenu.setVisible(true);
+        });
 
         JButton exitButton = Gui.buttonMaker(panelDetail, "Quitter", 580);
         exitButton.addActionListener(e1 -> {
@@ -185,7 +196,7 @@ public class HistorySwing {
      * @param endDate LocalDate
      * @throws InputException String
      */
-    public static void displayPurchasesQuantityByPeriod(LocalDate startDate, LocalDate endDate) throws InputException {
+    public static void displayPurchasesQuantityByPeriod(LocalDate startDate, LocalDate endDate, JFrame frameMenu) throws InputException {
         JFrame frame = Gui.setPopUpFrame(1600,500);
         JPanel panel = Gui.setPanel(frame);
 
@@ -226,7 +237,10 @@ public class HistorySwing {
         Gui.textAreaMaker(panel,totalOutMap.toString(), 10, 260, 1200, 100);
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",380);
-        backButton.addActionListener(ev -> frame.dispose());
+        backButton.addActionListener(ev -> {
+            frame.dispose();
+            frameMenu.setVisible(true);
+        });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 410);
         exitButton.addActionListener(e -> {
