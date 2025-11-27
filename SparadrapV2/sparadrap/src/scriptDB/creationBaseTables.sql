@@ -113,15 +113,6 @@ CREATE TABLE purchase(
    FOREIGN KEY(prescription_id) REFERENCES Prescription(prescription_id)
 );
 
-CREATE TABLE lister(
-   prescription_id INT,
-   drug_id INT,
-   prescription_quantity INT NOT NULL,
-   PRIMARY KEY(prescription_id, drug_id),
-   FOREIGN KEY(prescription_id) REFERENCES Prescription(prescription_id),
-   FOREIGN KEY(drug_id) REFERENCES Drug(drug_id)
-);
-
 CREATE TABLE contenir(
    drug_id INT,
    purchase_id INT,
